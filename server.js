@@ -11,9 +11,11 @@ const port = 3000;
 app.use(express.json()); //Цей рядок дозволяє обробляти запити, які мають тип application/json
 app.use(express.urlencoded({ extended: false })); //Цей рядок дозволяє обробляти запити, які мають тип application/x-www-form-urlencoded
 
+require('dotenv').config();
+const secret = process.env.secret;
 app.use(
   session({ 
-    secret: 'secret-key', 
+    secret: secret, 
     cookie: {
       path: '/',
       httpOnly: true,
@@ -34,10 +36,10 @@ app.use(passport.session());
 require('./config/github-passport-config');
 
 
-app.get('/', (req, res) => {
+app.get('/', (req, res) => {  
+  console.log('користувач автентифікований: ', req.isAuthenticated())
   console.log('session get method ', req.session)
-  console.log('session passport ', req.session.passport)
-  res.send('Привіт, це мій перший сервер на Node.js і Express!');
+  res.send(`Привіт, це мій перший сервер на Node.js і Express!`);
 });
 
 app.get('/bad', (req, res) => {
@@ -45,7 +47,7 @@ app.get('/bad', (req, res) => {
 });
 
 app.post('/login', (req, res, next) => {
-  console.log('start');
+  console.log('start to login');
   passport.authenticate('local', function(err, user){
     if (err) {
       return next(err);
@@ -74,10 +76,9 @@ app.get('/logout', (req, res) => {
 
 app.get('/admin', ensureAuthenticated, (req, res) => {
   console.log('admin page! ok!')
-  console.log('session get method ', req.session)
-  console.log('session passport ', req.session.passport)
-
-  console.log(req.isAuthenticated())
+  console.log('session get method: ')
+  console.log(req.session)
+  
   res.send('Hello admin! this is admin page')
 });
 

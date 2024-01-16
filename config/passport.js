@@ -32,9 +32,11 @@ passport.use(new LocalStrategy(
 // });
 
 passport.serializeUser((user, done) => {
-  done(null, user);
+  console.log('Serialize user passport local', user);
+  done(null, user.id);
 });
 
 passport.deserializeUser((user, done) => {
+  console.log('Deserialize user passport local', user);
   done(null, user);
 });
