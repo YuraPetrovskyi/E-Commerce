@@ -75,11 +75,10 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/admin', ensureAuthenticated, (req, res) => {
-  console.log('admin page! ok!')
-  console.log('session get method: ')
-  console.log(req.session)
-  
-  res.send('Hello admin! this is admin page')
+  console.log('admin page! ok!');
+  console.log(req.user);  
+  console.log(req.session);
+  res.send('Hello admin! this is admin page');
 });
 
 

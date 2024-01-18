@@ -33,10 +33,19 @@ passport.use(new LocalStrategy(
 
 passport.serializeUser((user, done) => {
   console.log('Serialize user passport local:', user);
-  done(null, user);
+  done(null, user.user_id);
 });
 
-passport.deserializeUser((user, done) => {
-  console.log('Deserialize user passport local:', user);
-  done(null, user);
+// passport.deserializeUser((id, done) => {
+//   console.log('Deserialize user passport local:', id);
+
+//   done(null, id);
+// });
+passport.deserializeUser((id, done) => {  
+  find.findById(id, function (err, user) { 
+    console.log('Deserialize user passport local id:', id);
+    console.log('Deserialize user passport local user:', user)
+    if (err) return done(err); 
+    done(null, user);
+  });
 });

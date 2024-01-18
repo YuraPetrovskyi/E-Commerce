@@ -33,11 +33,12 @@ function findById(id, callback) {
         return callback(null, false);
       }
       const user = results.rows[0];
-      console.log('function findById: ', user)
+      console.log('deserialization by findById: ', user)
       return callback(null, user);
     });
   } catch (error) {
     // Обробка помилки, якщо вона виникає під час виконання запиту до бази даних
+    console.error('Error in findById:', error);
     return callback(error, null);
   }
 }
