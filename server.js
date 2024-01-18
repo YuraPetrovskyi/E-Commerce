@@ -33,12 +33,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Підключення конфігурації GitHub стратегії
-require('./config/github-passport-config');
+// require('./config/github-passport-config');
 
 
 app.get('/', (req, res) => {  
   console.log('користувач автентифікований: ', req.isAuthenticated())
   console.log('session get method ', req.session)
+  console.log('req method contains user: ', req.user)
   res.send(`Привіт, це мій перший сервер на Node.js і Express!`);
 });
 
@@ -83,16 +84,16 @@ app.get('/admin', ensureAuthenticated, (req, res) => {
 
 
 
-app.get('/auth/github',
-  passport.authenticate('github', { scope: ["user"] })
-);
+// app.get('/auth/github',
+//   passport.authenticate('github', { scope: ["user"] })
+// );
 
-app.get('/auth/github/callback',
-  passport.authenticate('github', { failureRedirect: '/' }),
-  (req, res) => {
-    // Успішна автентифікація через GitHub
-    res.redirect('/admin');
-  });
+// app.get('/auth/github/callback',
+//   passport.authenticate('github', { failureRedirect: '/' }),
+//   (req, res) => {
+//     // Успішна автентифікація через GitHub
+//     res.redirect('/admin');
+//   });
 
 
 app.listen(port, () => {
