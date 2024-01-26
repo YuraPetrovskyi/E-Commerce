@@ -57,6 +57,16 @@ const Login = () => {
         Don't have an account? <Link to="/register">Register here</Link>.
       </p>
       <Link to="/">Home</Link>
+      <div>
+        <h2>Hey there!</h2>
+        <p>You'll be redirected to Google to login to your account!</p>
+        <a role="button" class="button" href="http://localhost:3000/auth/google">Login with Google</a>
+      </div>
+      {/* <div>
+        <h2>Hey there!</h2>
+        <p>You'll be redirected to Facebook to login to your account!</p>
+        <a href="http://localhost:3000/login/facebook" class="button">Log In With Facebook</a>
+      </div> */}
     </div>
   );
 };

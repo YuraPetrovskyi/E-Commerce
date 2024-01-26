@@ -24,10 +24,11 @@ const getUserById = (request, response) => {
 }
 
 
-
 // POST register a new user (create)
 const createUser = async (request, response) => {
-  const { username, email, password } = request.body
+  const { username, email, password } = request.body;
+  // const { username, email, password } = data;
+  
   console.log('Received data: ', { username, email, password });
 
   // Check if the email already exists in the database
@@ -68,6 +69,59 @@ const createUser = async (request, response) => {
     response.status(500).send('Internal Server Error');
   }
 }
+
+const createGoogleUser = async (profile) => {
+  console.log('started createGoogleUser function');
+  try {
+    const { displayName, emails } = profile;
+    const username = displayName;
+    const email = emails[0].value;
+    console.log('username and email : ', username, email);
+    // Генерація випадкового паролю
+    const generateRandomPassword = () => {
+      const length = 10;
+      const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      let password = "";
+      for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * charset.length);
+        password += charset[randomIndex];
+      }
+      return password;
+    };
+
+    const password = generateRandomPassword();
+    // const user = { username, email, password };
+    console.log('password, username, email:  ',password, username, email);
+    
+    let salt, hashedPassword;
+    try {
+      salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(password, salt);
+      console.log('Hashed password:', hashedPassword);
+    } catch (error) {
+      console.error('Password processing error:', error);
+      response.status(500).send('Internal Server Error');
+    }
+
+    const userInsertResult = await pool.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *', [username, email, hashedPassword]);
+    const userId = userInsertResult.rows[0].user_id;
+    if (!Array.isArray(userInsertResult.rows) || userInsertResult.rows.length < 1) {
+      return response.status(500).send('Internal Server Error');
+    }
+
+    const cartInsertResult = await pool.query('INSERT INTO carts (cart_id, user_id) VALUES ($1, $2) RETURNING *', [userId, userId]);
+    const cartsCreated = cartInsertResult.rows[0].created_at;
+    if (!Array.isArray(cartInsertResult.rows) || cartInsertResult.rows.length < 1) {
+      return response.status(500).send('Internal Server Error');
+    }
+    console.log(`User registered with ID: ${userId}, Name: ${username}, Email: ${email}, Password: ${hashedPassword}, Carts added at: ${cartsCreated}`);
+    return { user_id: userId, username, email, hashedPassword, cartsCreated };
+
+  } catch (error) {
+    console.error('Error creating Google user:', error);
+    throw error;
+  }
+};
 
 //  PUT Update user information by their user_id.
 const updateUser = async (request, response) => {
@@ -148,6 +202,7 @@ const deleteUser = (request, response) => {
 module.exports = {
   getUsers,
   getUserById,
+  createGoogleUser,
   createUser,
   updateUser,
   deleteUser,

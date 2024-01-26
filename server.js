@@ -41,6 +41,40 @@ require('./config/passport')
 app.use(passport.initialize());
 app.use(passport.session());
 
+
+
+// Google
+app.get('/auth/google', passport.authenticate('google', { 
+  scope: ['profile', 'email']
+}));
+
+app.get('/auth/google/callback', 
+  passport.authenticate('google', { 
+    failureRedirect: 'http://localhost:3001/login' 
+  }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    console.log('secces google sesion')
+    res.redirect('http://localhost:3001');
+  }
+);
+
+// Facebook
+// app.get('/login/facebook', passport.authenticate('facebook', {
+//   scope: [ 'email' ]
+// }));
+// app.get(
+//   '/oauth2/redirect/facebook',
+//   passport.authenticate('facebook', { 
+//     failureRedirect: "http://localhost:3001/login", // Адреса вашого фронтенду для перенаправлення при помилці
+//     failureMessage: true,
+//     successRedirect: "http://localhost:3001/", // Адреса вашого фронтенду для успішного перенаправлення
+//   }),
+//   function(req, res) {
+//     res.redirect('/');
+//   }
+// );
+
 // Підключення конфігурації GitHub стратегії
 // require('./config/github-passport-config');
 // app.get('/auth/github',
@@ -53,7 +87,6 @@ app.use(passport.session());
 //     // Успішна автентифікація через GitHub
 //     res.redirect('/admin');
 //   });
-
 
 app.get('/', ensureAuthenticated, (req, res) => {  
   console.log('користувач автентифікований: ', req.isAuthenticated())

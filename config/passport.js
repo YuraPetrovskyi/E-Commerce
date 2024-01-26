@@ -5,13 +5,10 @@ const bcrypt = require("bcrypt");
 
 const find = require('../db/find_in_passprt');
 
+require('./google-passport-config');
+// require('./facebook-passport-config');
 
-// const userDB = {
-//   id: 1,
-//   username: 'yura',
-//   email: 'yura@gmail.com',
-//   password: '111'
-// };
+
 
 passport.use(new LocalStrategy(
   {usernameField: 'email'},
@@ -36,11 +33,6 @@ passport.serializeUser((user, done) => {
   done(null, user.user_id);
 });
 
-// passport.deserializeUser((id, done) => {
-//   console.log('Deserialize user passport local:', id);
-
-//   done(null, id);
-// });
 passport.deserializeUser((id, done) => {  
   find.findById(id, function (err, user) { 
     console.log('Deserialize user passport local id:', id);

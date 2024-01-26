@@ -8,7 +8,7 @@ function findByEmail(email, callback) {
         return callback(error, null);
       }
       if (results.rows.length === 0) {
-        console.log('findByUsername function can not find the names user!');
+        console.log('findByEmail function can not find the names user!');
         return callback(null, false);
       }    
       const user = results.rows[0];
