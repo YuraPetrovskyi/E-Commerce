@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 
@@ -6,7 +6,66 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    checkAuthentication();       
+  }, []);
+  
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
+
+  const checkAuthentication = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/check-auth', {
+        method: 'GET',
+        credentials: 'include',
+      });
+      console.log(response)
+      if (response.ok) {
+        setIsAuthenticated(true);
+      }
+    } catch (error) {
+      console.error('Error fetching checkAuthentication:', error);
+    }
+  }
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     console.log('startet Home before fitch')
+  //     console.log(isAuthenticated)
+  //     try {        
+  //       const authResponse = await fetch('http://localhost:3000/check-auth', {
+  //         method: 'GET',
+  //         credentials: 'include',
+  //       });
+  //       const authData = await authResponse.json();
+
+  //       if (authData.isAuthenticated) {
+  //         console.log('isAuthenticated --> true')
+  //         // Якщо користувач аутентифікований, зробимо запит для отримання інформації про користувача
+  //         const profileResponse = await fetch('http://localhost:3000/profile', {
+  //           method: 'GET',
+  //           credentials: 'include',
+  //         });
+  //         const profileData = await profileResponse.json();
+  //         setUser(profileData);
+  //         setIsAuthenticated(true);
+  //       } else {
+  //         setIsAuthenticated(false);
+  //       }
+  //     } catch (error) {
+  //       console.log('користувач не автентифікований:')
+  //       console.error('Error fetching data:', error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -61,12 +120,9 @@ const Login = () => {
         <h2>Hey there!</h2>
         <p>You'll be redirected to Google to login to your account!</p>
         <a role="button" class="button" href="http://localhost:3000/auth/google">Login with Google</a>
+        {/* <br/>
+        <a href="http://localhost:3000/auth/facebook" class="button">Login with Facebook</a> */}
       </div>
-      {/* <div>
-        <h2>Hey there!</h2>
-        <p>You'll be redirected to Facebook to login to your account!</p>
-        <a href="http://localhost:3000/login/facebook" class="button">Log In With Facebook</a>
-      </div> */}
     </div>
   );
 };

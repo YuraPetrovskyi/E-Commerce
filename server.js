@@ -7,7 +7,11 @@ const cors = require('cors');
 require('dotenv').config();
 
 const db_users = require('./db/users');
-
+const db_products = require('./db/products');
+const db_carts = require('./db/carts');
+const db_cart_items = require('./db/cart_items');
+const db_orders = require('./db/orders');
+const db_order_items = require('./db/order_items');
 
 const app = express();
 const port = 3000;
@@ -59,13 +63,10 @@ app.get('/auth/google/callback',
   }
 );
 
-// Facebook
-// app.get('/login/facebook', passport.authenticate('facebook', {
-//   scope: [ 'email' ]
-// }));
-// app.get(
-//   '/oauth2/redirect/facebook',
-//   passport.authenticate('facebook', { 
+// // Facebook
+// app.get('/auth/facebook',
+//   passport.authenticate('facebook'));
+// app.get('/auth/facebook/callback', passport.authenticate('facebook', { 
 //     failureRedirect: "http://localhost:3001/login", // Адреса вашого фронтенду для перенаправлення при помилці
 //     failureMessage: true,
 //     successRedirect: "http://localhost:3001/", // Адреса вашого фронтенду для успішного перенаправлення
@@ -137,8 +138,9 @@ app.post('/register', db_users.createUser);
 app.get('/check-auth', (req, res) => {
   if (req.isAuthenticated()) {
     console.log('користувач аутентифікований?', req.isAuthenticated())
+    console.log('data inform:', req.user)
     // Якщо користувач аутентифікований, відправте відповідь зі статусом 200 та об'єктом, що містить інформацію про аутентифікацію
-    res.status(200).json({ isAuthenticated: true });
+    res.status(200).json({ isAuthenticated: true, username:  req.user.username});
   } else {
     console.log('користувач аутентифікований?', req.isAuthenticated())
     // Якщо користувач не аутентифікований, відправте відповідь зі статусом 401 (Unauthorized)
@@ -146,12 +148,32 @@ app.get('/check-auth', (req, res) => {
   }
 });
 
+  // 2 PRODUCTS
+  app.get('/products/search', db_products.searchProductsName);
+  app.get('/products', db_products.getProducts);
+  app.get('/products/:product_id', db_products.getProductsById);
+  app.post('/products', db_products.createProduct);
+  app.put('/products/:product_id', db_products.updateProduct);
+  app.delete('/products/:product_id', db_products.deleteProducts);
+  
+    // 3 CARTS
+  app.get('/carts/:user_id', db_carts.getCartsById);
+  app.post('/carts/:user_id', db_carts.createCarts); 
+  app.put('/carts/:cart_id', db_carts.updateCarts);
+  app.delete('/carts/:cart_id', db_carts.deleteCarts);
+  
+    // 4 Cart Items
+  app.get('/cart_items/:cart_id', db_cart_items.getCartItemsByUserId);
+  app.post('/cart_items/:cart_id', db_cart_items.createCartItemByCartId); 
+  app.put('/cart_items/:cart_item_id', db_cart_items.updateCartItemByCartItemId);
+  app.delete('/cart_items/:cart_item_id', db_cart_items.deleteCartItemByCartItemId);
+  
+
+
 app.get('/profile', ensureAuthenticated, (req, res) => {
   const user = req.user;
   res.json(user);
 });
-
-
 
 app.get('/bad', (req, res) => {
   res.send('bad autorization!!');

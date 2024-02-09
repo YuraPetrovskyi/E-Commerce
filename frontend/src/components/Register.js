@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Register.css';
 
@@ -7,7 +7,34 @@ const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    checkAuthentication();       
+  }, []);
+  
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
+
+  const checkAuthentication = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/check-auth', {
+        method: 'GET',
+        credentials: 'include',
+      });
+      console.log(response)
+      if (response.ok) {
+        setIsAuthenticated(true);
+      }
+    } catch (error) {
+      console.error('Error fetching checkAuthentication:', error);
+    }
+  }
 
   const handleRegister = async (e) => {
     e.preventDefault();

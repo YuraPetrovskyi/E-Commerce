@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Home.css';
+import Products from './Products';
 
 const Home = () => {
   const [user, setUser] = useState(null);
@@ -65,24 +66,28 @@ const Home = () => {
   };
 
   return (
-    <div className="home-container">
-      {isAuthenticated ? (
-        <>
-          <p>Welcome, {user?.username}!</p>
-          <button onClick={handleLogout}>Logout</button>
-        </>
-      ) : (
-        <>
-          <p>Please sign in or register.</p>
-          <Link to="/login">
-            <button>Login</button>
-          </Link>
-          <Link to="/register">
-            <button>Register</button>
-          </Link>
-        </>
-      )}
-    </div>
+    <div>
+      <div className="home-container">
+        {isAuthenticated ? (
+          <>
+            <p>Welcome, {user?.username}!</p>
+            <button onClick={handleLogout}>Logout</button>          
+          </>
+        ) : (
+          <>
+            <p>Please sign in or register.</p>
+            <Link to="/login">
+              <button>Login</button>
+            </Link>
+            <Link to="/register">
+              <button>Register</button>
+            </Link>
+            
+          </>
+        )}
+      </div>
+      <Products />
+    </div>    
   );
 };
 
