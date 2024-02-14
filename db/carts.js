@@ -17,7 +17,7 @@ const getCartsById = (request, response) => {
 // Create a new cart for an existing user with their user_id.
 const createCarts = (request, response) => {
   const user_id = parseInt(request.params.user_id);
-
+  console.log('recive user_id:', user_id);
   pool.query('INSERT INTO carts (cart_id, user_id) VALUES ($1, $2) RETURNING *', [user_id, user_id], (error, results) => {
     if (error) {
       response.status(500).send('Internal Server Error')

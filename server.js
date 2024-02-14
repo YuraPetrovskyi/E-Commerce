@@ -140,7 +140,7 @@ app.get('/check-auth', (req, res) => {
     console.log('користувач аутентифікований?', req.isAuthenticated())
     console.log('data inform:', req.user)
     // Якщо користувач аутентифікований, відправте відповідь зі статусом 200 та об'єктом, що містить інформацію про аутентифікацію
-    res.status(200).json({ isAuthenticated: true, username:  req.user.username});
+    res.status(200).json({ isAuthenticated: true, username:  req.user.username, user_id: req.user.user_id});
   } else {
     console.log('користувач аутентифікований?', req.isAuthenticated())
     // Якщо користувач не аутентифікований, відправте відповідь зі статусом 401 (Unauthorized)

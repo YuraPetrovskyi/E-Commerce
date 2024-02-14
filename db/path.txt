@@ -1,0 +1,140 @@
+  Користувачі (Users):
+GET /api/users: Отримати список всіх користувачів.
+GET /api/users/:user_id: Отримати інформацію про конкретного користувача за його user_id.
+POST /api/register: Створити нового користувача.
+PUT /api/users/:user_id: Оновити інформацію про користувача за його user_id.
+DELETE /api/users/:user_id: Видалити користувача за його user_id.
+
+  Продукти (Products):
+GET /api/products: Отримати список всіх продуктів.
+GET /api/products/:product_id: Отримати інформацію про конкретний продукт за його product_id.
+POST /api/products: Додати новий продукт.
+PUT /api/products/:product_id: Оновити інформацію про продукт за його product_id.
+DELETE /api/products/:product_id: Видалити продукт за його product_id.
+
+  Кошики (Carts):
+GET /api/carts/:user_id: Отримати кошик користувача за його user_id.
+POST /api/carts/:user_id: Створити новий кошик для користувача за його user_id.
+PUT /api/carts/:cart_id: Оновити кошик за його cart_id.
+DELETE /api/carts/:cart_id: Видалити кошик за його cart_id.
+
+  Елементи кошика (Cart Items):
+GET /api/cart_items/:cart_id: Отримати список елементів кошика за cart_id.
+POST /api/cart_items/:cart_id: Додати товар до кошика за cart_id.
+PUT /api/cart_items/:cart_item_id: Оновити кількість товару в кошику за cart_item_id.
+DELETE /api/cart_items/:cart_item_id: Видалити елемент кошика за cart_item_id.
+
+  Замовлення (Orders):
+GET /api/orders/:user_id: Отримати список замовлень користувача за його user_id.
+POST /api/orders/:user_id: Створити нове замовлення для користувача за user_id.
+PUT /api/orders/:order_id: Оновити статус замовлення за order_id.
+
+  Елементи замовлення (Order Items):
+GET /api/order_items/:order_id: Отримати список товарів в замовленні за order_id.
+POST /api/order_items/:order_id: Додати товар до замовлення за order_id.
+PUT /api/order_items/:order_item_id: Оновити кількість товару в замовленні за order_item_id.
+DELETE /api/order_items/:order_item_id: Видалити товар з замовлення за order_item_id.
+
+=======================================
+Content-Type: application/json
+
+--------------- Users
+
+-- app.post('/api/register', db.createUser) 
+http://localhost:3000/api/users
+{
+  "username": "Yurii",
+  "email": "yurii@gmail.com",
+  "password": "777*888*99"
+}
+-- app.post('/api/login', db.createUser) 
+http://localhost:3000/api/login
+{
+  "username": "Yurii",
+  "password": "777*888*99"
+}
+-- app.put('/api/users/1', db.updateUser)
+http://localhost:3000/api/users/1
+{
+  "username": "Yura",
+  "email": "yura@gmail.com",
+  "password": "777*888"
+}
+
+-------------- Products
+
+-- app.get('/api/products/search', db_products.searchProductsName)
+http://localhost:3000/api/products/search?name=laptop
+
+-- app.post('/api/products', db.createProduct) 
+http://localhost:3000/api/products
+{
+  "name": "phone",
+  "description": "Xiaomi Note 12 PRO",
+  "price": "400",
+  "inventory": "20"
+}
+
+-- app.put('/api/products/:product_id', db.updateProduct) 
+http://localhost:3000/api/products/1
+{
+  "name": "phone",
+  "description": "Xiaomi Note 13 PRO",
+  "price": "400",
+  "inventory": "20"
+}
+
+------------------ Carts
+
+-- app.post('/api/carts/:user_id', db.createCarts)
+http://localhost:3000/api/carts/1
+  created by id without json!
+
+-- app.put('/api/carts/:cart_id', db.updateCarts)
+http://localhost:3000/api/carts/2
+{
+  "user_id": 2,
+  "created_at": "2023-10-19T12:00:00.000Z"
+}
+
+------------------ Cart Items
+
+--  app.post('/api/cart_items/:cart_id', db.createCartItemsByCartId) 
+http://localhost:3000/api/cart_items/1
+{
+  "product_id": 4,
+  "quantity": 7
+}
+
+--  app.put('/api/cart_items/:cart_item_id', db.createCartItemsByCartId) 
+http://localhost:3000/api/cart_items/1
+{
+  "quantity": 10
+}
+
+------------------ Orders
+
+-- app.post('/api/orders/:user_id', db.createOrder ) 
+http://localhost:3000/api/orders/2
+  created by id without json!
+
+-- app.put('/api/orders/:order_id', db.updateOrderStatus )
+http://localhost:3000/api/orders/8
+{
+  "status": "done"  // or "active"
+}
+
+------------------ Orders Items
+
+-- app.post('/api/order_items/:order_id', db.createOrderItem ) 
+http://localhost:3000/api/order_items/6
+{
+  "product_id": 6,
+  "quantity": 5
+}
+
+-- app.put('/api/order_items/:order_item_id', db.updateOrderItem )
+http://localhost:3000/api/order_items/6
+{
+  "quantity": 5
+}

@@ -1,9 +1,9 @@
-const { pool } = require('../db/pool');
+const { pool } = require('./pool');
 
 
 // Get information about a specific product by his product_id.
 const getCartItemsByUserId = (request, response) => {
-  createCartItemsByCartId
+  const cart_id = parseInt(request.params.cart_id)
 
   pool.query('SELECT * FROM cart_items WHERE cart_id = $1', [cart_id], (error, results) => {
     if (error) {

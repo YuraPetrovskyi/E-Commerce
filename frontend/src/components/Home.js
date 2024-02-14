@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Home.css';
 import Products from './Products';
+import Cart from './Cart';
 
 const Home = () => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
+  const [cartID, setCartId] = useState(null);
+
+  const [carts, setCart] = useState([]);
 
 
   useEffect(() => {
@@ -28,8 +32,10 @@ const Home = () => {
             credentials: 'include',
           });
           const profileData = await profileResponse.json();
+          console.log(profileData);
           setUser(profileData);
           setIsAuthenticated(true);
+          setCartId(profileData.user_id)
         } else {
           setIsAuthenticated(false);
         }
@@ -41,6 +47,22 @@ const Home = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/cart_items/${cartID}`);
+        const cartrespons = await response.json();
+        console.log('cartrespons: ', cartrespons);
+        setCart(cartrespons);
+      } catch (error) {
+        console.error('Error fetching product data:', error);
+      }
+    };
+
+    fetchData();
+  }, [cartID]);
+
 
   const handleLogout = async () => {
     try {
@@ -65,13 +87,17 @@ const Home = () => {
     }
   };
 
+  console.log(carts);
+
   return (
     <div>
       <div className="home-container">
         {isAuthenticated ? (
           <>
             <p>Welcome, {user?.username}!</p>
-            <button onClick={handleLogout}>Logout</button>          
+            <button onClick={handleLogout}>Logout</button>  
+            <Link to="/cart" >Cart ({carts.length})</Link>
+            {/* <Cart carts={carts}/>         */}
           </>
         ) : (
           <>

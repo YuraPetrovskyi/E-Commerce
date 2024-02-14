@@ -7,6 +7,9 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [user_id, setUserID] = useState(null);
+
 
   useEffect(() => {
     checkAuthentication();       
@@ -40,6 +43,7 @@ const ProductDetail = () => {
         console.log('data from respons: ', data)
         setUser(data.username);
         setIsAuthenticated(true);
+        setUserID(data.user_id)
       }
     } catch (error) {
       console.error('Error fetching checkAuthentication:', error);
@@ -50,14 +54,14 @@ const ProductDetail = () => {
     try {
       // Implement logic to add the product to the user's cart
       // You can make a request to the server to handle the cart update
-      // Example: await fetch(`http://localhost:3000/carts/${user_id}`, {
-      //   method: 'POST',
-      //   credentials: 'include',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({ product_id, quantity: 1 }),
-      // });
+      await fetch(`http://localhost:3000/cart_items/${user_id}`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ product_id, quantity }),
+      });
 
       console.log(`Product ${product.name} added to the cart!`);
     } catch (error) {
@@ -86,6 +90,12 @@ const ProductDetail = () => {
       <p>Inventory: {product.inventory}</p>
       {isAuthenticated ? (
           <>
+            <label htmlFor="quantity">Quantity:</label>
+            <select id="quantity" value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))}>
+              {[...Array(product.inventory).keys()].map((index) => (
+                <option key={index + 1} value={index + 1}>{index + 1}</option>
+              ))}
+            </select>
             <button onClick={handleAddToCart}>Add to Cart</button>       
           </>
         ) : (
@@ -104,71 +114,3 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
-
-
-// import React, { useState, useEffect } from 'react';
-// import { Link } from 'react-router-dom';
-// import './Products.css';
-
-// const Products = () => {
-//   const [products, setProducts] = useState([]);
-
-//   useEffect(() => {
-//     fetchProducts();
-//   }, []);
-
-//   const fetchProducts = async () => {
-//     try {
-//       const response = await fetch('http://localhost:3000/products');
-//       if (response.ok) {
-//         const data = await response.json();
-//         console.log(data)
-//         setProducts(data);
-//       }
-//     } catch (error) {
-//       console.error('Error fetching products:', error);
-//     }
-//   };
-
-//   const addToCart = async (productId) => {
-//     try {
-//       const response = await fetch('http://localhost:3000/add-to-cart', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({
-//           userId: 1, // Потрібно замінити на реальний ID користувача після автентифікації
-//           productId,
-//           quantity: 1, // Кількість товару, яку додаємо
-//         }),
-//       });
-
-//       if (response.ok) {
-//         console.log('Product added to cart successfully');
-//         // Тут можна додати оновлення стану корзини або інші дії
-//       }
-//     } catch (error) {
-//       console.error('Error adding to cart:', error);
-//     }
-//   };
-
-//   return (
-//     <div className="products-container">
-//       <h2>Products</h2>
-//       <div className="product-list">
-//         {products.map((product) => (
-//           <div key={product.product_id} className="product-card">
-//             <h3>{product.name}</h3>
-//             <p>{product.description}</p>
-//             <p>Price: ${product.price}</p>
-//             <p>Inventory: {product.inventory}</p>
-//             <button onClick={() => addToCart(product.product_id)}>Add to Cart</button>
-//           </div>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Products;
