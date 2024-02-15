@@ -76,15 +76,50 @@ const Cart = () => {
   console.log('cartID', cartID);
   // console.log('productsID', productsID);
   console.log('products', products);
-
   console.log('isAuthenticated', isAuthenticated);
+
+  const handleDelete = async (productId) => {
+    try {
+      // Знаходимо cart_item_id за product_id
+      const cartItem = cart.find((item) => item.product_id === productId);
+  
+      if (!cartItem) {
+        // Якщо відповідний товар не знайдено в корзині
+        console.error('Product not found in cart');
+        alert(`Product not found in cart`);
+        return;
+      }
+  
+      const cartItemId = cartItem.cart_item_id;
+  
+      // Відправляємо запит на видалення з сервера за допомогою cart_item_id
+      const deleteProduct = await fetch(`http://localhost:3000/cart_items/${cartItemId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+  
+      // Оновлюємо стан корзини
+      const updatedCart = cart.filter((item) => item.cart_item_id !== cartItemId);
+      setCart(updatedCart);
+      console.log('updatedCart', updatedCart)
+      console.log('cartItem', cartItem)
+      console.log('cartItemId', cartItemId)
+      // Оновлюємо стан корзини, видаляючи відповідний товар з масиву products
+      const updatedProducts = products.filter((product) => product[0].product_id !== productId);
+      setProducts(updatedProducts);
+      // Оновлюємо cartID, щоб спровокувати оновлення useEffect
+      setCartId(cartID);
+      alert(`Product with productId ${productId} and cartItemId ${cartItemId} was deleted`);
+    } catch (error) {
+      console.error('Error deleting product:', error);
+    }
+  };
+
 
   return (
     <div>
       {/* <Link to="/cart" >Cart ({cart.carts.length})</Link> */}
       <p>My Cart</p>
-
-
       {/* <p>products in cart: {cart[0].quantity}</p> */}
       <ul className='container'>
         {products.map((product) => (
@@ -94,6 +129,7 @@ const Cart = () => {
             <p>{product[0].quantity}</p>
 
             <Link to={`/products/${product[0].product_id}`}>More information</Link>
+            <button onClick={() => handleDelete(product[0].product_id)}>Delete</button>
           </li>
         ))}
       </ul>
