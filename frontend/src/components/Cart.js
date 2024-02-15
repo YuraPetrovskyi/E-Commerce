@@ -91,6 +91,8 @@ const Cart = () => {
           <li key={product[0].product_id}>
             <p>{product[0].name} {product[0].model}</p>
             <p>${product[0].price}</p>
+            <p>{product[0].quantity}</p>
+
             <Link to={`/products/${product[0].product_id}`}>More information</Link>
           </li>
         ))}

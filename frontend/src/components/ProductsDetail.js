@@ -9,6 +9,9 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [user_id, setUserID] = useState(null);
 
+  const [carts, setCart] = useState([]);
+  const [renue, setRenue] = useState(0);
+  
 
   useEffect(() => {
     checkAuthentication();       
@@ -42,14 +45,33 @@ const ProductDetail = () => {
         console.log('data from respons: ', data)
         setUser(data.username);
         setIsAuthenticated(true);
-        setUserID(data.user_id)
+        setUserID(data.user_id);
       }
     } catch (error) {
       console.error('Error fetching checkAuthentication:', error);
     }
-  }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`http://localhost:3000/cart_items/${user_id}`);
+        const cartrespons = await response.json();
+        console.log('cartrespons: ', cartrespons);
+        setCart(cartrespons);
+        
+      } catch (error) {
+        console.error('Error fetching product data:', error);
+      }
+    };
+
+    fetchData();
+  }, [user_id, renue]);
+  console.log('carts', carts);
+
 
   const handleAddToCart = async () => {
+    
     try {
       // Implement logic to add the product to the user's cart
       // You can make a request to the server to handle the cart update
@@ -63,7 +85,9 @@ const ProductDetail = () => {
       });
 
       console.log(`Product ${product.name} ${product.model} added to the cart!`);
-      alert(`${quantity} of product ${product.name} ${product.model} added to the cart!`)
+      alert(`${quantity} of product ${product.name} ${product.model} added to the cart!`);
+      setQuantity(1);
+      setRenue(1);
     } catch (error) {
       console.error('Error adding product to the cart:', error);
     }
@@ -77,7 +101,8 @@ const ProductDetail = () => {
     <div>
       {isAuthenticated ? (
           <>
-            <p>Welcome, {user}!</p>         
+            <p>Welcome, {user}!</p>  
+            <Link to="/cart" >Cart ({carts.length})</Link>
           </>
         ) : (
           <>

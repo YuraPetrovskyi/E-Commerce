@@ -35,7 +35,7 @@ const Home = () => {
           console.log(profileData);
           setUser(profileData);
           setIsAuthenticated(true);
-          setCartId(profileData.user_id)
+          setCartId(profileData.user_id);
         } else {
           setIsAuthenticated(false);
         }
