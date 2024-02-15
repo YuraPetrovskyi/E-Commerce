@@ -57,7 +57,7 @@ const ProductDetail = () => {
       try {
         const response = await fetch(`http://localhost:3000/cart_items/${user_id}`);
         const cartrespons = await response.json();
-        console.log('cartrespons: ', cartrespons);
+        console.log('carts: ', cartrespons);
         setCart(cartrespons);
         
       } catch (error) {
@@ -71,10 +71,18 @@ const ProductDetail = () => {
 
 
   const handleAddToCart = async () => {
-    
     try {
-      // Implement logic to add the product to the user's cart
-      // You can make a request to the server to handle the cart update
+      // Перевірка, чи є товар з таким самим product_id в корзині
+    const existingCartItem = carts.find((item) => item.product_id === product.product_id);
+    
+    if (existingCartItem) {
+      // Якщо товар вже є в корзині, виводимо повідомлення користувачу та пропонуємо перейти до корзини
+      alert(`Product ${product.name} ${product.model} is already in the cart!`);
+      return;
+    }
+
+    // Якщо товар відсутній в корзині, відправляємо запит на сервер для додавання його в корзину
+    
       await fetch(`http://localhost:3000/cart_items/${user_id}`, {
         method: 'POST',
         credentials: 'include',
