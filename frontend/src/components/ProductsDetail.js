@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import Login from './Login';
 
 const ProductDetail = () => {
   const { product_id } = useParams();
@@ -63,7 +62,8 @@ const ProductDetail = () => {
         body: JSON.stringify({ product_id, quantity }),
       });
 
-      console.log(`Product ${product.name} added to the cart!`);
+      console.log(`Product ${product.name} ${product.model} added to the cart!`);
+      alert(`${quantity} of product ${product.name} ${product.model} added to the cart!`)
     } catch (error) {
       console.error('Error adding product to the cart:', error);
     }

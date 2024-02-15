@@ -7,6 +7,8 @@ const Cart = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [cart, setCart] = useState([]);
   const [cartID, setCartId] = useState(null);
+  // const [productsID, setProductsId] = useState([]);
+  const [products, setProducts] = useState([]); 
 
 
   useEffect(() => {
@@ -48,9 +50,19 @@ const Cart = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(`http://localhost:3000/cart_items/${cartID}`);
-        const cartrespons = await response.json();
-        console.log('cartrespons: ', cartrespons);
-        setCart(cartrespons);
+        const cartData  = await response.json();
+        console.log('cartData : ', cartData );
+        setCart(cartData );
+
+        // Отримання даних про кожен продукт у корзині та оновлення стану products
+        const productPromises = cartData.map(async (item) => {
+          const productResponse = await fetch(`http://localhost:3000/products/${item.product_id}`);
+          return productResponse.json();
+        });
+        
+        Promise.all(productPromises).then((productData) => {
+          setProducts(productData);
+        });
       } catch (error) {
         console.error('Error fetching product data:', error);
       }
@@ -62,6 +74,8 @@ const Cart = () => {
   console.log('user', user);
   console.log('cart', cart);
   console.log('cartID', cartID);
+  // console.log('productsID', productsID);
+  console.log('products', products);
 
   console.log('isAuthenticated', isAuthenticated);
 
@@ -69,19 +83,18 @@ const Cart = () => {
     <div>
       {/* <Link to="/cart" >Cart ({cart.carts.length})</Link> */}
       <p>My Cart</p>
-      
+
 
       {/* <p>products in cart: {cart[0].quantity}</p> */}
-      {/* <ul className='container'>
-        {cart.map((carts) => (
-          <li key={carts.product_id}>
-            <p>{carts.name}</p>
-            <p>{carts.model}</p>
-            <p>Price: ${carts.price}</p>
-            <Link to={`/products/${product.product_id}`}>More information</Link>
+      <ul className='container'>
+        {products.map((product) => (
+          <li key={product[0].product_id}>
+            <p>{product[0].name} {product[0].model}</p>
+            <p>${product[0].price}</p>
+            <Link to={`/products/${product[0].product_id}`}>More information</Link>
           </li>
         ))}
-      </ul> */}
+      </ul>
     </div>
   );
 };
