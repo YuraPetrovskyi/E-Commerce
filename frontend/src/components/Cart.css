@@ -1,0 +1,68 @@
+/* Cart.css */
+
+.container-home {
+  margin: 10px 30%;
+}
+.container-cart {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3px; /* Відступ між елементами */
+}
+
+.container-items {
+  margin: 3px;
+  border: 1px solid #ccc;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  width: calc(90% - 10px); /* Ширина елемента - половина відступу між елементами */
+}
+
+.container-price {
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+  align-items: center;
+}
+.container-price p {
+  margin-right: 3px;
+}
+.product-info {
+  display: flex;
+  justify-content: left;
+}
+.subtotal {
+  margin: 0;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-control select {
+  margin-right: 10px;
+}
+
+.checkout-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  font-size: 16px;
+  margin-top: 10px;
+  margin: 5px auto;
+  cursor: pointer;
+}
+
+.checkout-button:hover {
+  background-color: #45a049;
+}

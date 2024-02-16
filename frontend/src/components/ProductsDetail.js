@@ -109,6 +109,7 @@ const ProductDetail = () => {
     <div>
       {isAuthenticated ? (
           <>
+            <Link to="/">Home</Link>
             <p>Welcome, {user}!</p>  
             <Link to="/cart" >Cart ({carts.length})</Link>
           </>
