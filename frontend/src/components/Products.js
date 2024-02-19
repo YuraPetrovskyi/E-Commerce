@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './Products.css'
+import './Products.css';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -25,6 +25,7 @@ const Products = () => {
       <ul className='container'>
         {products.map((product) => (
           <li key={product.product_id}>
+            <img src={product.image_url} alt={product.name} />
             <p>{product.name}</p>
             <p>{product.model}</p>
             <p>Price: ${product.price}</p>

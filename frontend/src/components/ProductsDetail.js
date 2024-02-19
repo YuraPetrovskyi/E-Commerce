@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import './ProductsDetail.css';
 
 const ProductDetail = () => {
   const { product_id } = useParams();
@@ -106,43 +107,62 @@ const ProductDetail = () => {
   }
 
   return (
-    <div>
+    <div className="product-detail-container">
       {isAuthenticated ? (
-          <>
-            <Link to="/">Home</Link>
-            <p>Welcome, {user}!</p>  
-            <Link to="/cart" >Cart ({carts.length})</Link>
-          </>
+        <div className="auth-container">
+          <Link className='container-home' to="/">Home</Link>
+          <p>Welcome, {user}!</p>
+          <Link to="/cart">Cart ({carts.length})</Link>
+        </div>
+      ) : (
+        <div className="auth-container">
+          <h3>If you want to buy this item, please login.</h3>
+          <Link to="/login">
+            <button>Login</button>
+          </Link>
+          <Link to="/register">
+            <button>Register</button>
+          </Link>
+        </div>
+      )}
+      <div className="product-detail">
+        <div className="product-image">
+          <img src={product.image_url} alt={product.name} />
+        </div>    
+
+        <div className="product-info">
+          <p>{product.name}</p>
+          <div  className="product-name">            
+            <p>Model:</p>
+            <p>{product.model}</p>
+          </div>
+          <div className="product-name">
+            <p>Description:</p>
+            <p>{product.description}</p>
+          </div>
+          <div className="product-name">
+            <p>Price: ${product.price}</p> 
+          </div>    
+        </div>        
+      </div>
+      <div>
+        {product.inventory > 10 ? (
+          <p>This product is in stock</p>
         ) : (
-          <>
-          </>
+          <p>This product is almost out of stock</p>
         )}
-      <h2>{product.name}</h2>
-      <p>Model: {product.model}</p>
-      <p>Description: {product.description}</p>
-      <p>Price: ${product.price}</p>
-      <p>Inventory: {product.inventory}</p>
-      {isAuthenticated ? (
-          <>
-            <label htmlFor="quantity">Quantity:</label>
-            <select id="quantity" value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))}>
-              {[...Array(product.inventory).keys()].map((index) => (
-                <option key={index + 1} value={index + 1}>{index + 1}</option>
-              ))}
-            </select>
-            <button onClick={handleAddToCart}>Add to Cart</button>       
-          </>
-        ) : (
-          <>
-            <h3>If you want to bay this item? you need to  login</h3>      
-            <Link to="/login">
-              <button>Login</button>
-            </Link>
-            <Link to="/register">
-              <button>Register</button>
-            </Link>
-          </>
-        )}
+        {isAuthenticated && (
+              <div className="add-to-cart">
+                <label htmlFor="quantity">Quantity:</label>
+                <select id="quantity" value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))}>
+                  {[...Array(product.inventory).keys()].map((index) => (
+                    <option key={index + 1} value={index + 1}>{index + 1}</option>
+                  ))}
+                </select>
+                <button onClick={handleAddToCart}>Add to Cart</button>
+              </div>
+            )}
+      </div>      
     </div>
   );
 };

@@ -159,12 +159,14 @@ const Cart = () => {
     }
   };
 
-  // Cart.js
+  const handleCheckout = async () => {
+    
+  }
 
 return (
   <div>
     <Link className='container-home' to="/">Home</Link>
-    <p>My Cart</p>
+    <p>My basket</p>
     <ul className='container-cart'>
       {products.map((product, index) => {
         const item = cart[index];
@@ -199,7 +201,7 @@ return (
       })}
     </ul>
     <p className="total-price">Total Price: ${totalPrice.toFixed(2)}</p>
-    <button className="checkout-button">Proceed to Checkout</button>
+    <button className="checkout-button" onClick={() => handleCheckout()}>Proceed to Checkout</button>
   </div>
 );
 
