@@ -168,7 +168,17 @@ app.get('/check-auth', (req, res) => {
   app.put('/cart_items/:cart_item_id', db_cart_items.updateCartItemByCartItemId);
   app.delete('/cart_items/:cart_item_id', db_cart_items.deleteCartItemByCartItemId);
   
+    // 5 Orders
+  app.get('/orders/:user_id', db_orders.getOrders );
+  app.post('/orders/:user_id', db_orders.createOrder ); 
+  app.put('/orders/:order_id', db_orders.updateOrderStatus );
+  app.delete('/orders/:order_id', db_orders.deleteOrder);
 
+    // 6 Order Items
+  app.get('/order_items/:order_id', db_order_items.getOrderItems );
+  app.post('/order_items/:order_id', db_order_items.createOrderItem ); 
+  app.put('/order_items/:order_item_id', db_order_items.updateOrderItem );
+  app.delete('/order_items/:order_item_id', db_order_items.deleteOrderItem);
 
 app.get('/profile', ensureAuthenticated, (req, res) => {
   const user = req.user;

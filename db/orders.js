@@ -52,6 +52,7 @@ const createOrder = (request, response) => {
               Promise.all(orderItemsPromises).then(() => {
                 response.status(201).send(`Замовлення створено з ID: ${orderId}`);
               }).catch((orderItemsError) => {
+                console.log(`Помилка під час створення записів order_items: ${orderItemsError}`)
                 response.status(500).send('Помилка під час створення записів order_items');
               });
             }

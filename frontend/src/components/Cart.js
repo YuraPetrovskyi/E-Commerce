@@ -167,6 +167,7 @@ return (
   <div>
     <Link className='container-home' to="/">Home</Link>
     <p>My basket</p>
+    <Link className='container-home' to="/history">Order history</Link>
     <ul className='container-cart'>
       {products.map((product, index) => {
         const item = cart[index];
