@@ -28,7 +28,7 @@ const Products = () => {
             <img src={product.image_url} alt={product.name} />
             <p>{product.name}</p>
             <p>{product.model}</p>
-            <p>Price: ${product.price}</p>
+            <p>$ {product.price}</p>
             <Link to={`/products/${product.product_id}`}>More information</Link>
           </li>
         ))}

@@ -50,14 +50,17 @@ const Home = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await fetch(`http://localhost:3000/cart_items/${cartID}`);
-        const cartrespons = await response.json();
-        console.log('cartrespons: ', cartrespons);
-        setCart(cartrespons);
-      } catch (error) {
-        console.error('Error fetching product data:', error);
-      }
+      if (cartID) {
+        try {
+          const response = await fetch(`http://localhost:3000/cart_items/${cartID}`);
+          const cartrespons = await response.json();
+          console.log('response: ', response);
+          console.log('cartrespons: ', cartrespons);
+          setCart(cartrespons);
+        } catch (error) {
+          console.error('Error fetching product data:', error);
+        }
+      };      
     };
 
     fetchData();
@@ -93,12 +96,14 @@ const Home = () => {
     <div>
       <div className="home-container">
         {isAuthenticated ? (
-          <>
+          <div className='navigation'>
             <p>Welcome, {user?.username}!</p>
             <button onClick={handleLogout}>Logout</button>  
-            <Link to="/cart" >Cart ({carts.length})</Link>
-            {/* <Cart carts={carts}/>         */}
-          </>
+            <Link to="/cart" className='cart-container'>
+              <img src="/images/shopping.png" alt="shopping-cart-icon" />
+              <span className='cart-count'>{carts.length}</span>
+          </Link>
+          </div>
         ) : (
           <>
             <p>Please sign in or register.</p>

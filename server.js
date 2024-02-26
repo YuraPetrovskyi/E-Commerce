@@ -4,7 +4,10 @@ const passport = require('passport');
 // const authConfig = require('./config/auth');
 const cors = require('cors'); 
 
+
 require('dotenv').config();
+const createCheckoutSession = require('./config/checkout'); //for stripe
+
 
 const db_users = require('./db/users');
 const db_products = require('./db/products');
@@ -179,6 +182,9 @@ app.get('/check-auth', (req, res) => {
   app.post('/order_items/:order_id', db_order_items.createOrderItem ); 
   app.put('/order_items/:order_item_id', db_order_items.updateOrderItem );
   app.delete('/order_items/:order_item_id', db_order_items.deleteOrderItem);
+
+// Stripe 
+app.post('/create-checkout-session', createCheckoutSession);
 
 app.get('/profile', ensureAuthenticated, (req, res) => {
   const user = req.user;

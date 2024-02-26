@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-// import './Cart.css';
+import './Orders.css';
 
 const Orders = () => {
   const [user, setUser] = useState(null);
@@ -54,7 +54,7 @@ const Orders = () => {
           method: 'GET',
           credentials: 'include',
         });
-      if (response.ok) {
+      if (response.ok) {        
         const dataOrders = await response.json();
         console.log('my orders:', dataOrders);
         setOrders(dataOrders);
@@ -72,16 +72,32 @@ const Orders = () => {
 
   return (
     <div>
-      <Link className='container-home' to="/">Home</Link>
-      <p>My  order history</p> 
-      <Link className='container-home' to="/cart">Back to cart</Link>
-      <ul className='container'>
+      <div className='navigation'>
+        <Link  to="/"><button>Home</button></Link>
+        <h2>My  order history</h2> 
+        <Link to="/cart"><button>Basket</button></Link>
+      </div>
+      
+      <ul className='container-order'>
         {orders.map((order) => (
-          <li key={order.order_id}>
-            <p>Total amount: ${order.total_amount}</p>
-            <p>Date of order: ${order.order_date}</p>
-            <p>Order ID: {order.order_id}</p>
-            <Link to={`/order/${order.order_id}`}>More information</Link>
+          <li key={order.order_id} className='order-list'>
+            
+            <p>Date: {new Date(order.order_date).toLocaleString()}</p>
+            {/* <p>Order ID: {order.order_id}</p> */}
+            <Link to={`/order_items/${order.order_id}`}>More...</Link>
+            <p>Total: $ {order.total_amount}</p>
+            {/* <p>Status: {order.status}</p> */}
+            <div>{order.status ? (
+                    <p>Status: {order.status}</p>
+                  ) : (
+                    <p>Status: unpaid</p> 
+                  )}
+            </div>
+            {order.status ? (
+                    <p></p>
+                  ) : (
+                    <button>Pay</button> 
+                  )}
           </li>
         ))}
       </ul>

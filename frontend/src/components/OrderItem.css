@@ -1,0 +1,16 @@
+.container-oreder-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.oreder-item-list {
+  display: flex;
+  flex-direction: row;
+  width: 90%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.img-container {
+  max-width: 50px;
+}

@@ -4,7 +4,7 @@
   "description": "e-commerce",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nodemon server.js"
   },
   "author": "Yurii Petrovskyi",
   "license": "ISC",
@@ -19,6 +19,7 @@
     "passport-github": "^1.1.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
-    "pg": "^8.11.3"
+    "pg": "^8.11.3",
+    "stripe": "^14.18.0"
   }
 }

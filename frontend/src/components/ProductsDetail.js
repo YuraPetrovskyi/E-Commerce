@@ -110,9 +110,12 @@ const ProductDetail = () => {
     <div className="product-detail-container">
       {isAuthenticated ? (
         <div className="auth-container">
-          <Link className='container-home' to="/">Home</Link>
+          <Link  to="/"><button>Home</button></Link>
           <p>Welcome, {user}!</p>
-          <Link to="/cart">Cart ({carts.length})</Link>
+          <Link to="/cart" className='cart-container'>
+            <img src="/images/shopping.png" alt="shopping-cart-icon" />
+            <span className='cart-count'>{carts.length}</span>
+          </Link>
         </div>
       ) : (
         <div className="auth-container">

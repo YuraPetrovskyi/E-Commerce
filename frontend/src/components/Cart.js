@@ -8,13 +8,14 @@ const Cart = () => {
   const [cart, setCart] = useState([]);
   const [cartID, setCartId] = useState(null);
   const [products, setProducts] = useState([]); 
-
   const [totalPrice, setTotalPrice] = useState(0);
+  const [cartEmpty, setCartEmpty] = useState('');
+  
 
   // ============================= Отримання даних про користувача
   useEffect(() => {
     const fetchData = async () => {
-      console.log('startet Home before fitch')
+      console.log('startet Cart before fitch')
       console.log(isAuthenticated)
       try {        
         const authResponse = await fetch('http://localhost:3000/check-auth', {
@@ -47,29 +48,44 @@ const Cart = () => {
     fetchData();
   }, []);
 
-  // ============================= Отримання даних про товари у корзині
-  useEffect(() => {
+  useEffect(() => {    
     const fetchData = async () => {
       try {
+        if (!cartID) return;
+  
         const response = await fetch(`http://localhost:3000/cart_items/${cartID}`);
-        const cartData  = await response.json();
+        
+        // Перевіряємо, чи відповідь вдала
+        if (!response.ok) {
+          if (response.status === 404) {
+            // Відобразити повідомлення, якщо корзина порожня
+            setCartEmpty('Your basket is empty :)');
+            // alert('Your basket is empty :)');
+          } else {
+            // Інші статуси можуть сигналізувати про помилку на сервері або інші проблеми
+            console.error('Unexpected response status:', response.status);
+          }
+          return;
+        }
+  
+        // Отримуємо дані корзини
+        const cartData = await response.json();
         console.log('cartData : ', cartData );
-        setCart(cartData );
-
-        // Отримання даних про кожен продукт у корзині та оновлення стану products
+        setCart(cartData);
+        
+        // Отримуємо дані про кожен продукт у корзині та оновлюємо стан products
         const productPromises = cartData.map(async (item) => {
           const productResponse = await fetch(`http://localhost:3000/products/${item.product_id}`);
           return productResponse.json();
-        });
+        });          
         
-        Promise.all(productPromises).then((productData) => {
-          setProducts(productData);
-        });
+        const productData = await Promise.all(productPromises);
+        setProducts(productData);
       } catch (error) {
         console.error('Error fetching product data:', error);
       }
     };
-
+  
     fetchData();
   }, [cartID]);
 
@@ -160,14 +176,38 @@ const Cart = () => {
   };
 
   const handleCheckout = async () => {
-    
-  }
+    try {
+      const featch_heckout = await fetch(`http://localhost:3000/orders/${cartID}`, {
+            method: 'POST',
+            credentials: 'include',
+          });
+      console.log(featch_heckout);
+      if (featch_heckout.ok) {
+        console.log('featch_heckout.ok : ', featch_heckout.ok);
+        setProducts([]);
+        setCartEmpty('');
+        setCartId(cartID);// Оновлюємо cartID, щоб спровокувати оновлення useEffect 
+        alert(`Замовлення створено`);        
+      } else {
+        alert(`Помилка при створенні ордеру!`);
+      } 
+    } catch (error) {
+      console.error('Error during checkout:', error);
+    }
+  };
 
 return (
   <div>
-    <Link className='container-home' to="/">Home</Link>
-    <p>My basket</p>
-    <Link className='container-home' to="/history">Order history</Link>
+    <div className='navigation'>
+      <Link to="/"><button utton>Home</button></Link>
+      <h2>My basket</h2>      
+      <Link to="/orders"><button>My orders</button></Link>
+    </div>
+    <p>{cartEmpty ? (
+            <h3>{cartEmpty}</h3>
+          ) : (
+            <p></p>
+          )}</p>    
     <ul className='container-cart'>
       {products.map((product, index) => {
         const item = cart[index];
@@ -201,8 +241,17 @@ return (
         );
       })}
     </ul>
-    <p className="total-price">Total Price: ${totalPrice.toFixed(2)}</p>
-    <button className="checkout-button" onClick={() => handleCheckout()}>Proceed to Checkout</button>
+    <div>{cartEmpty ? (
+            <p></p>
+          ) : (
+            <div>
+              <p className="total-price">Total Price: ${totalPrice.toFixed(2)}</p>
+              <button className="checkout-button" onClick={() => handleCheckout()}>Proceed to Checkout</button>
+            </div>
+          )}
+    </div> 
+    {/* <p className="total-price">Total Price: ${totalPrice.toFixed(2)}</p> */}
+    
   </div>
 );
 

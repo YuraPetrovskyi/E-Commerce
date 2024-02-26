@@ -7,8 +7,11 @@
 
 .auth-container {
   margin-bottom: 20px;
+  display: flex;  
 }
-
+.auth-container p {
+  margin-left: 20px;
+}
 .product-detail {
   display: flex;
   align-items: flex-start;

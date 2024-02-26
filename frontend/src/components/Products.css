@@ -3,7 +3,7 @@ li {
   flex-direction: column; /* Встановлюємо напрямок колонки */
   border: 1px solid #ccc; /* Додаємо рамку */
   border-radius: 5px; /* Закруглюємо кути */
-  padding: 10px; /* Додаємо відступи */
+  padding: 5px; /* Додаємо відступи */
   margin: 10px; /* Додаємо зовнішні відступи */
   width: 200px; /* Задаємо ширину карточки */
 }
@@ -21,4 +21,6 @@ li p {
 .container {
   display: flex; /* Встановлюємо елементи в один рядок */
   flex-wrap: wrap;
+  padding-left: 5%;
+  margin: 0 auto;
 }
