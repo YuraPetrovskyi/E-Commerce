@@ -199,15 +199,15 @@ const Cart = () => {
 return (
   <div>
     <div className='navigation'>
-      <Link to="/"><button utton>Home</button></Link>
+      <Link to="/"><button >Home</button></Link>
       <h2>My basket</h2>      
       <Link to="/orders"><button>My orders</button></Link>
     </div>
-    <p>{cartEmpty ? (
+    <div>{cartEmpty ? (
             <h3>{cartEmpty}</h3>
           ) : (
-            <p></p>
-          )}</p>    
+            <h3></h3>
+          )}</div>    
     <ul className='container-cart'>
       {products.map((product, index) => {
         const item = cart[index];
@@ -246,7 +246,7 @@ return (
           ) : (
             <div>
               <p className="total-price">Total Price: ${totalPrice.toFixed(2)}</p>
-              <button className="checkout-button" onClick={() => handleCheckout()}>Proceed to Checkout</button>
+              <button className="checkout-button" onClick={() => handleCheckout()}>Create an order</button>
             </div>
           )}
     </div> 

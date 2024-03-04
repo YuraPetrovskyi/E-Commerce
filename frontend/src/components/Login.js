@@ -119,9 +119,9 @@ const Login = () => {
       <div>
         <h2>Hey there!</h2>
         <p>You'll be redirected to Google to login to your account!</p>
-        <a role="button" class="button" href="http://localhost:3000/auth/google">Login with Google</a>
+        <a role="button" className="button" href="http://localhost:3000/auth/google">Login with Google</a>
         {/* <br/>
-        <a href="http://localhost:3000/auth/facebook" class="button">Login with Facebook</a> */}
+        <a href="http://localhost:3000/auth/facebook" className="button">Login with Facebook</a> */}
       </div>
     </div>
   );

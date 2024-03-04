@@ -1,12 +1,14 @@
 const express = require('express');
+const cors = require('cors'); 
 const session = require('express-session');
 const passport = require('passport');
-// const authConfig = require('./config/auth');
-const cors = require('cors'); 
-
-
 require('dotenv').config();
+const secret = process.env.secret;
+
+// const authConfig = require('./config/auth');
+
 const createCheckoutSession = require('./config/checkout'); //for stripe
+const webhook = require('./config/webhook');
 
 
 const db_users = require('./db/users');
@@ -24,11 +26,17 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use(express.json()); //Цей рядок дозволяє обробляти запити, які мають тип application/json
+// app.use(express.json()); //Цей рядок дозволяє обробляти запити, які мають тип application/json
 app.use(express.urlencoded({ extended: false })); //Цей рядок дозволяє обробляти запити, які мають тип application/x-www-form-urlencoded
+app.use(express.json({
+  verify: (req, res, buffer) => req['rawBody'] = buffer,
+}))
+// // Використання отриманого buffer
+// app.use((req, res, next) => {
+//   console.log('Raw body:', req.rawBody);
+//   next();
+// });
 
-require('dotenv').config();
-const secret = process.env.secret;
 app.use(
   session({ 
     secret: secret, 
@@ -174,7 +182,7 @@ app.get('/check-auth', (req, res) => {
     // 5 Orders
   app.get('/orders/:user_id', db_orders.getOrders );
   app.post('/orders/:user_id', db_orders.createOrder ); 
-  app.put('/orders/:order_id', db_orders.updateOrderStatus );
+  app.put('/orders/:order_id', db_orders.updateOrderStatus);
   app.delete('/orders/:order_id', db_orders.deleteOrder);
 
     // 6 Order Items
@@ -186,6 +194,10 @@ app.get('/check-auth', (req, res) => {
 // Stripe 
 app.post('/create-checkout-session', createCheckoutSession);
 
+app.post('/webhook', webhook);
+
+
+// Addition
 app.get('/profile', ensureAuthenticated, (req, res) => {
   const user = req.user;
   res.json(user);
@@ -195,6 +207,7 @@ app.get('/bad', (req, res) => {
   res.send('bad autorization!!');
 });
 
+// lisener server
 app.listen(port, () => {
   console.log(`Сервер запущено на порті ${port}`);
 });

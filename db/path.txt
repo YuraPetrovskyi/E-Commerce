@@ -121,7 +121,7 @@ http://localhost:3000/api/orders/2
 -- app.put('/api/orders/:order_id', db.updateOrderStatus )
 http://localhost:3000/api/orders/8
 {
-  "status": "done"  // or "active"
+  "status": "Paid"  // or "active"
 }
 
 ------------------ Orders Items

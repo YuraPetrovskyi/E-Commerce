@@ -72,8 +72,10 @@ const updateOrderStatus = (request, response) => {
       response.status(500).send('Internal Server Error');
     } else {
       if (results.rows.length > 0) {
+        console.log(`The status of the order with id: ${results.rows[0].order_id} has been changed to ${results.rows[0].status}`);
         response.status(200).send(`The status of the order with id: ${results.rows[0].order_id} has been changed to ${results.rows[0].status}`);
       } else {
+        console.log(`Order with id ${order_id} not found`);
         response.status(404).send(`Order with id ${order_id} not found`);
       }
     }

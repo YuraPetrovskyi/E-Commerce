@@ -5,11 +5,11 @@ import './Orders.css';
 const Orders = () => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [cart, setCart] = useState([]);
+  // const [cart, setCart] = useState([]);
   const [userID, setUserId] = useState(null);
   const [orders, setOrders] = useState([]); 
 
-  const [totalPrice, setTotalPrice] = useState(0);
+  // const [totalPrice, setTotalPrice] = useState(0);
 
   // ============================= Отримання даних про користувача
   useEffect(() => {
@@ -82,7 +82,7 @@ const Orders = () => {
         {orders.map((order) => (
           <li key={order.order_id} className='order-list'>
             
-            <p>Date: {new Date(order.order_date).toLocaleString()}</p>
+            <p>{new Date(order.order_date).toLocaleString()}</p>
             {/* <p>Order ID: {order.order_id}</p> */}
             <Link to={`/order_items/${order.order_id}`}>More...</Link>
             <p>Total: $ {order.total_amount}</p>
@@ -95,8 +95,10 @@ const Orders = () => {
             </div>
             {order.status ? (
                     <p></p>
-                  ) : (
-                    <button>Pay</button> 
+                  ) : (                    
+                    <Link to={`/checkout/${order.order_id}`}>
+                      <button>Checkout Summary</button>
+                    </Link>
                   )}
           </li>
         ))}
