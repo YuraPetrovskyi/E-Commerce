@@ -101,10 +101,9 @@ app.get('/auth/google/callback',
 //   });
 
 app.get('/', ensureAuthenticated, (req, res) => {  
-  console.log('користувач автентифікований: ', req.isAuthenticated())
-  console.log('session get method ', req.session)
-  console.log('req method contains user: ', req.user)
-  res.send(`Привіт, це мій перший сервер на Node.js і Express!`);
+  console.log('користувач автентифікований: ', req.isAuthenticated());
+  console.log('session get method ', req.session);
+  console.log('req method contains user: ', req.user);
 });
 
 
@@ -146,17 +145,29 @@ app.get('/admin', ensureAuthenticated, (req, res) => {
 
 app.post('/register', db_users.createUser);
 
-app.get('/check-auth', (req, res) => {
+// app.get('/check-auth', ensureAuthenticated, (req, res) => {
+//   if (req.isAuthenticated()) {
+//     console.log('користувач аутентифікований :', req.isAuthenticated())
+//     console.log('data inform:', req.user)
+//     // Якщо користувач аутентифікований, відправте відповідь зі статусом 200 та об'єктом, що містить інформацію про аутентифікацію
+//     res.status(200).json({ isAuthenticated: true, username:  req.user.username, user_id: req.user.user_id});
+//   } else {
+//     console.log('користувач неаутентифікований, результат: ', req.isAuthenticated())
+//     // Якщо користувач не аутентифікований, відправте відповідь зі статусом 401 (Unauthorized)
+//     res.status(401).json({ isAuthenticated: false });
+//   }
+// });
+function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
-    console.log('користувач аутентифікований?', req.isAuthenticated())
-    console.log('data inform:', req.user)
-    // Якщо користувач аутентифікований, відправте відповідь зі статусом 200 та об'єктом, що містить інформацію про аутентифікацію
-    res.status(200).json({ isAuthenticated: true, username:  req.user.username, user_id: req.user.user_id});
-  } else {
-    console.log('користувач аутентифікований?', req.isAuthenticated())
-    // Якщо користувач не аутентифікований, відправте відповідь зі статусом 401 (Unauthorized)
-    res.status(401).json({ isAuthenticated: false });
+    return next();
   }
+  console.log('you are not registreted');
+  res.sendStatus(401);
+}
+
+app.get('/check-auth', ensureAuthenticated, (req, res) => {
+  console.log('користувач аутентифікований :', req.isAuthenticated());
+  res.status(200).json({ isAuthenticated: true, username:  req.user.username, user_id: req.user.user_id});
 });
 
   // 2 PRODUCTS
@@ -180,16 +191,16 @@ app.get('/check-auth', (req, res) => {
   app.delete('/cart_items/:cart_item_id', db_cart_items.deleteCartItemByCartItemId);
   
     // 5 Orders
-  app.get('/orders/:user_id', db_orders.getOrders );
-  app.post('/orders/:user_id', db_orders.createOrder ); 
-  app.put('/orders/:order_id', db_orders.updateOrderStatus);
-  app.delete('/orders/:order_id', db_orders.deleteOrder);
+  app.get('/orders/:user_id', ensureAuthenticated, db_orders.getOrders );
+  app.post('/orders/:user_id', ensureAuthenticated, db_orders.createOrder ); 
+  app.put('/orders/:order_id', ensureAuthenticated, db_orders.updateOrderStatus);
+  app.delete('/orders/:order_id', ensureAuthenticated, db_orders.deleteOrder);
 
     // 6 Order Items
-  app.get('/order_items/:order_id', db_order_items.getOrderItems );
-  app.post('/order_items/:order_id', db_order_items.createOrderItem ); 
-  app.put('/order_items/:order_item_id', db_order_items.updateOrderItem );
-  app.delete('/order_items/:order_item_id', db_order_items.deleteOrderItem);
+  app.get('/order_items/:order_id', ensureAuthenticated, db_order_items.getOrderItems );
+  app.post('/order_items/:order_id', ensureAuthenticated, db_order_items.createOrderItem ); 
+  app.put('/order_items/:order_item_id', ensureAuthenticated, db_order_items.updateOrderItem );
+  app.delete('/order_items/:order_item_id', ensureAuthenticated, db_order_items.deleteOrderItem);
 
 // Stripe 
 app.post('/create-checkout-session', createCheckoutSession);
@@ -213,10 +224,3 @@ app.listen(port, () => {
 });
 
 
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  console.log('you are not registreted')
-  res.redirect('/bad');
-}

@@ -1,7 +1,29 @@
-.container-order {
+
+.orders-container {
+  margin: 10px;
+  align-items: center;
+}
+.orders-ul-container a {
+  color: inherit; /* Застосувати колір, визначений для батьківського елементу */
+}
+.orders-ul-container a:visited {
+  color: inherit; /* Застосувати колір, визначений для батьківського елементу */
+  text-decoration: none; /* Забрати підкреслення */  
+}
+.orders-ul-container a:hover {
+  color: rgb(8, 188, 155);
+}
+.orders-ul-container {
   display: flex;
   flex-direction: column;
-  color: rgb(108, 111, 110);
+  align-items: center;
+}
+.orders-ul-container {
+  margin: 0;
+  padding: 0;
+}
+.orders-container button{
+  max-width: 90px;
 }
 
 .order-list {
@@ -9,8 +31,32 @@
   flex-direction: row;
   width: 95%;
   align-items: center;
-  margin-right: 20px;
   justify-content: space-around;
-  margin: 2px;
+  margin: 3px;
 }
 
+.orders-number {
+  margin-right: 5px;
+  text-align: center;
+}
+.orders-number p {
+  font-size: 0.7rem;
+  margin-right: 5px;
+}
+
+.orders-total-price {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-left: 5px;
+}
+
+.paid-orders-container h2{
+  color: white; 
+  padding: 10px; 
+  margin-top: 10px;
+}
+.paid-orders-container {
+  background-color: black;
+  border-radius: 15px;
+}

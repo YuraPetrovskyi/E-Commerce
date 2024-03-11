@@ -1,6 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { CartContext } from './CartContext';
 import './Cart.css';
+
+import Layout from './Layout';
 
 const Cart = () => {
   const [user, setUser] = useState(null);
@@ -11,6 +14,9 @@ const Cart = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [cartEmpty, setCartEmpty] = useState('');
   
+  const { cartlenght, setCartLenght } = useContext(CartContext);
+  const navigate = useNavigate();
+
 
   // ============================= Отримання даних про користувача
   useEffect(() => {
@@ -59,8 +65,12 @@ const Cart = () => {
         if (!response.ok) {
           if (response.status === 404) {
             // Відобразити повідомлення, якщо корзина порожня
+            console.log('Your basket is empty :)');
             setCartEmpty('Your basket is empty :)');
             // alert('Your basket is empty :)');
+            setProducts([]);
+            setCart([]);
+            setCartLenght(null);
           } else {
             // Інші статуси можуть сигналізувати про помилку на сервері або інші проблеми
             console.error('Unexpected response status:', response.status);
@@ -121,8 +131,15 @@ const Cart = () => {
       });  
       // Оновлюємо стан корзини
       const updatedCart = cart.filter((item) => item.cart_item_id !== cartItemId);
-      setCart(updatedCart);
+      setCart(updatedCart);            
       console.log('updatedCart in handleDelete', updatedCart)
+      if(updatedCart.length > 0) {
+        setCartLenght(updatedCart.length);
+      }
+      if (updatedCart.length === 0) {
+        setCartEmpty('Your basket is empty :)');
+        setCartLenght(null);
+      }
       console.log('cartItem in handleDelete', cartItem)
       console.log('cartItemId in handleDelete', cartItemId)
       // Оновлюємо стан корзини, видаляючи відповідний товар з масиву products
@@ -185,9 +202,11 @@ const Cart = () => {
       if (featch_heckout.ok) {
         console.log('featch_heckout.ok : ', featch_heckout.ok);
         setProducts([]);
+        setCartLenght(null);
         setCartEmpty('');
         setCartId(cartID);// Оновлюємо cartID, щоб спровокувати оновлення useEffect 
-        alert(`Замовлення створено`);        
+        alert(`Замовлення створено`); 
+        navigate('/order_created');       
       } else {
         alert(`Помилка при створенні ордеру!`);
       } 
@@ -197,62 +216,85 @@ const Cart = () => {
   };
 
 return (
-  <div>
-    <div className='navigation'>
-      <Link to="/"><button >Home</button></Link>
-      <h2>My basket</h2>      
-      <Link to="/orders"><button>My orders</button></Link>
+  <Layout>
+
+    <div className="cart-back-container">
+      <div className="back-cart-container">
+        <button onClick={() => navigate(-1)} className="button-back">
+          <img src="/images/back.png" alt="shopping-cart-icon" />
+        </button>                  
+        <h2>My basket</h2>      
+        <Link to="/orders"><button>Orders</button></Link>
+      </div>
     </div>
-    <div>{cartEmpty ? (
-            <h3>{cartEmpty}</h3>
-          ) : (
-            <h3></h3>
-          )}</div>    
+    <div className="cart-empty-message">
+      {cartEmpty ? (
+        <h3>{cartEmpty}</h3>
+      ) : (
+        <h3></h3>
+      )}
+    </div> 
+    
     <ul className='container-cart'>
+      
       {products.map((product, index) => {
         const item = cart[index];
         const productInfo = product[0];
         const subtotal = parseFloat(productInfo.price) * item.quantity;
         const inventoryOptions = Array.from({ length: productInfo.inventory }, (_, i) => i + 1); // Варіанти кількості товару
+        
         return (
           <li key={productInfo.product_id} className='container-items'>
-            <div className="product-info">
-              <Link to={`/products/${productInfo.product_id}`}>
-                <p>{productInfo.name} {productInfo.model}</p>
-              </Link>              
+            
+            <div className="cart-item-info">
+              <div className="cart-item-image">
+                <img src={productInfo.image_url} alt={productInfo.name} />
+              </div>                             
             </div>
-            <div className='container-price'>
-              <p>${productInfo.price}</p>
-              <div className="quantity-control">
-                <select
-                  value={item.quantity}
-                  onChange={(e) => handleQuantityChange(productInfo.product_id, e.target.value)}
-                >
-                  {inventoryOptions.map((option) => (
-                    <option key={option} value={option}>{option}</option>
-                  ))}
-                </select>
+
+            <div className='container-discription'>              
+              <div className='container-discription-price'>
+                <Link to={`/products/${productInfo.product_id}`}>
+                  <p>{productInfo.model}</p>
+                </Link>
                 
-              </div>
-              <p className="subtotal">Total: ${subtotal.toFixed(2)}</p>
-              <button onClick={() => handleDelete(productInfo.product_id)}>Delete</button>
-            </div>            
+                <div className="cart-price">
+                  <p>${productInfo.price}</p>
+                  <select
+                    value={item.quantity}
+                    onChange={(e) => handleQuantityChange(productInfo.product_id, e.target.value)}
+                  >
+                    {inventoryOptions.map((option) => (
+                      <option key={option} value={option}>{option}</option>
+                    ))}
+                  </select> 
+                  <p>Total: ${subtotal.toFixed(2)}</p>               
+                </div>
+              </div> 
+              
+              <div className='container-delete-button'>                
+                <button onClick={() => handleDelete(productInfo.product_id)}>Delete</button>
+              </div>              
+            </div> 
+                    
           </li>
         );
       })}
     </ul>
-    <div>{cartEmpty ? (
-            <p></p>
-          ) : (
-            <div>
-              <p className="total-price">Total Price: ${totalPrice.toFixed(2)}</p>
-              <button className="checkout-button" onClick={() => handleCheckout()}>Create an order</button>
-            </div>
-          )}
-    </div> 
-    {/* <p className="total-price">Total Price: ${totalPrice.toFixed(2)}</p> */}
-    
-  </div>
+
+    <div>
+      {cartEmpty ?
+        (
+          <div></div>
+        ) : (
+          <div className="total-price"> 
+            <p>Total: ${totalPrice.toFixed(2)}</p>
+            <button className="checkout-button" onClick={() => handleCheckout()}>Create an order</button>
+          </div>
+        )}
+    </div>  
+
+  </Layout>
 );
 
 };

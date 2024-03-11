@@ -11,7 +11,7 @@ const Canceled = () => {
     navigate('/orders')
   }
   return (
-    <div >
+    <div className='canceled-container'>
       <h1>Payment failed</h1>
       <p>Payment was not successful</p>
       <div>

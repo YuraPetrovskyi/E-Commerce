@@ -1,54 +1,114 @@
 /* Cart.css */
-
-.container-home {
-  margin: 10px 30%;
-}
-.container-cart {
-  list-style: none;
-  padding: 0;
+.back-cart-container {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 3px; /* Відступ між елементами */
-}
-
-.container-items {
-  margin: 3px;
-  border: 1px solid #ccc;
-  padding: 5px;
-  display: flex;
-  align-items: center;
   flex-direction: row;
   justify-content: space-between;
-  width: calc(90% - 10px); /* Ширина елемента - половина відступу між елементами */
+  align-items: center;
+  /* width: 70%; */
+  /* min-width: 400px; */
+  /* margin: 10px 50px; */
+}
+.cart-empty-message {
+  display: flex;
+  justify-content: center;
+  /* margin: 0 auto; */
+  /* background-color: #4CAF50; */
 }
 
-.container-price {
+/* -----------------container-cart ul ------------*/
+.container-cart { /* ul */
+  padding: 10px;
   display: flex;
-  flex-direction: row;
-  justify-content: right;
-  align-items: center;
+  flex-wrap: wrap;
+  /* justify-content: center; */
+  flex-direction: column;
+  margin: 0 auto;
 }
-.container-price p {
-  margin-right: 3px;
+.container-cart li{
+  border-radius: 5px;
 }
-.product-info {
-  display: flex;
-  justify-content: left;
+.container-cart button {
+  padding: 10px;
+  margin: 0px;
 }
-.subtotal {
+.container-cart p {
+  padding: 0;
   margin: 0;
 }
+/* -----------------container-items  li ------------*/
+.container-items {  /* li */
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin: 0 auto;
+  margin-bottom: 5px;
+  padding: 0;
+}
 
-.quantity-control {
+/* ----------------- image ------------*/
+.cart-item-info {
   display: flex;
   align-items: center;
 }
-
-.quantity-control select {
-  margin-right: 10px;
+.cart-item-image {
+  width: 60px;
+  margin: 5px;
+}
+.cart-item-image img{
+  width: 60px;
 }
 
+/* ----------------- discription and price ------------*/
+.container-discription {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.container-discription-price {
+  /* flex-basis: 60%; */
+  flex-grow: 1;
+  /* background-color: #3602f4; */
+}
+.container-discription-price a{
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+.cart-price {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.cart-price p{
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.container-delete-button {
+  flex-basis: 15%;
+  align-items: center;
+  margin: 0 5px;
+}
+
+
+/*-------------- Totoal price -------------------*/
+
+.total-price {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+.total-price p {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-left: 20px;
+}
 .checkout-button {
   background-color: #4CAF50;
   color: white;
@@ -62,7 +122,6 @@
   margin: 5px auto;
   cursor: pointer;
 }
-
 .checkout-button:hover {
   background-color: #45a049;
 }

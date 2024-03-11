@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useStripe } from "@stripe/react-stripe-js";
-import './checkout.css';
+
+import Layout from './Layout';
 
 const Checkout = () => {
   const { order_id } = useParams();
@@ -15,6 +16,7 @@ const Checkout = () => {
   const [totalPrice, setTotalPrice] = useState(0);
 
   const stripe = useStripe();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -171,18 +173,24 @@ const Checkout = () => {
   };
 
   return (
-    <div>
-      <div className='navigation'>
-        <Link  to="/"><button>Home</button></Link>
-        <h2>Checkout Summary</h2> 
-        <Link  to="/orders"><button>Orders</button></Link>
+    <Layout>
+      <div className="cart-back-container">
+        <div className="back-cart-container">
+          <button onClick={() => navigate(-1)} className="button-back">
+            <img src="/images/back.png" alt="shopping-cart-icon" />
+          </button>                  
+          <h2>Checkout Summary</h2>      
+          <Link to="/orders"><button>Orders</button></Link>
+        </div>
       </div>
-      <h3>Total Items: {orderItems.length}</h3>
-      <Link to={`/order_items/${order_id}`}>More...</Link>
-      <h4>Amount to pay: ${totalPrice}</h4>
-      {user && user.email && <h4>Email: {user.email}</h4>}
-      <button onClick={() => handleGuestCheckout()}>CHECKOUT</button>
-    </div>
+      <div className="checkout-container">
+        <p>Total Items: {orderItems.length}</p>
+        <Link to={`/order_items/${order_id}`}>More...</Link>
+        <p>Amount to pay: ${totalPrice}</p>
+        {user && user.email && <h4>Email: {user.email}</h4>}
+        <button onClick={() => handleGuestCheckout()}>CHECKOUT</button>
+      </div>      
+    </Layout>
   );
 };
 

@@ -41,7 +41,7 @@ const Success = () => {
   }, [order_id]);
 
   return (
-    <div>
+    <div className='success-container'>
       <h1>Thank you for your order</h1>
       <p>We are currently processing your order and 
         will send you a confirmation email shortly

@@ -11,6 +11,8 @@ import OrderItem from './components/OrderItem';
 import Checkout from './components/checkout';
 import Canceled from './components/Canceled';
 import Success from './components/Success';
+import OrderCreated from './components/OrderCreated';
+
 
 function App() {
   return (
@@ -30,6 +32,7 @@ function App() {
         <Route path='/canceled' element={<Canceled />} />
         {/* <Route path='/success' element={<Success />} /> */}
         <Route path='/success/:order_id' element={<Success />} />
+        <Route path='/order_created' element={<OrderCreated />} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
