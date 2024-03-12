@@ -8,12 +8,13 @@ require("dotenv").config();
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
+const SERVER_HOST = process.env.SERVER_HOST;
 
 
 passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/google/callback",
+    callbackURL: `${SERVER_HOST}/auth/google/callback`,
     prompt: 'select_account'
   },
   async (accessToken, refreshToken, profile, done) => {

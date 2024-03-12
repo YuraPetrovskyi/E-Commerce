@@ -3,8 +3,11 @@ const cors = require('cors');
 const session = require('express-session');
 const passport = require('passport');
 require('dotenv').config();
+
 const secret = process.env.secret;
 const WEB_APP_URL= process.env.WEB_APP_URL
+const SERVER_HOST = process.env.SERVER_HOST;
+
 // const authConfig = require('./config/auth');
 
 const createCheckoutSession = require('./config/checkout'); //for stripe
@@ -19,7 +22,7 @@ const db_orders = require('./db/orders');
 const db_order_items = require('./db/order_items');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(cors({
   origin: WEB_APP_URL,  // URL вашого клієнтського додатку
