@@ -162,7 +162,8 @@ function ensureAuthenticated(req, res, next) {
     return next();
   }
   console.log('you are not registreted');
-  res.sendStatus(401);
+  // res.sendStatus(401);
+  return res.status(401).json({ message: 'Unauthorized' });
 }
 
 app.get('/check-auth', ensureAuthenticated, (req, res) => {

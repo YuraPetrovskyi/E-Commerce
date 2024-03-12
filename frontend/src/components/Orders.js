@@ -7,7 +7,7 @@ import './Orders.css';
 
 const Orders = () => {
   const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
   // const [cart, setCart] = useState([]);
   const [userID, setUserId] = useState(null);
   const [orders, setOrders] = useState([]); 
@@ -37,11 +37,9 @@ const Orders = () => {
           const profileData = await profileResponse.json();
           // console.log(profileData);
           setUser(profileData);
-          setIsAuthenticated(true);
+          // setIsAuthenticated(true);
           setUserId(profileData.user_id)
-        } else {
-          setIsAuthenticated(false);
-        }
+        } 
       } catch (error) {
         console.log('користувач не автентифікований:')
         console.error('Error fetching data:', error);
@@ -72,7 +70,7 @@ const Orders = () => {
       };
       fetchData()
     }    
-  }, [user]);
+  }, [user, userID]);
 
   // console.log('orders: ', orders);
   const orders_paid = orders.filter(order => order.status === 'Paid');

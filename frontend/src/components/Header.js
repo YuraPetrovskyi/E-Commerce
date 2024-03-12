@@ -113,8 +113,6 @@ const Header = () => {
           <button onClick={handleLogout}>Logout</button>  
           <Link to="/cart" className='cart-image-container'>
             <img src="/images/shopping.png" alt="shopping-cart-icon" />
-            {/* <span className='cart-count'>{carts.length === 0 ? "" : carts.length}</span> */}
-            {/* <span className='cart-count'>{cartItemCount === 0 ? "" : cartItemCount}</span> */}
             <span className='cart-count'>{cartlenght}</span>
           </Link>
         </div>

@@ -8,11 +8,11 @@ const Checkout = () => {
   const { order_id } = useParams();
   const [products, setProducts] = useState([]);
   const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
   // const [cart, setCart] = useState([]);
   const [userID, setUserId] = useState(null);
   const [orderItems, setOrderItems] = useState([]); 
-  const [orders, setOrders] = useState([]); 
+  // const [orders, setOrders] = useState([]); 
   const [totalPrice, setTotalPrice] = useState(0);
 
   const stripe = useStripe();
@@ -55,10 +55,8 @@ const Checkout = () => {
           // console.log(profileData);
           setUserId(profileData.user_id);
           setUser(profileData);
-          setIsAuthenticated(true);
-        } else {
-          setIsAuthenticated(false);
-        }
+          // setIsAuthenticated(true);
+        } 
       } catch (error) {
         console.log('користувач не автентифікований:')
         console.error('Error fetching data:', error);
@@ -87,38 +85,41 @@ const Checkout = () => {
       }
     };
     fetchData()
-  }, [user]);
+  }, [user, order_id]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {        
-        const response = await fetch(`http://localhost:3000/orders/${userID}`, {
-          method: 'GET',
-          credentials: 'include',
-        });
-      if (response.ok) {        
-        const dataOrders = await response.json();
-        // console.log('my orders:', dataOrders);
-
-        // Using the find method to find the first element that matches the condition
-        const foundOrder = dataOrders.find(order => order.order_id === Number(order_id));
-
-        // if (foundOrder) {
-        //   console.log('Знайдено замовлення:', foundOrder);
-        // } else {
-        //   console.log(`Замовлення з таким id: ${order_id} - не знайдено`);
-        // }
-        setTotalPrice(foundOrder.total_amount);
-        setOrders(dataOrders);
-      }
-        
-      } catch (error) {
-        console.log('Помилка при спробі глянути історію покупок:( :')
-        console.error('Error fetching data:', error);
-      }
-    };
-    fetchData()
-  }, [userID]);
+    if(userID) {
+      const fetchData = async () => {
+        try {        
+          const response = await fetch(`http://localhost:3000/orders/${userID}`, {
+            method: 'GET',
+            credentials: 'include',
+          });
+        if (response.ok) {        
+          const dataOrders = await response.json();
+          // console.log('my orders:', dataOrders);
+  
+          // Using the find method to find the first element that matches the condition
+          const foundOrder = dataOrders.find(order => order.order_id === Number(order_id));
+  
+          // if (foundOrder) {
+          //   console.log('Знайдено замовлення:', foundOrder);
+          // } else {
+          //   console.log(`Замовлення з таким id: ${order_id} - не знайдено`);
+          // }
+          setTotalPrice(foundOrder.total_amount);
+          // setOrders(dataOrders);
+        }
+          
+        } catch (error) {
+          console.log('Помилка при спробі глянути історію покупок:( :')
+          console.error('Error fetching data:', error);
+        }
+      };
+      fetchData()
+    }    
+    
+  }, [userID, order_id]);
 
   // console.log('order items: ', orderItems);
   // console.log('user: ', user);
