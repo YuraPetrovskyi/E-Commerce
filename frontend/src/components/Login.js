@@ -26,7 +26,7 @@ const Login = () => {
         method: 'GET',
         credentials: 'include',
       });
-      console.log(response)
+      // console.log(response)
       if (response.ok) {
         setIsAuthenticated(true);
       }

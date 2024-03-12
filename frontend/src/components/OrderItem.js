@@ -9,7 +9,7 @@ const OrderItem = () => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   // const [cart, setCart] = useState([]);
-  const [userID, setUserId] = useState(null);
+  // const [userID, setUserId] = useState(null);
   const [orderItems, setOrderItems] = useState([]); 
 
   // const [totalPrice, setTotalPrice] = useState(0);
@@ -53,7 +53,7 @@ const OrderItem = () => {
           console.log(profileData);
           setUser(profileData);
           setIsAuthenticated(true);
-          setUserId(profileData.user_id)
+          // setUserId(profileData.user_id)
         } else {
           setIsAuthenticated(false);
         }
@@ -64,7 +64,7 @@ const OrderItem = () => {
     };
 
     fetchData();
-  }, []);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,7 +85,7 @@ const OrderItem = () => {
       }
     };
     fetchData()
-  }, [user]);
+  }, [user, order_id]);
 
 
 

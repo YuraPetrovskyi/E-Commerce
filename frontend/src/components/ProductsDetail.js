@@ -48,10 +48,10 @@ const ProductDetail = () => {
         method: 'GET',
         credentials: 'include',
       });
-      console.log('response: ',response)
+      // console.log('response: ',response)
       if (response.ok) {
         const data = await response.json();
-        console.log('data from respons: ', data)
+        // console.log('data from respons: ', data)
         setUser(data.username);
         setIsAuthenticated(true);
         setUserID(data.user_id);
@@ -68,8 +68,8 @@ const ProductDetail = () => {
           const response = await fetch(`http://localhost:3000/cart_items/${user_id}`);
           if(response.ok) {            
             const cartrespons = await response.json();
-            console.log('response: ', response);
-            console.log('cartrespons: ', cartrespons);
+            // console.log('response: ', response);
+            // console.log('cartrespons: ', cartrespons);
             setCart(cartrespons);
           }
           if(response.status === 404){
@@ -83,7 +83,7 @@ const ProductDetail = () => {
       fetchData();
     }
   }, [user_id, renue, quantity]);
-  console.log('carts', carts);
+  // console.log('carts', carts);
 
 
   const handleAddToCart = async () => {

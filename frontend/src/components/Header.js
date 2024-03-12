@@ -14,7 +14,7 @@ const Header = () => {
   
   useEffect(() => {
     const fetchData = async () => {
-      console.log('startet Home before fetch');
+      // console.log('startet Home before fetch');
       try {        
         const authResponse = await fetch('http://localhost:3000/check-auth', {
           method: 'GET',
@@ -25,13 +25,13 @@ const Header = () => {
           const authData = await authResponse.json();
     
           if (authData.isAuthenticated) {
-            console.log('isAuthenticated --> true');
+            // console.log('isAuthenticated --> true');
             const profileResponse = await fetch('http://localhost:3000/profile', {
               method: 'GET',
               credentials: 'include',
             });
             const profileData = await profileResponse.json();
-            console.log(profileData);
+            // console.log(profileData);
             setUser(profileData);
             setIsAuthenticated(true);
             setCartId(profileData.user_id);
@@ -59,14 +59,14 @@ const Header = () => {
           const response = await fetch(`http://localhost:3000/cart_items/${cartID}`);
           if(response.ok) {            
             const cartrespons = await response.json();
-            console.log('response: ', response);
-            console.log('cartrespons: ', cartrespons);
+            // console.log('response: ', response);
+            // console.log('cartrespons: ', cartrespons);
             setCart(cartrespons);
             setCartLenght(cartrespons.length)
           }
           if(response.status === 404){
             const text = await response.text()  
-            console.log('response: ', text);  
+            // console.log('response: ', text);  
           }          
         } catch (error) {
           console.error('Error fetching product data:', error);
@@ -88,7 +88,7 @@ const Header = () => {
         setIsAuthenticated(false);
         setUser(null);
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         if (data.redirect) {
           navigate(data.redirect); // Перенаправити за допомогою useNavigate
         } else {

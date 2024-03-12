@@ -51,7 +51,7 @@ const Success = () => {
           Continue Shopping
         </button>
         <button onClick={goToOrders}>
-          Continue Shopping
+          Orders
         </button>
       </div>
     </div>

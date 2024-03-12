@@ -28,14 +28,14 @@ const Orders = () => {
         const authData = await authResponse.json();
 
         if (authData.isAuthenticated) {
-          console.log('isAuthenticated --> true')
+          // console.log('isAuthenticated --> true')
           // Якщо користувач аутентифікований, зробимо запит для отримання інформації про користувача
           const profileResponse = await fetch('http://localhost:3000/profile', {
             method: 'GET',
             credentials: 'include',
           });
           const profileData = await profileResponse.json();
-          console.log(profileData);
+          // console.log(profileData);
           setUser(profileData);
           setIsAuthenticated(true);
           setUserId(profileData.user_id)
@@ -61,7 +61,7 @@ const Orders = () => {
           });
         if (response.ok) {        
           const dataOrders = await response.json();
-          console.log('my orders:', dataOrders);
+          // console.log('my orders:', dataOrders);
           setOrders(dataOrders);
         }
           
@@ -74,12 +74,12 @@ const Orders = () => {
     }    
   }, [user]);
 
-  console.log('orders: ', orders);
+  // console.log('orders: ', orders);
   const orders_paid = orders.filter(order => order.status === 'Paid');
   const orders_unpaid = orders.filter(order => order.status === null);
 
-  console.log('orders_paid', orders_paid);
-  console.log('orders_unpaid', orders_unpaid);
+  // console.log('orders_paid', orders_paid);
+  // console.log('orders_unpaid', orders_unpaid);
 
   return (
     <Layout>

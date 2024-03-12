@@ -38,6 +38,6 @@ passport.deserializeUser((id, done) => {
     console.log('Deserialize user passport local id:', id);
     console.log('Deserialize user passport local user:', user)
     if (err) return done(err); 
-    done(null, user);
+    done(null, user.id);
   });
 });

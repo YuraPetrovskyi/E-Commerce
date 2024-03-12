@@ -5,9 +5,19 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: "Madimi One", sans-serif;
+  /* font-family: "VT323", monospace; */
+  font-style: normal;
+  letter-spacing: 1px;
+}
+body a {
+  /* font-family: "VT323", monospace; */
+  /* font-style:italic; */
+  /* color: aqua; */
+  text-shadow: 1px 1px 1px rgba(4, 192, 213, 0.583);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+    monospace;    
 }

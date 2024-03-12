@@ -110,8 +110,7 @@
   margin-left: 20px;
 }
 .checkout-button {
-  background-color: #4CAF50;
-  color: white;
+  /* color: white; */
   border: none;
   padding: 10px 20px;
   text-align: center;
@@ -122,6 +121,4 @@
   margin: 5px auto;
   cursor: pointer;
 }
-.checkout-button:hover {
-  background-color: #45a049;
-}
+

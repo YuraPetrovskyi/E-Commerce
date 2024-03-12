@@ -31,14 +31,14 @@ const Cart = () => {
         const authData = await authResponse.json();
 
         if (authData.isAuthenticated) {
-          console.log('isAuthenticated --> true')
+          // console.log('isAuthenticated --> true')
           // Якщо користувач аутентифікований, зробимо запит для отримання інформації про користувача
           const profileResponse = await fetch('http://localhost:3000/profile', {
             method: 'GET',
             credentials: 'include',
           });
           const profileData = await profileResponse.json();
-          console.log(profileData);
+          // console.log(profileData);
           setUser(profileData);
           setIsAuthenticated(true);
           setCartId(profileData.user_id)
@@ -80,7 +80,7 @@ const Cart = () => {
   
         // Отримуємо дані корзини
         const cartData = await response.json();
-        console.log('cartData : ', cartData );
+        // console.log('cartData : ', cartData );
         setCart(cartData);
         
         // Отримуємо дані про кожен продукт у корзині та оновлюємо стан products
@@ -132,7 +132,7 @@ const Cart = () => {
       // Оновлюємо стан корзини
       const updatedCart = cart.filter((item) => item.cart_item_id !== cartItemId);
       setCart(updatedCart);            
-      console.log('updatedCart in handleDelete', updatedCart)
+      // console.log('updatedCart in handleDelete', updatedCart)
       if(updatedCart.length > 0) {
         setCartLenght(updatedCart.length);
       }
@@ -140,8 +140,9 @@ const Cart = () => {
         setCartEmpty('Your basket is empty :)');
         setCartLenght(null);
       }
-      console.log('cartItem in handleDelete', cartItem)
-      console.log('cartItemId in handleDelete', cartItemId)
+      // console.log('cartItem in handleDelete', cartItem)
+      // console.log('cartItemId in handleDelete', cartItemId)
+
       // Оновлюємо стан корзини, видаляючи відповідний товар з масиву products
       const updatedProducts = products.filter((product) => product[0].product_id !== productId);
       setProducts(updatedProducts);      
@@ -151,12 +152,9 @@ const Cart = () => {
       console.error('Error deleting product:', error);
     }
   };
-  // console.log('user', user);
-  console.log('cart', cart);
-  // console.log('cartID', cartID);
-  // // console.log('productsID', productsID);
-  console.log('products', products);
-  // console.log('isAuthenticated', isAuthenticated);
+
+  // console.log('cart', cart);
+  // console.log('products', products);
 
 
   // ============================= Зміна кількості товару
@@ -200,7 +198,7 @@ const Cart = () => {
           });
       console.log(featch_heckout);
       if (featch_heckout.ok) {
-        console.log('featch_heckout.ok : ', featch_heckout.ok);
+        // console.log('featch_heckout.ok : ', featch_heckout.ok);
         setProducts([]);
         setCartLenght(null);
         setCartEmpty('');
