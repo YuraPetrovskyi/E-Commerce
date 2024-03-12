@@ -6,15 +6,15 @@ import './Cart.css';
 import Layout from './Layout';
 
 const Cart = () => {
-  const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [user, setUser] = useState(null);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [cart, setCart] = useState([]);
   const [cartID, setCartId] = useState(null);
   const [products, setProducts] = useState([]); 
   const [totalPrice, setTotalPrice] = useState(0);
   const [cartEmpty, setCartEmpty] = useState('');
   
-  const { cartlenght, setCartLenght } = useContext(CartContext);
+  const { setCartLenght } = useContext(CartContext);
   const navigate = useNavigate();
 
 
@@ -39,12 +39,10 @@ const Cart = () => {
           });
           const profileData = await profileResponse.json();
           // console.log(profileData);
-          setUser(profileData);
-          setIsAuthenticated(true);
+          // setUser(profileData);
+          // setIsAuthenticated(true);
           setCartId(profileData.user_id)
-        } else {
-          setIsAuthenticated(false);
-        }
+        } 
       } catch (error) {
         console.log('користувач не автентифікований:')
         console.error('Error fetching data:', error);
@@ -97,7 +95,7 @@ const Cart = () => {
     };
   
     fetchData();
-  }, [cartID]);
+  }, [cartID, setCartLenght]);
 
   // ============================= Обчислення загальної суми
   useEffect(() => {
@@ -226,11 +224,7 @@ return (
       </div>
     </div>
     <div className="cart-empty-message">
-      {cartEmpty ? (
-        <h3>{cartEmpty}</h3>
-      ) : (
-        <h3></h3>
-      )}
+      {cartEmpty && <h3>{cartEmpty}</h3>}
     </div> 
     
     <ul className='container-cart'>

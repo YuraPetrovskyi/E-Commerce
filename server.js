@@ -4,7 +4,7 @@ const session = require('express-session');
 const passport = require('passport');
 require('dotenv').config();
 const secret = process.env.secret;
-
+const WEB_APP_URL= process.env.WEB_APP_URL
 // const authConfig = require('./config/auth');
 
 const createCheckoutSession = require('./config/checkout'); //for stripe
@@ -22,7 +22,7 @@ const app = express();
 const port = 3000;
 
 app.use(cors({
-  origin: 'http://localhost:3001',  // URL вашого клієнтського додатку
+  origin: WEB_APP_URL,  // URL вашого клієнтського додатку
   credentials: true,
 }));
 
@@ -65,12 +65,13 @@ app.get('/auth/google', passport.authenticate('google', {
 
 app.get('/auth/google/callback', 
   passport.authenticate('google', { 
-    failureRedirect: 'http://localhost:3001/login' 
+    failureRedirect: `${WEB_APP_URL}/login` 
   }),
   function(req, res) {
     // Successful authentication, redirect home.
     console.log('secces google sesion')
-    res.redirect('http://localhost:3001');
+    console.log('host: ',`${WEB_APP_URL}`)
+    res.redirect(`${WEB_APP_URL}`);
   }
 );
 
