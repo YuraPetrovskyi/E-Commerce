@@ -12,10 +12,8 @@ const OrderCreated = () => {
         <h2> 
           Congratulations, your order has been successfully created!          
         </h2>
-        <Link to="/orders">
-          <div className="order-created">
-            <h3>Click on me to complete your purchase</h3>
-          </div>          
+        <Link to="/orders">          
+          <button>Click on me to complete your purchase</button>
         </Link>
         <Link to="/">
           <button>Home</button>

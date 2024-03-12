@@ -29,12 +29,12 @@ const OrderItem = () => {
 
     fetchData();
   }, []);
-  console.log('products: ',products);
+  // console.log('products: ',products);
   // ============================= Отримання даних про користувача
   useEffect(() => {
     const fetchData = async () => {
-      console.log('startet Home before fitch')
-      console.log(isAuthenticated)
+      // console.log('startet Home before fitch')
+      // console.log(isAuthenticated)
       try {        
         const authResponse = await fetch('http://localhost:3000/check-auth', {
           method: 'GET',
@@ -43,14 +43,14 @@ const OrderItem = () => {
         const authData = await authResponse.json();
 
         if (authData.isAuthenticated) {
-          console.log('isAuthenticated --> true')
+          // console.log('isAuthenticated --> true')
           // Якщо користувач аутентифікований, зробимо запит для отримання інформації про користувача
           const profileResponse = await fetch('http://localhost:3000/profile', {
             method: 'GET',
             credentials: 'include',
           });
           const profileData = await profileResponse.json();
-          console.log(profileData);
+          // console.log(profileData);
           setUser(profileData);
           setIsAuthenticated(true);
           // setUserId(profileData.user_id)
@@ -75,7 +75,7 @@ const OrderItem = () => {
         });
       if (response.ok) {
         const dataOrders = await response.json();
-        console.log('my order items:', dataOrders);
+        // console.log('my order items:', dataOrders);
         setOrderItems(dataOrders);
       }
         
@@ -89,7 +89,7 @@ const OrderItem = () => {
 
 
 
-  console.log('orders: ', orderItems);
+  // console.log('orders: ', orderItems);
 
   return (
     <Layout>

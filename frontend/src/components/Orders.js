@@ -18,8 +18,8 @@ const Orders = () => {
   // ============================= Отримання даних про користувача
   useEffect(() => {
     const fetchData = async () => {
-      console.log('startet Home before fitch')
-      console.log(isAuthenticated)
+      // console.log('startet Home before fitch')
+      // console.log(isAuthenticated)
       try {        
         const authResponse = await fetch('http://localhost:3000/check-auth', {
           method: 'GET',

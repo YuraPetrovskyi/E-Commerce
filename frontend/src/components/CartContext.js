@@ -9,7 +9,7 @@ export const CartProvider = ({ children }) => {
     setCartLenght(cartlenght)
   }, [cartlenght]);
 
-  console.log("cartlenght:", cartlenght)
+  // console.log("cartlenght:", cartlenght)
 
 
 

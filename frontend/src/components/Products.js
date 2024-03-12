@@ -17,8 +17,8 @@ const Products = () => {
     fetchData();
   }, []);
 
-  console.log(products);
-  
+  // console.log(products);
+
   return (
     <div>
       <h2>Product List</h2>

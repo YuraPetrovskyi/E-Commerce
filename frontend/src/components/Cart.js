@@ -21,8 +21,8 @@ const Cart = () => {
   // ============================= Отримання даних про користувача
   useEffect(() => {
     const fetchData = async () => {
-      console.log('startet Cart before fitch')
-      console.log(isAuthenticated)
+      // console.log('startet Cart before fitch')
+      // console.log(isAuthenticated)
       try {        
         const authResponse = await fetch('http://localhost:3000/check-auth', {
           method: 'GET',
@@ -196,7 +196,7 @@ const Cart = () => {
             method: 'POST',
             credentials: 'include',
           });
-      console.log(featch_heckout);
+      // console.log(featch_heckout);
       if (featch_heckout.ok) {
         // console.log('featch_heckout.ok : ', featch_heckout.ok);
         setProducts([]);

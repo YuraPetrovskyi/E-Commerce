@@ -9,7 +9,7 @@ const Checkout = () => {
   const [products, setProducts] = useState([]);
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [cart, setCart] = useState([]);
+  // const [cart, setCart] = useState([]);
   const [userID, setUserId] = useState(null);
   const [orderItems, setOrderItems] = useState([]); 
   const [orders, setOrders] = useState([]); 
@@ -31,12 +31,12 @@ const Checkout = () => {
 
     fetchData();
   }, []);
-  console.log('products: ',products);
+  // console.log('products: ',products);
   // ============================= Obtaining user data
   useEffect(() => {
     const fetchData = async () => {
-      console.log('startet Home before fitch')
-      console.log(isAuthenticated)
+      // console.log('startet Home before fitch')
+      // console.log(isAuthenticated)
       try {        
         const authResponse = await fetch('http://localhost:3000/check-auth', {
           method: 'GET',
@@ -45,14 +45,14 @@ const Checkout = () => {
         const authData = await authResponse.json();
 
         if (authData.isAuthenticated) {
-          console.log('isAuthenticated --> true')
+          // console.log('isAuthenticated --> true')
           // If the user is authenticated, we will make a request to obtain information about the user
           const profileResponse = await fetch('http://localhost:3000/profile', {
             method: 'GET',
             credentials: 'include',
           });
           const profileData = await profileResponse.json();
-          console.log(profileData);
+          // console.log(profileData);
           setUserId(profileData.user_id);
           setUser(profileData);
           setIsAuthenticated(true);
@@ -77,7 +77,7 @@ const Checkout = () => {
         });
       if (response.ok) {
         const dataOrders = await response.json();
-        console.log('my order items:', dataOrders);
+        // console.log('my order items:', dataOrders);
         setOrderItems(dataOrders);
       }
         
@@ -98,16 +98,16 @@ const Checkout = () => {
         });
       if (response.ok) {        
         const dataOrders = await response.json();
-        console.log('my orders:', dataOrders);
+        // console.log('my orders:', dataOrders);
 
         // Using the find method to find the first element that matches the condition
         const foundOrder = dataOrders.find(order => order.order_id === Number(order_id));
 
-        if (foundOrder) {
-          console.log('Знайдено замовлення:', foundOrder);
-        } else {
-          console.log(`Замовлення з таким id: ${order_id} - не знайдено`);
-        }
+        // if (foundOrder) {
+        //   console.log('Знайдено замовлення:', foundOrder);
+        // } else {
+        //   console.log(`Замовлення з таким id: ${order_id} - не знайдено`);
+        // }
         setTotalPrice(foundOrder.total_amount);
         setOrders(dataOrders);
       }
@@ -120,14 +120,14 @@ const Checkout = () => {
     fetchData()
   }, [userID]);
 
-  console.log('order items: ', orderItems);
-  console.log('user: ', user);
+  // console.log('order items: ', orderItems);
+  // console.log('user: ', user);
 
   const handleGuestCheckout = async () => {
     // create line_items - required for a stripe
     const line_items = orderItems.map(item => {
       const product = products.filter(product => product.product_id === item.product_id);
-      console.log('product : ',product);      
+      // console.log('product : ',product);      
       return {
         quantity: item.quantity,
         price_data: {
@@ -141,7 +141,7 @@ const Checkout = () => {
         }
       }
     })
-    console.log('line_items', line_items);  
+    // console.log('line_items', line_items);  
 
     // creating the request body
     const body = {
@@ -149,7 +149,7 @@ const Checkout = () => {
       customer_email: user.email,
       order_id: order_id
     };
-    console.log('body', body);
+    // console.log('body', body);
 
     // a request to the server to create a stripe session ID 
     const response = await fetch(`http://localhost:3000/create-checkout-session`, {
@@ -160,7 +160,7 @@ const Checkout = () => {
       },
     });
     const { sessionId } = await response.json();
-    console.log('sessionId : ', sessionId)
+    // console.log('sessionId : ', sessionId)
 
     // redirection to the Stripe page for further payment
     const { error } = await stripe.redirectToCheckout({

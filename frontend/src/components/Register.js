@@ -27,7 +27,7 @@ const Register = () => {
         method: 'GET',
         credentials: 'include',
       });
-      console.log(response)
+      // console.log(response)
       if (response.ok) {
         setIsAuthenticated(true);
       }
@@ -38,7 +38,7 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    console.log('started handleLogin');
+    // console.log('started handleLogin');
     try {
       const response = await fetch('http://localhost:3000/register', {
         method: 'POST',
@@ -48,7 +48,7 @@ const Register = () => {
         credentials: 'include',
         body: JSON.stringify({username, email, password }),
       });
-      console.log('finish registered fetch');
+      // console.log('finish registered fetch');
       if (response.ok) {
         try {
           const response = await fetch('http://localhost:3000/login', {
@@ -59,10 +59,10 @@ const Register = () => {
             credentials: 'include',
             body: JSON.stringify({ email, password }),
           });
-          console.log('finish login fetch');
+          // console.log('finish login fetch');
           if (response.ok) {
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             if (data.redirect) {
               navigate(data.redirect); // Перенаправити за допомогою useNavigate
             } else {
