@@ -7,7 +7,7 @@ const Header = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
   const [cartID, setCartId] = useState(null);
-  const [carts, setCart] = useState([]);
+  // const [carts, setCart] = useState([]);
 
   const { cartlenght, setCartLenght } = useContext(CartContext);
 
@@ -61,12 +61,12 @@ const Header = () => {
             const cartrespons = await response.json();
             // console.log('response: ', response);
             // console.log('cartrespons: ', cartrespons);
-            setCart(cartrespons);
+            // setCart(cartrespons);
             setCartLenght(cartrespons.length)
           }
           if(response.status === 404){
             const text = await response.text()  
-            // console.log('response: ', text);  
+            console.log('response: ', text);  
           }          
         } catch (error) {
           console.error('Error fetching product data:', error);
@@ -75,7 +75,7 @@ const Header = () => {
     };
 
     fetchData();
-  }, [cartID]);
+  }, [cartID, setCartLenght]);
 
   const handleLogout = async () => {
     try {
