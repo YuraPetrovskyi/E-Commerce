@@ -223,6 +223,10 @@ app.get('/bad', (req, res) => {
   res.send('bad autorization!!');
 });
 
+app.get("/health", (req, res) => { 
+  res.sendStatus(200); 
+});
+
 // lisener server
 app.listen(port, () => {
   console.log(`Сервер запущено на порті ${port}`);
