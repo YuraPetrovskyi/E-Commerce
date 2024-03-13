@@ -8,11 +8,17 @@ const Products = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
+  console.log('Products useEffect');
+
     const fetchData = async () => {
       try {
-        const response = await fetch(`${SERVER_HOST}/products`);
+        const response = await fetch(`${SERVER_HOST}/products`, {
+          method: 'GET',
+          credentials: 'include', // Включити креденціали
+        });
         const data = await response.json();
         setProducts(data);
+        console.log('Products useEffect after fetch - ok');
       } catch (error) {
         console.error('Error fetching product data:', error);
       }
@@ -20,7 +26,7 @@ const Products = () => {
     fetchData();
   }, []);
 
-  // console.log(products);
+  console.log(products);
 
   return (
     <div>
