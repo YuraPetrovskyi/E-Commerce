@@ -18,6 +18,8 @@ const Checkout = () => {
   const stripe = useStripe();
   const navigate = useNavigate();
 
+  const SERVER_HOST = process.env.SERVER_HOST;
+  
   useEffect(() => {
     const fetchData = async () => {
       try {

@@ -2,6 +2,10 @@ import React, { useEffect, useState, useContext }from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { CartContext } from './CartContext';
 
+const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
+
+
+
 const Header = () => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -16,7 +20,7 @@ const Header = () => {
     const fetchData = async () => {
       // console.log('startet Home before fetch');
       try {        
-        const authResponse = await fetch('http://localhost:3000/check-auth', {
+        const authResponse = await fetch(`${SERVER_HOST}/check-auth`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -26,7 +30,7 @@ const Header = () => {
     
           if (authData.isAuthenticated) {
             // console.log('isAuthenticated --> true');
-            const profileResponse = await fetch('http://localhost:3000/profile', {
+            const profileResponse = await fetch(`${SERVER_HOST}/profile`, {
               method: 'GET',
               credentials: 'include',
             });
@@ -56,7 +60,7 @@ const Header = () => {
     const fetchData = async () => {
       if (cartID) {
         try {
-          const response = await fetch(`http://localhost:3000/cart_items/${cartID}`);
+          const response = await fetch(`${SERVER_HOST}/cart_items/${cartID}`);
           if(response.ok) {            
             const cartrespons = await response.json();
             // console.log('response: ', response);
@@ -79,7 +83,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:3000/logout', {
+      const response = await fetch(`${SERVER_HOST}/logout`, {
         method: 'GET',
         credentials: 'include',
       });

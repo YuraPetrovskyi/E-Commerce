@@ -3,7 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import Layout from './Layout';
 
+
 import './Orders.css';
+
+const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
+
+
 
 const Orders = () => {
   const [user, setUser] = useState(null);
@@ -21,7 +26,7 @@ const Orders = () => {
       // console.log('startet Home before fitch')
       // console.log(isAuthenticated)
       try {        
-        const authResponse = await fetch('http://localhost:3000/check-auth', {
+        const authResponse = await fetch(`${SERVER_HOST}/check-auth`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -30,7 +35,7 @@ const Orders = () => {
         if (authData.isAuthenticated) {
           // console.log('isAuthenticated --> true')
           // Якщо користувач аутентифікований, зробимо запит для отримання інформації про користувача
-          const profileResponse = await fetch('http://localhost:3000/profile', {
+          const profileResponse = await fetch(`${SERVER_HOST}/profile`, {
             method: 'GET',
             credentials: 'include',
           });
@@ -53,7 +58,7 @@ const Orders = () => {
     if(userID) {
       const fetchData = async () => {
         try {        
-          const response = await fetch(`http://localhost:3000/orders/${userID}`, {
+          const response = await fetch(`${SERVER_HOST}/orders/${userID}`, {
             method: 'GET',
             credentials: 'include',
           });

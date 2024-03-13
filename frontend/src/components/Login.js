@@ -2,11 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 
+const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
+
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+
 
   const navigate = useNavigate();
 
@@ -22,7 +27,7 @@ const Login = () => {
 
   const checkAuthentication = async () => {
     try {
-      const response = await fetch('http://localhost:3000/check-auth', {
+      const response = await fetch(`${SERVER_HOST}/check-auth`, {
         method: 'GET',
         credentials: 'include',
       });
@@ -71,7 +76,7 @@ const Login = () => {
     e.preventDefault();
     console.log('started handleLogin');
     try {
-      const response = await fetch('http://localhost:3000/login', {
+      const response = await fetch(`${SERVER_HOST}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -119,7 +124,7 @@ const Login = () => {
       <div>
         <h2>Hey there!</h2>
         <p>You'll be redirected to Google to login to your account!</p>
-        <a role="button" className="button" href="http://localhost:3000/auth/google">Login with Google</a>
+        <a role="button" className="button" href={`${SERVER_HOST}/auth/google`}>Login with Google</a>
         {/* <br/>
         <a href="http://localhost:3000/auth/facebook" className="button">Login with Facebook</a> */}
       </div>

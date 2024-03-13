@@ -5,6 +5,7 @@ import Layout from './Layout';
 
 import { CartContext } from './CartContext';
 
+const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
 
 const ProductDetail = () => {
   const { product_id } = useParams();
@@ -21,7 +22,6 @@ const ProductDetail = () => {
 
   const { cartlenght, setCartLenght } = useContext(CartContext);
 
-
   useEffect(() => {
     checkAuthentication();       
   }, []);
@@ -29,7 +29,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/products/${product_id}`);
+        const response = await fetch(`${SERVER_HOST}/products/${product_id}`);
         const data = await response.json();
         setProduct(data[0]); // Assuming the API response is an array with a single product
       } catch (error) {
@@ -44,7 +44,7 @@ const ProductDetail = () => {
 
   const checkAuthentication = async () => {
     try {
-      const response = await fetch('http://localhost:3000/check-auth', {
+      const response = await fetch(`${SERVER_HOST}/check-auth`, {
         method: 'GET',
         credentials: 'include',
       });
@@ -65,7 +65,7 @@ const ProductDetail = () => {
     if (user_id) {
       const fetchData = async () => {
         try {
-          const response = await fetch(`http://localhost:3000/cart_items/${user_id}`);
+          const response = await fetch(`${SERVER_HOST}/cart_items/${user_id}`);
           if(response.ok) {            
             const cartrespons = await response.json();
             // console.log('response: ', response);
@@ -96,7 +96,7 @@ const ProductDetail = () => {
       return;
     }
     // Якщо товар відсутній в корзині, відправляємо запит на сервер для додавання його в корзину    
-      await fetch(`http://localhost:3000/cart_items/${user_id}`, {
+      await fetch(`${SERVER_HOST}/cart_items/${user_id}`, {
         method: 'POST',
         credentials: 'include',
         headers: {

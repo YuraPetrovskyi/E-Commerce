@@ -12,6 +12,10 @@ import { loadStripe } from '@stripe/stripe-js';
 
 
 const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHABLE_KEY);
+// console.log('process.env.REACT_APP_PUBLISHABLE_KEY', process.env.REACT_APP_PUBLISHABLE_KEY)
+// console.log('process.env.REACT_APP_SERVER_HOST_SERVER_HOST', process.env.REACT_APP_SERVER_HOST)
+
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

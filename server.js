@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const secret = process.env.secret;
 const WEB_APP_URL= process.env.WEB_APP_URL
-const SERVER_HOST = process.env.SERVER_HOST;
+const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
 
 // const authConfig = require('./config/auth');
 

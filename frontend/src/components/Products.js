@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
+
+
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -7,7 +10,7 @@ const Products = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/products');
+        const response = await fetch(`${SERVER_HOST}/products`);
         const data = await response.json();
         setProducts(data);
       } catch (error) {

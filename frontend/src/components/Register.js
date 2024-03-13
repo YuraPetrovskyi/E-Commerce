@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Register.css';
+const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
+
 
 const Register = () => {
   const [email, setEmail] = useState('');
@@ -11,6 +13,8 @@ const Register = () => {
 
   const navigate = useNavigate();
 
+
+  
   useEffect(() => {
     checkAuthentication();       
   }, []);
@@ -23,7 +27,7 @@ const Register = () => {
 
   const checkAuthentication = async () => {
     try {
-      const response = await fetch('http://localhost:3000/check-auth', {
+      const response = await fetch(`${SERVER_HOST}/check-auth`, {
         method: 'GET',
         credentials: 'include',
       });
@@ -40,7 +44,7 @@ const Register = () => {
     e.preventDefault();
     // console.log('started handleLogin');
     try {
-      const response = await fetch('http://localhost:3000/register', {
+      const response = await fetch(`${SERVER_HOST}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,7 +55,7 @@ const Register = () => {
       // console.log('finish registered fetch');
       if (response.ok) {
         try {
-          const response = await fetch('http://localhost:3000/login', {
+          const response = await fetch(`${SERVER_HOST}/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

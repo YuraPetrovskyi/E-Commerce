@@ -3,6 +3,10 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import './OrderItem.css';
 import Layout from './Layout';
 
+const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
+
+
+
 const OrderItem = () => {
   const { order_id } = useParams();
   const [products, setProducts] = useState([]);
@@ -19,7 +23,7 @@ const OrderItem = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/products');
+        const response = await fetch(`${SERVER_HOST}/products`);
         const data = await response.json();
         setProducts(data);
       } catch (error) {
@@ -36,7 +40,7 @@ const OrderItem = () => {
       // console.log('startet Home before fitch')
       // console.log(isAuthenticated)
       try {        
-        const authResponse = await fetch('http://localhost:3000/check-auth', {
+        const authResponse = await fetch(`${SERVER_HOST}/check-auth`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -45,7 +49,7 @@ const OrderItem = () => {
         if (authData.isAuthenticated) {
           // console.log('isAuthenticated --> true')
           // Якщо користувач аутентифікований, зробимо запит для отримання інформації про користувача
-          const profileResponse = await fetch('http://localhost:3000/profile', {
+          const profileResponse = await fetch(`${SERVER_HOST}/profile`, {
             method: 'GET',
             credentials: 'include',
           });
@@ -69,7 +73,7 @@ const OrderItem = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {        
-        const response = await fetch(`http://localhost:3000/order_items/${order_id}`, {
+        const response = await fetch(`${SERVER_HOST}/order_items/${order_id}`, {
           method: 'GET',
           credentials: 'include',
         });

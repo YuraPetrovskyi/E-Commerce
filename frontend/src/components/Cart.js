@@ -4,7 +4,12 @@ import { CartContext } from './CartContext';
 import './Cart.css';
 
 import Layout from './Layout';
+console.log('process.env.REACT_APP_PUBLISHABLE_KEY', process.env.REACT_APP_PUBLISHABLE_KEY)
+console.log('process.env.SERVER_HOST', process.env.REACT_APP_SERVER_HOST)
 
+const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
+
+// require('dotenv').config();
 const Cart = () => {
   // const [user, setUser] = useState(null);
   // const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -17,14 +22,13 @@ const Cart = () => {
   const { setCartLenght } = useContext(CartContext);
   const navigate = useNavigate();
 
-
   // ============================= Отримання даних про користувача
   useEffect(() => {
     const fetchData = async () => {
       // console.log('startet Cart before fitch')
-      // console.log(isAuthenticated)
+      console.log(`${SERVER_HOST}/check-auth`)
       try {        
-        const authResponse = await fetch('http://localhost:3000/check-auth', {
+        const authResponse = await fetch(`${SERVER_HOST}/check-auth`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -33,7 +37,7 @@ const Cart = () => {
         if (authData.isAuthenticated) {
           // console.log('isAuthenticated --> true')
           // Якщо користувач аутентифікований, зробимо запит для отримання інформації про користувача
-          const profileResponse = await fetch('http://localhost:3000/profile', {
+          const profileResponse = await fetch(`${SERVER_HOST}/profile`, {
             method: 'GET',
             credentials: 'include',
           });
@@ -57,7 +61,7 @@ const Cart = () => {
       try {
         if (!cartID) return;
   
-        const response = await fetch(`http://localhost:3000/cart_items/${cartID}`);
+        const response = await fetch(`${SERVER_HOST}/cart_items/${cartID}`);
         
         // Перевіряємо, чи відповідь вдала
         if (!response.ok) {
@@ -83,7 +87,7 @@ const Cart = () => {
         
         // Отримуємо дані про кожен продукт у корзині та оновлюємо стан products
         const productPromises = cartData.map(async (item) => {
-          const productResponse = await fetch(`http://localhost:3000/products/${item.product_id}`);
+          const productResponse = await fetch(`${SERVER_HOST}/products/${item.product_id}`);
           return productResponse.json();
         });          
         
@@ -123,7 +127,7 @@ const Cart = () => {
       }  
       const cartItemId = cartItem.cart_item_id;  
       // Відправляємо запит на видалення з сервера за допомогою cart_item_id
-      await fetch(`http://localhost:3000/cart_items/${cartItemId}`, {
+      await fetch(`${SERVER_HOST}/cart_items/${cartItemId}`, {
         method: 'DELETE',
         credentials: 'include',
       });  
@@ -165,7 +169,7 @@ const Cart = () => {
         return;
       }
       const cartItemId = cartItem.cart_item_id;
-      const response = await fetch(`http://localhost:3000/cart_items/${cartItemId}`, {
+      const response = await fetch(`${SERVER_HOST}/cart_items/${cartItemId}`, {
         method: 'PUT',
         credentials: 'include',
         headers: {
@@ -190,7 +194,7 @@ const Cart = () => {
 
   const handleCheckout = async () => {
     try {
-      const featch_heckout = await fetch(`http://localhost:3000/orders/${cartID}`, {
+      const featch_heckout = await fetch(`${SERVER_HOST}/orders/${cartID}`, {
             method: 'POST',
             credentials: 'include',
           });

@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
+
+
+
 const Success = () => {
   const navigate = useNavigate()
   const { order_id } = useParams()
@@ -17,7 +21,7 @@ const Success = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/orders/${order_id}`, {
+        const response = await fetch(`${SERVER_HOST}/orders/${order_id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -25,7 +29,7 @@ const Success = () => {
           credentials: 'include',
           body: JSON.stringify({ status: 'Paid' }),
         });
-        console.log(response);
+        // console.log(response);
         if (response.ok) {
           console.log(`The status of the order with id: ${order_id} has been changed to Paid`);
           alert(`The status of the order with id: ${order_id} has been changed to Paid`);
