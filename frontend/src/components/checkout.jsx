@@ -4,6 +4,9 @@ import { useStripe } from "@stripe/react-stripe-js";
 
 import Layout from './Layout';
 
+const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
+
+
 const Checkout = () => {
   const { order_id } = useParams();
   const [products, setProducts] = useState([]);
@@ -12,18 +15,17 @@ const Checkout = () => {
   // const [cart, setCart] = useState([]);
   const [userID, setUserId] = useState(null);
   const [orderItems, setOrderItems] = useState([]); 
-  // const [orders, setOrders] = useState([]); 
+  // const [orders, setOrders] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
 
   const stripe = useStripe();
   const navigate = useNavigate();
 
-  const SERVER_HOST = process.env.SERVER_HOST;
   
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/products');
+        const response = await fetch(`${SERVER_HOST}/products`);
         const data = await response.json();
         setProducts(data);
       } catch (error) {
@@ -40,7 +42,7 @@ const Checkout = () => {
       // console.log('startet Home before fitch')
       // console.log(isAuthenticated)
       try {        
-        const authResponse = await fetch('http://localhost:3000/check-auth', {
+        const authResponse = await fetch(`${SERVER_HOST}/check-auth`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -49,7 +51,7 @@ const Checkout = () => {
         if (authData.isAuthenticated) {
           // console.log('isAuthenticated --> true')
           // If the user is authenticated, we will make a request to obtain information about the user
-          const profileResponse = await fetch('http://localhost:3000/profile', {
+          const profileResponse = await fetch(`${SERVER_HOST}/profile`, {
             method: 'GET',
             credentials: 'include',
           });
@@ -71,7 +73,7 @@ const Checkout = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {        
-        const response = await fetch(`http://localhost:3000/order_items/${order_id}`, {
+        const response = await fetch(`${SERVER_HOST}/order_items/${order_id}`, {
           method: 'GET',
           credentials: 'include',
         });
@@ -93,7 +95,7 @@ const Checkout = () => {
     if(userID) {
       const fetchData = async () => {
         try {        
-          const response = await fetch(`http://localhost:3000/orders/${userID}`, {
+          const response = await fetch(`${SERVER_HOST}/orders/${userID}`, {
             method: 'GET',
             credentials: 'include',
           });
@@ -155,7 +157,7 @@ const Checkout = () => {
     // console.log('body', body);
 
     // a request to the server to create a stripe session ID 
-    const response = await fetch(`http://localhost:3000/create-checkout-session`, {
+    const response = await fetch(`${SERVER_HOST}/create-checkout-session`, {
       method: 'POST',
       ...(body && { body: JSON.stringify(body) }),
       headers: {
