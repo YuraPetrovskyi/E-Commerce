@@ -17,29 +17,29 @@ const Pool = require('pg').Pool // or const { Pool }  = require('pg') ---> npm i
 // };
 
 // ============================= 2
-const RENDER_DATABASE_USERNAME = process.env.RENDER_DATABASE_USERNAME
-const RENDER_DATABASE_HOST = process.env.RENDER_DATABASE_HOST
-const RENDER_DATABASE_NAME = process.env.RENDER_DATABASE_NAME
-const RENDER_DATABASE_PASSWORD = process.env.RENDER_DATABASE_PASSWORD
+// const RENDER_DATABASE_USERNAME = process.env.RENDER_DATABASE_USERNAME
+// const RENDER_DATABASE_HOST = process.env.RENDER_DATABASE_HOST
+// const RENDER_DATABASE_NAME = process.env.RENDER_DATABASE_NAME
+// const RENDER_DATABASE_PASSWORD = process.env.RENDER_DATABASE_PASSWORD
 
-const pool = new Pool({
-  user: RENDER_DATABASE_USERNAME,
-  host: RENDER_DATABASE_HOST,
-  database: RENDER_DATABASE_NAME,
-  password: RENDER_DATABASE_PASSWORD,
-  port: 5432, // Залишаємо стандартний порт
-});
+// const pool = new Pool({
+//   user: RENDER_DATABASE_USERNAME,
+//   host: RENDER_DATABASE_HOST,
+//   database: RENDER_DATABASE_NAME,
+//   password: RENDER_DATABASE_PASSWORD,
+//   port: 5432, // Залишаємо стандартний порт
+// });
 
 
 // ============================= 3
-// const connectionString = process.env.RENDER_EXTERNAL_DATABASE_URL;
+const connectionString = process.env.RENDER_EXTERNAL_DATABASE_URL;
 
-// const pool = new Pool({
-//   connectionString: connectionString,
-//   ssl: {
-//     rejectUnauthorized: false // Опція для виключення перевірки сертифікату SSL (необхідно для Render)
-//   }
-// });
+const pool = new Pool({
+  connectionString: connectionString,
+  ssl: {
+    rejectUnauthorized: false // Опція для виключення перевірки сертифікату SSL (необхідно для Render)
+  }
+});
 
 
 module.exports = {
