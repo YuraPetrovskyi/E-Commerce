@@ -21,12 +21,12 @@ const Login = () => {
     checkAuthentication();       
   }, []);
   
-  useEffect(() => {
-    if (isAuthenticated) {
-      console.log('navigate("/")')
-      navigate('/');
-    }
-  }, [isAuthenticated, navigate]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     console.log('navigate("/")')
+  //     navigate('/');
+  //   }
+  // }, [isAuthenticated, navigate]);
 
   const checkAuthentication = async () => {
     try {
@@ -73,7 +73,7 @@ const Login = () => {
       console.error('Error during login:', error);
     }
   };
-
+  console.log('isAuthenticated', isAuthenticated)
   return (
     <div className="login-container">
       <h2>Login</h2>

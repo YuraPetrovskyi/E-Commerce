@@ -21,13 +21,13 @@ const Register = () => {
     checkAuthentication();       
   }, []);
   
-  useEffect(() => {
+  // useEffect(() => {
 
-    if (isAuthenticated) {
-      console.log('navigate("/")')
-      navigate('/');
-    }
-  }, [isAuthenticated, navigate]);
+  //   if (isAuthenticated) {
+  //     console.log('navigate("/")')
+  //     navigate('/');
+  //   }
+  // }, [isAuthenticated, navigate]);
 
   const checkAuthentication = async () => {
     try {
@@ -92,6 +92,7 @@ const Register = () => {
       setErrorMessage(error);
     }
   };
+  console.log('isAuthenticated', isAuthenticated)
 
   return (
     <div className="register-container">
