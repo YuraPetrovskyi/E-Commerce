@@ -16,11 +16,15 @@ const Register = () => {
 
   
   useEffect(() => {
+    console.log('checkAuthentication()')
+
     checkAuthentication();       
   }, []);
   
   useEffect(() => {
+
     if (isAuthenticated) {
+      console.log('navigate("/")')
       navigate('/');
     }
   }, [isAuthenticated, navigate]);
@@ -31,7 +35,7 @@ const Register = () => {
         method: 'GET',
         credentials: 'include',
       });
-      // console.log(response)
+      console.log(response)
       if (response.ok) {
         setIsAuthenticated(true);
       }
@@ -52,7 +56,7 @@ const Register = () => {
         credentials: 'include',
         body: JSON.stringify({username, email, password }),
       });
-      // console.log('finish registered fetch');
+      console.log('finish registered fetch');
       if (response.ok) {
         try {
           const response = await fetch(`${SERVER_HOST}/login`, {
@@ -63,10 +67,10 @@ const Register = () => {
             credentials: 'include',
             body: JSON.stringify({ email, password }),
           });
-          // console.log('finish login fetch');
+          console.log('finish login fetch');
           if (response.ok) {
             const data = await response.json();
-            // console.log(data);
+            console.log(data);
             if (data.redirect) {
               navigate(data.redirect); // Перенаправити за допомогою useNavigate
             } else {
@@ -81,8 +85,8 @@ const Register = () => {
       } else {
         const errorMessage = await response.text(); // Отримати текст повідомлення з тіла відповіді
         setErrorMessage(errorMessage);
-        // console.log(errorMessage);
-        // console.error(`Login failed: ${errorMessage}`);
+        console.log(errorMessage);
+        console.error(`Login failed: ${errorMessage}`);
       }
     } catch (error) {
       setErrorMessage(error);

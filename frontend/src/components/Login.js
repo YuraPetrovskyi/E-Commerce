@@ -16,11 +16,14 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log('checkAuthentication()')
+
     checkAuthentication();       
   }, []);
   
   useEffect(() => {
     if (isAuthenticated) {
+      console.log('navigate("/")')
       navigate('/');
     }
   }, [isAuthenticated, navigate]);
@@ -31,7 +34,7 @@ const Login = () => {
         method: 'GET',
         credentials: 'include',
       });
-      // console.log(response)
+      console.log(response)
       if (response.ok) {
         setIsAuthenticated(true);
       }
@@ -39,38 +42,6 @@ const Login = () => {
       console.error('Error fetching checkAuthentication:', error);
     }
   }
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     console.log('startet Home before fitch')
-  //     console.log(isAuthenticated)
-  //     try {        
-  //       const authResponse = await fetch('http://localhost:3000/check-auth', {
-  //         method: 'GET',
-  //         credentials: 'include',
-  //       });
-  //       const authData = await authResponse.json();
-
-  //       if (authData.isAuthenticated) {
-  //         console.log('isAuthenticated --> true')
-  //         // Якщо користувач аутентифікований, зробимо запит для отримання інформації про користувача
-  //         const profileResponse = await fetch('http://localhost:3000/profile', {
-  //           method: 'GET',
-  //           credentials: 'include',
-  //         });
-  //         const profileData = await profileResponse.json();
-  //         setUser(profileData);
-  //         setIsAuthenticated(true);
-  //       } else {
-  //         setIsAuthenticated(false);
-  //       }
-  //     } catch (error) {
-  //       console.log('користувач не автентифікований:')
-  //       console.error('Error fetching data:', error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -87,7 +58,7 @@ const Login = () => {
       console.log('finish fetch');
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
+        console.log('data', data);
         if (data.redirect) {
           navigate(data.redirect); // Перенаправити за допомогою useNavigate
         } else {
@@ -133,3 +104,38 @@ const Login = () => {
 };
 
 export default Login;
+
+
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     console.log('startet Home before fitch')
+  //     console.log(isAuthenticated)
+  //     try {        
+  //       const authResponse = await fetch('http://localhost:3000/check-auth', {
+  //         method: 'GET',
+  //         credentials: 'include',
+  //       });
+  //       const authData = await authResponse.json();
+
+  //       if (authData.isAuthenticated) {
+  //         console.log('isAuthenticated --> true')
+  //         // Якщо користувач аутентифікований, зробимо запит для отримання інформації про користувача
+  //         const profileResponse = await fetch('http://localhost:3000/profile', {
+  //           method: 'GET',
+  //           credentials: 'include',
+  //         });
+  //         const profileData = await profileResponse.json();
+  //         setUser(profileData);
+  //         setIsAuthenticated(true);
+  //       } else {
+  //         setIsAuthenticated(false);
+  //       }
+  //     } catch (error) {
+  //       console.log('користувач не автентифікований:')
+  //       console.error('Error fetching data:', error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);

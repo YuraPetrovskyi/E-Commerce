@@ -18,6 +18,7 @@ passport.use(new GoogleStrategy({
     prompt: 'select_account'
   },
   async (accessToken, refreshToken, profile, done) => {
+    
     console.log('Warnin!! new GoogleStrategy profile: ', profile)
     const user = await find.findByEmail(profile.emails[0].value, async (err, user) => {
       console.log('user from GoogleStrategy: ', user);
