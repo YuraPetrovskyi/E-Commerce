@@ -18,10 +18,10 @@ passport.use(new GoogleStrategy({
     prompt: 'select_account'
   },
   async (accessToken, refreshToken, profile, done) => {
-    
     console.log('Warnin!! new GoogleStrategy profile: ', profile)
+    console.log('accessToken: ', accessToken)
+    console.log('refreshToken: ', refreshToken)
     const user = await find.findByEmail(profile.emails[0].value, async (err, user) => {
-      console.log('user from GoogleStrategy: ', user);
       if(err) return done(err);
       
       if(!user) {
@@ -29,6 +29,7 @@ passport.use(new GoogleStrategy({
         console.log('GoogleStrategy created a new profile : ', newUser)
         return done(null, newUser);
       }
+      console.log('user from GoogleStrategy: ', user);
       return done(null, user)
     });
   }

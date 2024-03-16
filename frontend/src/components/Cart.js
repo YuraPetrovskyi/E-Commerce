@@ -4,8 +4,6 @@ import { CartContext } from './CartContext';
 import './Cart.css';
 
 import Layout from './Layout';
-console.log('process.env.REACT_APP_PUBLISHABLE_KEY', process.env.REACT_APP_PUBLISHABLE_KEY)
-console.log('process.env.REACT_APP_SERVER_HOST', process.env.REACT_APP_SERVER_HOST)
 
 const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
 

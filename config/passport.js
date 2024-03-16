@@ -5,9 +5,9 @@ const bcrypt = require("bcrypt");
 
 const find = require('../db/find_in_passprt');
 
-require('./google-passport-config');
 // require('./facebook-passport-config');
 
+require('./google-passport-config');
 
 
 passport.use(new LocalStrategy(
@@ -41,3 +41,4 @@ passport.deserializeUser((id, done) => {
     done(null, user.id);
   });
 });
+

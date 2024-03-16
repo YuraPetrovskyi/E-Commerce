@@ -81,35 +81,11 @@ app.get('/auth/google/callback',
     // Successful authentication, redirect home.
     console.log('secces google sesion')
     console.log('host: ',`${WEB_APP_URL}`)
-    res.redirect(`${WEB_APP_URL}`);
+    res.redirect(`${WEB_APP_URL}/login`);
   }
 );
 
-// // Facebook
-// app.get('/auth/facebook',
-//   passport.authenticate('facebook'));
-// app.get('/auth/facebook/callback', passport.authenticate('facebook', { 
-//     failureRedirect: "http://localhost:3001/login", // Адреса вашого фронтенду для перенаправлення при помилці
-//     failureMessage: true,
-//     successRedirect: "http://localhost:3001/", // Адреса вашого фронтенду для успішного перенаправлення
-//   }),
-//   function(req, res) {
-//     res.redirect('/');
-//   }
-// );
 
-// Підключення конфігурації GitHub стратегії
-// require('./config/github-passport-config');
-// app.get('/auth/github',
-//   passport.authenticate('github', { scope: ["user"] })
-// );
-
-// app.get('/auth/github/callback',
-//   passport.authenticate('github', { failureRedirect: '/' }),
-//   (req, res) => {
-//     // Успішна автентифікація через GitHub
-//     res.redirect('/admin');
-//   });
 
 app.get('/', ensureAuthenticated, (req, res) => {  
   console.log('користувач автентифікований: ', req.isAuthenticated());
@@ -123,15 +99,19 @@ app.post('/login', (req, res, next) => {
   console.log('start to login');
   passport.authenticate('local', function(err, user, info){
     if (err) {
+      console.log('return next(err)....');
       return next(err);
     }
     if (!user) {
+      console.log("return res.status(401).json({ error: info.message || 'Incorrect name or password' });");
       return res.status(401).json({ error: info.message || 'Incorrect name or password' });
     }
     req.logIn(user, function(err) {
+      console.log(' req.logIn started ...');
       if (err) {
         return next(err);
       }
+      console.log('req.logIn is ok, you will redirect: "/" ');
       return res.json({ redirect: '/' }); // Відправити JSON з об'єктом з полем redirect
     })
   })(req, res, next)
@@ -156,23 +136,12 @@ app.get('/admin', ensureAuthenticated, (req, res) => {
 
 app.post('/register', db_users.createUser);
 
-// app.get('/check-auth', ensureAuthenticated, (req, res) => {
-//   if (req.isAuthenticated()) {
-//     console.log('користувач аутентифікований :', req.isAuthenticated())
-//     console.log('data inform:', req.user)
-//     // Якщо користувач аутентифікований, відправте відповідь зі статусом 200 та об'єктом, що містить інформацію про аутентифікацію
-//     res.status(200).json({ isAuthenticated: true, username:  req.user.username, user_id: req.user.user_id});
-//   } else {
-//     console.log('користувач неаутентифікований, результат: ', req.isAuthenticated())
-//     // Якщо користувач не аутентифікований, відправте відповідь зі статусом 401 (Unauthorized)
-//     res.status(401).json({ isAuthenticated: false });
-//   }
-// });
+
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  console.log('you are not registreted');
+  console.log('ensureAuthenticated: you are not registreted');
   // res.sendStatus(401);
   return res.status(401).json({ message: 'Unauthorized' });
 }
@@ -239,4 +208,28 @@ app.listen(port, () => {
   console.log(`Сервер запущено на порті ${port}`);
 });
 
+// // Facebook
+// app.get('/auth/facebook',
+//   passport.authenticate('facebook'));
+// app.get('/auth/facebook/callback', passport.authenticate('facebook', { 
+//     failureRedirect: "http://localhost:3001/login", // Адреса вашого фронтенду для перенаправлення при помилці
+//     failureMessage: true,
+//     successRedirect: "http://localhost:3001/", // Адреса вашого фронтенду для успішного перенаправлення
+//   }),
+//   function(req, res) {
+//     res.redirect('/');
+//   }
+// );
 
+// Підключення конфігурації GitHub стратегії
+// require('./config/github-passport-config');
+// app.get('/auth/github',
+//   passport.authenticate('github', { scope: ["user"] })
+// );
+
+// app.get('/auth/github/callback',
+//   passport.authenticate('github', { failureRedirect: '/' }),
+//   (req, res) => {
+//     // Успішна автентифікація через GitHub
+//     res.redirect('/admin');
+//   });

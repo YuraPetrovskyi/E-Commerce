@@ -15,11 +15,11 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log('checkAuthentication()')
+  // useEffect(() => {
+  //   console.log('checkAuthentication()')
 
-    checkAuthentication();       
-  }, []);
+  //   checkAuthentication();       
+  // }, []);
   
   // useEffect(() => {
   //   if (isAuthenticated) {
