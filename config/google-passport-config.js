@@ -41,17 +41,14 @@ passport.use(new GoogleStrategy({
 ));
 
 passport.serializeUser((user, done) => {
-  console.log('Serialize user passport google:', user);
-  console.log('Serialize user passport google:', user.user_id);
-
+  console.log('Serialize user passport google: user and user_id', user, user.user_id);
   done(null, user.user_id);
 });
 
 passport.deserializeUser((id, done) => {  
-  console.log('Deserialize user passport google id:', id);
+  // console.log('Deserialize user passport google id:', id);
   find.findById(id,  (err, user) => { 
-    console.log('Deserialize user passport google id:', id);
-    console.log('Deserialize user passport google user:', user)
+    console.log(`Deserialize user passport google ${id} user:`, user);
     if (err) return done(err); 
     done(null, user);
   });

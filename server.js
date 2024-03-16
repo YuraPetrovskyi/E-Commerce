@@ -2,18 +2,36 @@ const express = require('express');
 const cors = require('cors'); 
 const session = require('express-session');
 const passport = require('passport');
+
 require('dotenv').config();
+
+// const RedisStore = require('connect-redis')(session);
+const RedisStore = require("connect-redis").default;
+const redis = require('redis');
+
+const store = new session.MemoryStore();
 
 const secret = process.env.secret;
 const WEB_APP_URL= process.env.WEB_APP_URL
-const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
+// const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
 
-// const authConfig = require('./config/auth');
+// Redis for session
+const REDIS_HOST = process.env.REDIS_HOST;
+const REDIS_PORT = process.env.REDIS_PORT;
+const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
 
+const redisOptions = {
+  host: REDIS_HOST, // або IP-адреса вашого сервера Redis
+  port: REDIS_PORT, // порт, на якому запущений сервер Redis
+  password: REDIS_PASSWORD,
+};
+const client = redis.createClient(redisOptions);
+
+// Stripe
 const createCheckoutSession = require('./config/checkout'); //for stripe
 const webhook = require('./config/webhook');
 
-
+// DB
 const db_users = require('./db/users');
 const db_products = require('./db/products');
 const db_carts = require('./db/carts');
@@ -47,18 +65,36 @@ app.use(express.json({
 //   next();
 // });
 
+
+
 app.use(
   session({ 
     secret: secret, 
+    // store: new RedisStore({ client: client }),
     cookie: {
       path: '/',
       httpOnly: true,
-      maxAge: 60*60*1000
-    },
+      maxAge: 60*60*1000,
+      // sameSite: "none",
+      // secure: true,
+    },    
     resave: false, 
-    saveUninitialized: false 
+    saveUninitialized: false,
+    store,
   })
 );
+// - maxAge - становлює кількість мілісекунд до завершення терміну дії файлу cookie. У цьому випадку ми встановлюємо термін його дії через 24 години. 
+// - secure - щоб він надсилався на сервер лише через HTTPS. 
+// - sameSite -встановлюємо її "none", щоб дозволити міжсайтовий файл cookie через різні браузери.
+
+client.on('error', (error) => {
+  console.error('Error connecting to Redis:', error);
+});
+
+// Handle Redis connection error
+client.on('error', (error) => {
+  console.error('Error connecting to Redis:', error);
+});
 
 // Підключення конфігурації Passport стратегії
 require('./config/passport')
