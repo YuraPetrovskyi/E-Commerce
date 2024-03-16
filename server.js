@@ -81,7 +81,7 @@ app.get('/auth/google/callback',
     // Successful authentication, redirect home.
     console.log('secces google sesion')
     console.log('host: ',`${WEB_APP_URL}`)
-    res.redirect(`${WEB_APP_URL}/login`);
+    res.redirect(`${WEB_APP_URL}`);
   }
 );
 

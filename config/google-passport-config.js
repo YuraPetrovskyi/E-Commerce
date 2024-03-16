@@ -17,20 +17,25 @@ passport.use(new GoogleStrategy({
     callbackURL: `${SERVER_HOST}/auth/google/callback`,
     prompt: 'select_account'
   },
-  async (accessToken, refreshToken, profile, done) => {
+  (accessToken, refreshToken, profile, done) => {
     console.log('Warnin!! new GoogleStrategy profile: ', profile)
     console.log('accessToken: ', accessToken)
     console.log('refreshToken: ', refreshToken)
-    const user = await find.findByEmail(profile.emails[0].value, async (err, user) => {
+    find.findByEmail(profile.emails[0].value, (err, user) => {
       if(err) return done(err);
       
-      if(!user) {
-        const newUser = await db_users.createGoogleUser(profile);
-        console.log('GoogleStrategy created a new profile : ', newUser)
-        return done(null, newUser);
+      if (!user) {
+        db_users.createGoogleUser(profile, (err, newUser) => {
+          if (err) {
+            console.log('Error creating Google user:', err);
+            return done(err);
+          }
+          console.log('GoogleStrategy created a new profile : ', newUser);
+          return done(null, newUser);
+        });
+      } else {
+        return done(null, user);
       }
-      console.log('user from GoogleStrategy: ', user);
-      return done(null, user)
     });
   }
 ));
@@ -51,3 +56,46 @@ passport.deserializeUser((id, done) => {
     done(null, user);
   });
 });
+
+
+// Here's an example of what the code will look like after rewriting it to async/await:
+
+// passport.use(new GoogleStrategy({
+//     clientID: GOOGLE_CLIENT_ID,
+//     clientSecret: GOOGLE_CLIENT_SECRET,
+//     callbackURL: `${SERVER_HOST}/auth/google/callback`,
+//     prompt: 'select_account'
+//   },
+//   async (accessToken, refreshToken, profile, done) => {
+//     try {
+//       console.log('Warnin!! new GoogleStrategy profile: ', profile);
+//       const user = await find.findByEmail(profile.emails[0].value);
+//       console.log('user from GoogleStrategy: ', user);
+//       if (!user) {
+//         const newUser = await db_users.createGoogleUser(profile);
+//         console.log('GoogleStrategy created a new profile : ', newUser);
+//         return done(null, newUser);
+//       }
+//       return done(null, user);
+//     } catch (error) {
+//       return done(error);
+//     }
+//   }
+// ));
+
+// passport.serializeUser((user, done) => {
+//   console.log('Serialize user passport google:', user);
+//   console.log('Serialize user passport google:', user.user_id);
+//   done(null, user.user_id);
+// });
+
+// passport.deserializeUser(async (id, done) => {
+//   try {
+//     console.log('Deserialize user passport google id:', id);
+//     const user = await find.findById(id);
+//     console.log('Deserialize user passport google user:', user);
+//     done(null, user);
+//   } catch (error) {
+//     done(error);
+//   }
+// });

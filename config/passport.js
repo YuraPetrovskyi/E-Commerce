@@ -14,7 +14,7 @@ passport.use(new LocalStrategy(
   {usernameField: 'email'},
   (email, password, done) => {   
     find.findByEmail(email, async (err, user) => { // Look up user in the db  
-      
+    console.log('Warnin!! new LocalStrategy email: ', email)      
       if(err) return done(err);   
                // перевіряє, чи знайдено помилку. If there's an error in db lookup,return err callback function
       
@@ -35,9 +35,8 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((id, done) => {  
   find.findById(id, function (err, user) { 
-    console.log('Deserialize user passport local id:', id);
-    console.log('Deserialize user passport local user:', user)
     if (err) return done(err); 
+    console.log('Deserialize user passport local==> id: and user:', id, user);
     done(null, user.id);
   });
 });
