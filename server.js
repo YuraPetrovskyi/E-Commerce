@@ -5,33 +5,45 @@ const passport = require('passport');
 
 require('dotenv').config();
 
-// const RedisStore = require('connect-redis')(session);
-const RedisStore = require("connect-redis").default;
-const redis = require('redis');
+//================ MongoDB conection
+// const { MongoClient } = require("mongodb");
+//================ MongoDB for session
+const MongoDBStore = require('connect-mongodb-session')(session);
 
-const store = new session.MemoryStore();
+const uri =process.env.MONGODB_URI;
+// const client = new MongoClient(uri);
 
-const secret = process.env.secret;
-const WEB_APP_URL= process.env.WEB_APP_URL
-// const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
+// Функція для підключення до MongoDB
+// const connectToDatabase = async () => {
+//   await client.connect();
+//   return client;
+// };
 
-// Redis for session
-const REDIS_HOST = process.env.REDIS_HOST;
-const REDIS_PORT = process.env.REDIS_PORT;
-const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
+// const run = async (request, response, client) => {
+//   try {
+//     console.log('started')
+//     const database = client.db('sample_mflix');
+//     const movies = database.collection('movies');
 
-const redisOptions = {
-  host: REDIS_HOST, // або IP-адреса вашого сервера Redis
-  port: REDIS_PORT, // порт, на якому запущений сервер Redis
-  password: REDIS_PASSWORD,
-};
-const client = redis.createClient(redisOptions);
+//     // Запит на пошук фільму з назвою 'Back to the Future'
+//     const query = { title: 'Back to the Future' };
+//     const movie = await movies.findOne(query);
 
-// Stripe
+//     console.log(movie);
+//     response.status(200).json(movie);
+//   } catch (error) {
+//     console.error(error);
+//     response.status(500).json({ error: 'Internal Server Error' });
+//   }
+// }
+
+
+
+//================ Stripe
 const createCheckoutSession = require('./config/checkout'); //for stripe
 const webhook = require('./config/webhook');
 
-// DB
+//================ DB
 const db_users = require('./db/users');
 const db_products = require('./db/products');
 const db_carts = require('./db/carts');
@@ -39,9 +51,26 @@ const db_cart_items = require('./db/cart_items');
 const db_orders = require('./db/orders');
 const db_order_items = require('./db/order_items');
 
-const app = express();
-const port = process.env.PORT || 3000;
 
+
+const app = express();
+
+const store = new MongoDBStore(
+  {
+    uri: uri,
+    databaseName: 'sample_mflix',
+    collection: 'session'
+  },
+  function(error) {
+    console.error('error! Помилка збереження сесій у MongoDB:', error);
+  });
+
+store.on('error', function(error) {
+  console.error('Помилка збереження сесій у MongoDB:', error);
+});
+
+//  ================> Cors
+const WEB_APP_URL= process.env.WEB_APP_URL
 app.use(cors({
   origin: WEB_APP_URL,  // URL вашого клієнтського додатку
   credentials: true,
@@ -54,57 +83,43 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Credentials', true);
   next();
 });
-// app.use(express.json()); //Цей рядок дозволяє обробляти запити, які мають тип application/json
+
 app.use(express.urlencoded({ extended: false })); //Цей рядок дозволяє обробляти запити, які мають тип application/x-www-form-urlencoded
 app.use(express.json({
   verify: (req, res, buffer) => req['rawBody'] = buffer,
 }))
-// // Використання отриманого buffer
+// Використання отриманого buffer
 // app.use((req, res, next) => {
 //   console.log('Raw body:', req.rawBody);
 //   next();
 // });
 
 
-
+const secret = process.env.secret;
+// const store = new session.MemoryStore();
 app.use(
   session({ 
     secret: secret, 
     // store: new RedisStore({ client: client }),
     cookie: {
       path: '/',
-      httpOnly: true,
-      maxAge: 60*60*1000,
-      // sameSite: "none",
-      // secure: true,
+      httpOnly: true, 
+      maxAge: 60*60*1000, // - maxAge - становлює кількість мілісекунд до завершення терміну дії файлу cookie. У цьому випадку ми встановлюємо термін його дії через 24 години. 
+      // sameSite: "none",  // - sameSite -встановлюємо її "none", щоб дозволити міжсайтовий файл cookie через різні браузери.
+      // secure: true, // - secure - щоб він надсилався на сервер лише через HTTPS.
     },    
     resave: false, 
     saveUninitialized: false,
-    store,
+    store: store,
   })
 );
-// - maxAge - становлює кількість мілісекунд до завершення терміну дії файлу cookie. У цьому випадку ми встановлюємо термін його дії через 24 години. 
-// - secure - щоб він надсилався на сервер лише через HTTPS. 
-// - sameSite -встановлюємо її "none", щоб дозволити міжсайтовий файл cookie через різні браузери.
 
-client.on('error', (error) => {
-  console.error('Error connecting to Redis:', error);
-});
-
-// Handle Redis connection error
-client.on('error', (error) => {
-  console.error('Error connecting to Redis:', error);
-});
-
-// Підключення конфігурації Passport стратегії
+//================ Passport 
 require('./config/passport')
-
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-
-// Google
+//================ Google
 app.get('/auth/google', passport.authenticate('google', { 
   scope: ['profile', 'email']
 }));
@@ -235,11 +250,19 @@ app.get('/bad', (req, res) => {
   res.send('bad autorization!!');
 });
 
+// app.get('/movies', async (req, res) => {
+//   const client = await connectToDatabase();
+//   await run(req, res, client);
+//   await client.close(); // Закриття підключення після виконання запиту
+// });
+
 app.get("/health", (req, res) => { 
   res.sendStatus(200); 
 });
 
 // lisener server
+const port = process.env.PORT || 3000;
+
 app.listen(port, () => {
   console.log(`Сервер запущено на порті ${port}`);
 });
@@ -269,3 +292,27 @@ app.listen(port, () => {
 //     // Успішна автентифікація через GitHub
 //     res.redirect('/admin');
 //   });
+
+
+//================ Redis for session
+// const RedisStore = require('connect-redis')(session);
+// const RedisStore = require("connect-redis").default;
+// const redis = require('redis');
+
+// const REDIS_HOST = process.env.REDIS_HOST;
+// const REDIS_PORT = process.env.REDIS_PORT;
+// const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
+
+// const redisOptions = {
+//   host: REDIS_HOST, // або IP-адреса вашого сервера Redis
+//   port: REDIS_PORT, // порт, на якому запущений сервер Redis
+//   password: REDIS_PASSWORD,
+// };
+
+// const client = redis.createClient(redisOptions);
+// const store = new RedisStore({ client: client });
+
+// Handle Redis connection error
+// client.on('error', (error) => {
+//   console.error('Error connecting to Redis:', error);
+// });
