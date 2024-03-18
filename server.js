@@ -5,37 +5,38 @@ const passport = require('passport');
 
 require('dotenv').config();
 
-//================ MongoDB conection
-// const { MongoClient } = require("mongodb");
+
 //================ MongoDB for session
 const MongoDBStore = require('connect-mongodb-session')(session);
-
 const uri =process.env.MONGODB_URI;
-// const client = new MongoClient(uri);
+
+//================ MongoDB conection
+const { MongoClient } = require("mongodb");
+const client = new MongoClient(uri);
 
 // Функція для підключення до MongoDB
-// const connectToDatabase = async () => {
-//   await client.connect();
-//   return client;
-// };
+const connectToDatabase = async () => {
+  await client.connect();
+  return client;
+};
 
-// const run = async (request, response, client) => {
-//   try {
-//     console.log('started')
-//     const database = client.db('sample_mflix');
-//     const movies = database.collection('movies');
+const run = async (request, response, client) => {
+  try {
+    console.log('started')
+    const database = client.db('sample_mflix');
+    const movies = database.collection('movies');
 
-//     // Запит на пошук фільму з назвою 'Back to the Future'
-//     const query = { title: 'Back to the Future' };
-//     const movie = await movies.findOne(query);
+    // Запит на пошук фільму з назвою 'Back to the Future'
+    const query = { title: 'Back to the Future' };
+    const movie = await movies.findOne(query);
 
-//     console.log(movie);
-//     response.status(200).json(movie);
-//   } catch (error) {
-//     console.error(error);
-//     response.status(500).json({ error: 'Internal Server Error' });
-//   }
-// }
+    console.log(movie);
+    response.status(200).json(movie);
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: 'Internal Server Error' });
+  }
+}
 
 
 
@@ -55,6 +56,7 @@ const db_order_items = require('./db/order_items');
 
 const app = express();
 
+// ========== MongoDBStore
 const store = new MongoDBStore(
   {
     uri: uri,
@@ -68,6 +70,25 @@ const store = new MongoDBStore(
 store.on('error', function(error) {
   console.error('Помилка збереження сесій у MongoDB:', error);
 });
+const secret = process.env.secret;
+// const store = new session.MemoryStore();
+app.use(
+  session({ 
+    secret: secret, 
+    // store: new RedisStore({ client: client }),
+    cookie: {
+      path: '/',
+      httpOnly: true, 
+      maxAge: 60*60*1000, // - maxAge - становлює кількість мілісекунд до завершення терміну дії файлу cookie. У цьому випадку ми встановлюємо термін його дії через 24 години. 
+      // sameSite: "none",  // - sameSite -встановлюємо її "none", щоб дозволити міжсайтовий файл cookie через різні браузери.
+      // secure: true, // - secure - щоб він надсилався на сервер лише через HTTPS.
+    },    
+    resave: false, 
+    saveUninitialized: false,
+    store: store,
+  })
+);
+
 
 //  ================> Cors
 const WEB_APP_URL= process.env.WEB_APP_URL
@@ -95,24 +116,7 @@ app.use(express.json({
 // });
 
 
-const secret = process.env.secret;
-// const store = new session.MemoryStore();
-app.use(
-  session({ 
-    secret: secret, 
-    // store: new RedisStore({ client: client }),
-    cookie: {
-      path: '/',
-      httpOnly: true, 
-      maxAge: 60*60*1000, // - maxAge - становлює кількість мілісекунд до завершення терміну дії файлу cookie. У цьому випадку ми встановлюємо термін його дії через 24 години. 
-      // sameSite: "none",  // - sameSite -встановлюємо її "none", щоб дозволити міжсайтовий файл cookie через різні браузери.
-      // secure: true, // - secure - щоб він надсилався на сервер лише через HTTPS.
-    },    
-    resave: false, 
-    saveUninitialized: false,
-    store: store,
-  })
-);
+
 
 //================ Passport 
 require('./config/passport')
@@ -250,11 +254,11 @@ app.get('/bad', (req, res) => {
   res.send('bad autorization!!');
 });
 
-// app.get('/movies', async (req, res) => {
-//   const client = await connectToDatabase();
-//   await run(req, res, client);
-//   await client.close(); // Закриття підключення після виконання запиту
-// });
+app.get('/movies', async (req, res) => {
+  const client = await connectToDatabase();
+  await run(req, res, client);
+  await client.close(); // Закриття підключення після виконання запиту
+});
 
 app.get("/health", (req, res) => { 
   res.sendStatus(200); 
