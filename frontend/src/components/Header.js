@@ -7,79 +7,83 @@ const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
 
 
 const Header = () => {
-  const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [user, setUser] = useState(null);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
-  const [cartID, setCartId] = useState(null);
+  // const [cartID, setCartId] = useState(null);
   // const [carts, setCart] = useState([]);
 
-  const { cartlenght, setCartLenght } = useContext(CartContext);
+  const { cartlenght, setCartLenght, user, setUser } = useContext(CartContext);
+  const { authenticated, setAuthenticated, cartID} = useContext(CartContext);
 
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      // console.log('startet Home before fetch');
-      try {        
-        const authResponse = await fetch(`${SERVER_HOST}/check-auth`, {
-          method: 'GET',
-          credentials: 'include',
-        });
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     // console.log('startet Home before fetch');
+  //     try {        
+  //       const authResponse = await fetch(`${SERVER_HOST}/check-auth`, {
+  //         method: 'GET',
+  //         credentials: 'include',
+  //       });
     
-        if (authResponse.ok) {
-          const authData = await authResponse.json();
+  //       if (authResponse.ok) {
+  //         const authData = await authResponse.json();
     
-          if (authData.isAuthenticated) {
-            // console.log('isAuthenticated --> true');
-            const profileResponse = await fetch(`${SERVER_HOST}/profile`, {
-              method: 'GET',
-              credentials: 'include',
-            });
-            const profileData = await profileResponse.json();
-            // console.log(profileData);
-            setUser(profileData);
-            setIsAuthenticated(true);
-            setCartId(profileData.user_id);
+  //         if (authData.isAuthenticated) {
+  //           // console.log('isAuthenticated --> true');
+  //           const profileResponse = await fetch(`${SERVER_HOST}/profile`, {
+  //             method: 'GET',
+  //             credentials: 'include',
+  //           });
+  //           const profileData = await profileResponse.json();
+  //           // console.log(profileData);
+  //           setUser(profileData);
+  //           setIsAuthenticated(true);
+  //           setCartId(profileData.user_id);
+  //           setAuthenticated(true);
 
-          } else {
-            setIsAuthenticated(false);
-          }
-        } else {
-          console.log('користувач не автентифікований:');
-          setIsAuthenticated(false);
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setIsAuthenticated(false);
-      }
-    };
+  //         } else {
+  //           setIsAuthenticated(false);
+  //           setAuthenticated(false);
+  //         }
+  //       } else {
+  //         console.log('користувач не автентифікований:');
+  //         setIsAuthenticated(false);
+  //         setAuthenticated(false);
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //       setIsAuthenticated(false);
+  //       setAuthenticated(false);
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (cartID) {
-        try {
-          const response = await fetch(`${SERVER_HOST}/cart_items/${cartID}`);
-          if(response.ok) {            
-            const cartrespons = await response.json();
-            // console.log('response: ', response);
-            // console.log('cartrespons: ', cartrespons);
-            // setCart(cartrespons);
-            setCartLenght(cartrespons.length)
-          }
-          if(response.status === 404){
-            const text = await response.text()  
-            console.log('response: ', text);  
-          }          
-        } catch (error) {
-          console.error('Error fetching product data:', error);
-        }
-      };      
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (cartID) {
+  //       try {
+  //         const response = await fetch(`${SERVER_HOST}/cart_items/${cartID}`);
+  //         if(response.ok) {            
+  //           const cartrespons = await response.json();
+  //           // console.log('response: ', response);
+  //           // console.log('cartrespons: ', cartrespons);
+  //           // setCart(cartrespons);
+  //           setCartLenght(cartrespons.length)
+  //         }
+  //         if(response.status === 404){
+  //           const text = await response.text()  
+  //           console.log('response: ', text);  
+  //         }          
+  //       } catch (error) {
+  //         console.error('Error fetching product data:', error);
+  //       }
+  //     };      
+  //   };
 
-    fetchData();
-  }, [cartID, setCartLenght]);
+  //   fetchData();
+  // }, [cartID, setCartLenght]);
 
   const handleLogout = async () => {
     try {
@@ -89,7 +93,8 @@ const Header = () => {
       });
       // Додаткові дії при виході користувача, якщо потрібно
       if (response.ok) {
-        setIsAuthenticated(false);
+        // setIsAuthenticated(false);
+        setAuthenticated(false);
         setUser(null);
         const data = await response.json();
         // console.log(data);
@@ -111,9 +116,10 @@ const Header = () => {
       <div className="header-emblem">
         <Link to="/">E-COMMERS</Link>        
       </div>
-      {isAuthenticated ? (
+      {authenticated ? (
         <div className='header-customer'>
           <p>Welcome, {user?.username}!</p>
+          {authenticated ? (<p>authenticated</p>) :(<p>none</p>)}
           <button onClick={handleLogout}>Logout</button>  
           <Link to="/cart" className='cart-image-container'>
             <img src="/images/shopping.png" alt="shopping-cart-icon" />
@@ -123,6 +129,7 @@ const Header = () => {
       ) : (
         <div className='header-customer'>
           <p>Please sign in or register.</p>
+          {authenticated ? (<p>authenticated</p>) :(<p>none</p>)}
           <Link to="/login">
             <button>Login</button>
           </Link>

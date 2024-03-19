@@ -216,21 +216,21 @@ app.get('/check-auth', ensureAuthenticated, (req, res) => {
   app.get('/products/search', db_products.searchProductsName);
   app.get('/products', db_products.getProducts);
   app.get('/products/:product_id', db_products.getProductsById);
-  app.post('/products', db_products.createProduct);
-  app.put('/products/:product_id', db_products.updateProduct);
-  app.delete('/products/:product_id', db_products.deleteProducts);
+  app.post('/products', ensureAuthenticated, db_products.createProduct);
+  app.put('/products/:product_id', ensureAuthenticated, db_products.updateProduct);
+  app.delete('/products/:product_id', ensureAuthenticated, db_products.deleteProducts);
   
     // 3 CARTS
   app.get('/carts/:user_id', db_carts.getCartsById);
-  app.post('/carts/:user_id', db_carts.createCarts); 
-  app.put('/carts/:cart_id', db_carts.updateCarts);
-  app.delete('/carts/:cart_id', db_carts.deleteCarts);
+  app.post('/carts/:user_id', ensureAuthenticated, db_carts.createCarts); 
+  app.put('/carts/:cart_id', ensureAuthenticated, db_carts.updateCarts);
+  app.delete('/carts/:cart_id', ensureAuthenticated, db_carts.deleteCarts);
   
     // 4 Cart Items
   app.get('/cart_items/:cart_id', db_cart_items.getCartItemsByUserId);
-  app.post('/cart_items/:cart_id', db_cart_items.createCartItemByCartId); 
-  app.put('/cart_items/:cart_item_id', db_cart_items.updateCartItemByCartItemId);
-  app.delete('/cart_items/:cart_item_id', db_cart_items.deleteCartItemByCartItemId);
+  app.post('/cart_items/:cart_id', ensureAuthenticated, db_cart_items.createCartItemByCartId); 
+  app.put('/cart_items/:cart_item_id', ensureAuthenticated, db_cart_items.updateCartItemByCartItemId);
+  app.delete('/cart_items/:cart_item_id', ensureAuthenticated, db_cart_items.deleteCartItemByCartItemId);
   
     // 5 Orders
   app.get('/orders/:user_id', ensureAuthenticated, db_orders.getOrders );
