@@ -1,4 +1,16 @@
 const Pool = require('pg').Pool // or const { Pool }  = require('pg') ---> npm install pg
+// ============================= 3 for RENDER_EXTERNAL_DATABASE_URL
+const connectionString = process.env.RENDER_EXTERNAL_DATABASE_URL;
+const pool = new Pool({
+  connectionString: connectionString,
+  ssl: {
+    rejectUnauthorized: false // Опція для виключення перевірки сертифікату SSL (необхідно для Render)
+  }
+});
+module.exports = {
+  pool,
+};
+
 
 // ============================= 1 for localhost
 // const userNameENV = process.env.user;
@@ -29,19 +41,3 @@ const Pool = require('pg').Pool // or const { Pool }  = require('pg') ---> npm i
 //   password: RENDER_DATABASE_PASSWORD,
 //   port: 5432, // Залишаємо стандартний порт
 // });
-
-
-// ============================= 3 for RENDER_EXTERNAL_DATABASE_URL
-const connectionString = process.env.RENDER_EXTERNAL_DATABASE_URL;
-
-const pool = new Pool({
-  connectionString: connectionString,
-  ssl: {
-    rejectUnauthorized: false // Опція для виключення перевірки сертифікату SSL (необхідно для Render)
-  }
-});
-
-
-module.exports = {
-  pool,
-};

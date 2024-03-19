@@ -3,6 +3,8 @@ const cors = require('cors');
 const session = require('express-session');
 const passport = require('passport');
 
+const cookieParser = require('cookie-parser');
+
 require('dotenv').config();
 
 
@@ -88,7 +90,7 @@ app.use(
     store: store,
   })
 );
-
+app.use(cookieParser());
 
 //  ================> Cors
 const WEB_APP_URL= process.env.WEB_APP_URL
@@ -115,13 +117,17 @@ app.use(express.json({
 //   next();
 // });
 
-
-
-
 //================ Passport 
 require('./config/passport')
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use((req, res, next) => {
+  console.log("Request headers:", req.headers);
+  console.log("Session ID from cookies:", req.cookies);
+  next();
+});
+
 
 //================ Google
 app.get('/auth/google', passport.authenticate('google', { 

@@ -45,11 +45,13 @@ passport.serializeUser((user, done) => {
   done(null, user.user_id);
 });
 
-passport.deserializeUser((id, done) => {  
-  // console.log('Deserialize user passport google id:', id);
-  find.findById(id,  (err, user) => { 
-    console.log(`Deserialize user passport google ${id} user:`, user);
+passport.deserializeUser((id, done) => { 
+  console.log(`started Deserialize google ${id}`);
+  
+  find.findById(id,  (err, user) => {
+    console.log("Attempting to deserialize user with ID:", id); 
     if (err) return done(err); 
+    console.log(`Deserialize user passport google ${id} user ok!:`, user);
     done(null, user);
   });
 });

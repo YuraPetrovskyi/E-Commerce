@@ -15,33 +15,7 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   console.log('checkAuthentication()')
-
-  //   checkAuthentication();       
-  // }, []);
   
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     console.log('navigate("/")')
-  //     navigate('/');
-  //   }
-  // }, [isAuthenticated, navigate]);
-
-  // const checkAuthentication = async () => {
-  //   try {
-  //     const response = await fetch(`${SERVER_HOST}/check-auth`, {
-  //       method: 'GET',
-  //       credentials: 'include',
-  //     });
-  //     console.log(response)
-  //     if (response.ok) {
-  //       setIsAuthenticated(true);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching checkAuthentication:', error);
-  //   }
-  // }
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -105,7 +79,33 @@ const Login = () => {
 
 export default Login;
 
+// useEffect(() => {
+  //   console.log('checkAuthentication()')
 
+  //   checkAuthentication();       
+  // }, []);
+  
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     console.log('navigate("/")')
+  //     navigate('/');
+  //   }
+  // }, [isAuthenticated, navigate]);
+
+  // const checkAuthentication = async () => {
+  //   try {
+  //     const response = await fetch(`${SERVER_HOST}/check-auth`, {
+  //       method: 'GET',
+  //       credentials: 'include',
+  //     });
+  //     console.log(response)
+  //     if (response.ok) {
+  //       setIsAuthenticated(true);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching checkAuthentication:', error);
+  //   }
+  // }
 
   // useEffect(() => {
   //   const fetchData = async () => {

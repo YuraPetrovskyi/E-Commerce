@@ -10,7 +10,7 @@ const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
 const ProductDetail = () => {
   const { product_id } = useParams();
   const [product, setProduct] = useState(null);
-  const [setUser] = useState(null);
+  // const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [user_id, setUserID] = useState(null);
@@ -48,11 +48,11 @@ const ProductDetail = () => {
         method: 'GET',
         credentials: 'include',
       });
-      // console.log('response: ',response)
+      console.log('response: ',response)
       if (response.ok) {
         const data = await response.json();
         // console.log('data from respons: ', data)
-        setUser(data.username);
+        // setUser(data.username);
         setIsAuthenticated(true);
         setUserID(data.user_id);
       }

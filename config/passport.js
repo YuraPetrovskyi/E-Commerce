@@ -34,9 +34,10 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {  
-  find.findById(id, function (err, user) { 
-    if (err) return done(err); 
+  console.log("Attempting to deserialize user with ID:", id);
+  find.findById(id, (err, user) => { 
     console.log(`Deserialize user passport  local==> ${id} user:`, user);
+    if (err) return done(err); 
     done(null, user.id);
   });
 });
