@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
 
@@ -28,20 +28,20 @@ const Login = () => {
   //   }
   // }, [isAuthenticated, navigate]);
 
-  const checkAuthentication = async () => {
-    try {
-      const response = await fetch(`${SERVER_HOST}/check-auth`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-      console.log(response)
-      if (response.ok) {
-        setIsAuthenticated(true);
-      }
-    } catch (error) {
-      console.error('Error fetching checkAuthentication:', error);
-    }
-  }
+  // const checkAuthentication = async () => {
+  //   try {
+  //     const response = await fetch(`${SERVER_HOST}/check-auth`, {
+  //       method: 'GET',
+  //       credentials: 'include',
+  //     });
+  //     console.log(response)
+  //     if (response.ok) {
+  //       setIsAuthenticated(true);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching checkAuthentication:', error);
+  //   }
+  // }
 
   const handleLogin = async (e) => {
     e.preventDefault();
