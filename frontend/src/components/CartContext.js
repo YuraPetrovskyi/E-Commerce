@@ -79,6 +79,8 @@ export const CartProvider = ({ children }) => {
   console.log('CartContext cartlenght:', cartlenght);
   console.log('CartContext authenticated:', authenticated);  
   console.log('CartContext cartId:', cartId);
+  console.log('CartContext user:', user);
+
 
   return (
     <CartContext.Provider 
