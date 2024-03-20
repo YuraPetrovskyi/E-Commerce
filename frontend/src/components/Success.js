@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { CartContext } from './CartContext';
 
 const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
-
-
 
 const Success = () => {
   const navigate = useNavigate()
   const { order_id } = useParams()
+  const { authenticated } = useContext(CartContext);
+
 
   console.log('order_id:', order_id);
 
@@ -17,6 +18,13 @@ const Success = () => {
   const goToOrders = () => {
     navigate('/orders')
   }
+  
+  useEffect(() => {
+    if(!authenticated) {
+      navigate('/')
+    }    
+  }, [authenticated, navigate]);
+
   // http://localhost:3001/success?session_id=cs_test_b1ybSEVS1rtg0oDqJGks34Aj5xRMilcZXOJ9HQ2WOtvISOT1qyST4oluEM&order_id=31
   useEffect(() => {
     const fetchData = async () => {

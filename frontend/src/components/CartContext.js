@@ -15,8 +15,7 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {    
     setCartLenght(cartlenght);
-    setAuthenticated(authenticated)
-  }, [cartlenght, authenticated]);
+  }, [cartlenght]);
 
   useEffect(() => {    
     const fetchData = async () => {
@@ -30,24 +29,26 @@ export const CartProvider = ({ children }) => {
         if (respons.isAuthenticated) {
           setAuthenticated(true);
           setUser(respons.user);
-          setUserId(user.user_id);
-          setCartId(user.user_id);
+          setUserId(respons.user.user_id);
+          setCartId(respons.user.user_id);
         } else {
           setAuthenticated(false);
           setUser({});
           setCart([]);
-          setCartId(null)
+          setCartId(null);
+          setCartLenght(null);
         }
       } catch (error) {
         console.error('Error CartProvider fetching data:', error);
         setAuthenticated(false);
         setUser({});  
         setCart([]);
-        setCartId(null)
+        setCartId(null);
+        setCartLenght(null);
       }
     };
     fetchData();
-  }, [authenticated ]);
+  }, [authenticated]);
 
     useEffect(() => {
     const fetchData = async () => {

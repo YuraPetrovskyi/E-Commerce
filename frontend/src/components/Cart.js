@@ -9,18 +9,20 @@ const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
 // require('dotenv').config();
 
 const Cart = () => {
-  // const [user, setUser] = useState(null);
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // const [cart, setCart] = useState([]);
-  // const [cartID, setCartId] = useState(null);
   const [products, setProducts] = useState([]); 
   const [totalPrice, setTotalPrice] = useState(0);
   const [cartEmpty, setCartEmpty] = useState('');
   
   const { setCartLenght, setCart } = useContext(CartContext);
-  const { cartlenght, cartId, cart } = useContext(CartContext);
+  const { cartlenght, cartId, cart, authenticated } = useContext(CartContext);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if(!authenticated) {
+      navigate('/')
+    }    
+  }, [authenticated, navigate]);
 
   useEffect(() => {    
     const fetchData = async () => {
@@ -244,6 +246,10 @@ export default Cart;
 
 
 
+  // const [user, setUser] = useState(null);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [cart, setCart] = useState([]);
+  // const [cartID, setCartId] = useState(null);
   // ============================= Отримання даних про користувача
   // useEffect(() => {
   //   const fetchData = async () => {

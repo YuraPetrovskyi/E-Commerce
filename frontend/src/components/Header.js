@@ -17,10 +17,10 @@ const Header = () => {
         credentials: 'include',
       });
       if (response.ok) {
-        setAuthenticated(false);
         const data = await response.json();
         console.log(data);
         if (data.redirect) {
+          setAuthenticated(false);
           navigate(data.redirect); // Перенаправити за допомогою useNavigate
         } else {
           console.error('Login failed');

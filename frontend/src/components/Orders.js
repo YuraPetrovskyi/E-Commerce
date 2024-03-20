@@ -1,73 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { CartContext } from './CartContext';
 
 import Layout from './Layout';
-
-
 import './Orders.css';
 
 const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
 
-
-
 const Orders = () => {
-  const [user, setUser] = useState(null);
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // const [cart, setCart] = useState([]);
-  const [userID, setUserId] = useState(null);
   const [orders, setOrders] = useState([]); 
+  const { user, authenticated, userId } = useContext(CartContext);
 
   // const [totalPrice, setTotalPrice] = useState(0);
   const navigate = useNavigate();
 
-  // ============================= Отримання даних про користувача
   useEffect(() => {
-    const fetchData = async () => {
-      // console.log('startet Home before fitch')
-      // console.log(isAuthenticated)
-      try {        
-        const authResponse = await fetch(`${SERVER_HOST}/check-auth`, {
-          method: 'GET',
-          credentials: 'include',
-        });
-        const authData = await authResponse.json();
-
-        if (authData.isAuthenticated) {
-          // console.log('isAuthenticated --> true')
-          // Якщо користувач аутентифікований, зробимо запит для отримання інформації про користувача
-          const profileResponse = await fetch(`${SERVER_HOST}/profile`, {
-            method: 'GET',
-            credentials: 'include',
-          });
-          const profileData = await profileResponse.json();
-          // console.log(profileData);
-          setUser(profileData);
-          // setIsAuthenticated(true);
-          setUserId(profileData.user_id)
-        } 
-      } catch (error) {
-        console.log('користувач не автентифікований:')
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
+    if(!authenticated) {
+      navigate('/')
+    }    
+  }, [authenticated, navigate]);
 
   useEffect(() => {
-    if(userID) {
+    if(authenticated) {
       const fetchData = async () => {
         try {        
-          const response = await fetch(`${SERVER_HOST}/orders/${userID}`, {
+          const response = await fetch(`${SERVER_HOST}/orders/${userId}`, {
             method: 'GET',
             credentials: 'include',
           });
-        if (response.ok) {        
-          const dataOrders = await response.json();
-          // console.log('my orders:', dataOrders);
-          setOrders(dataOrders);
-        }
-          
+          if (response.ok) {        
+            const dataOrders = await response.json();
+            // console.log('my orders:', dataOrders);
+            setOrders(dataOrders);
+          }          
         } catch (error) {
           console.log('Помилка при спробі глянути історію покупок:( :')
           console.error('Error fetching data:', error);
@@ -75,7 +40,7 @@ const Orders = () => {
       };
       fetchData()
     }    
-  }, [user, userID]);
+  }, [user, userId, authenticated]);
 
   // console.log('orders: ', orders);
   const orders_paid = orders.filter(order => order.status === 'Paid');
@@ -143,8 +108,6 @@ const Orders = () => {
           </ul>
         </div>
       </div>
-      
-
     </Layout>
   );
 };

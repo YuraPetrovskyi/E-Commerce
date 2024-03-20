@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useStripe } from "@stripe/react-stripe-js";
+import { CartContext } from './CartContext';
 
 import Layout from './Layout';
 
@@ -10,17 +11,18 @@ const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
 const Checkout = () => {
   const { order_id } = useParams();
   const [products, setProducts] = useState([]);
-  const [user, setUser] = useState(null);
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // const [cart, setCart] = useState([]);
-  const [userID, setUserId] = useState(null);
   const [orderItems, setOrderItems] = useState([]); 
-  // const [orders, setOrders] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const { user, userId, authenticated } = useContext(CartContext);
 
   const stripe = useStripe();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if(!authenticated) {
+      navigate('/')
+    }    
+  }, [authenticated, navigate]);
   
   useEffect(() => {
     const fetchData = async () => {
@@ -32,43 +34,9 @@ const Checkout = () => {
         console.error('Error fetching product data:', error);
       }
     };
-
     fetchData();
   }, []);
-  // console.log('products: ',products);
-  // ============================= Obtaining user data
-  useEffect(() => {
-    const fetchData = async () => {
-      // console.log('startet Home before fitch')
-      // console.log(isAuthenticated)
-      try {        
-        const authResponse = await fetch(`${SERVER_HOST}/check-auth`, {
-          method: 'GET',
-          credentials: 'include',
-        });
-        const authData = await authResponse.json();
-
-        if (authData.isAuthenticated) {
-          // console.log('isAuthenticated --> true')
-          // If the user is authenticated, we will make a request to obtain information about the user
-          const profileResponse = await fetch(`${SERVER_HOST}/profile`, {
-            method: 'GET',
-            credentials: 'include',
-          });
-          const profileData = await profileResponse.json();
-          // console.log(profileData);
-          setUserId(profileData.user_id);
-          setUser(profileData);
-          // setIsAuthenticated(true);
-        } 
-      } catch (error) {
-        console.log('користувач не автентифікований:')
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  // console.log('products: ',products);  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,12 +45,11 @@ const Checkout = () => {
           method: 'GET',
           credentials: 'include',
         });
-      if (response.ok) {
-        const dataOrders = await response.json();
-        // console.log('my order items:', dataOrders);
-        setOrderItems(dataOrders);
-      }
-        
+        if (response.ok) {
+          const dataOrders = await response.json();
+          // console.log('my order items:', dataOrders);
+          setOrderItems(dataOrders);
+        }        
       } catch (error) {
         console.log('Помилка при спробі глянути деталі покупок:( :')
         console.error('Error fetching data:', error);
@@ -92,38 +59,29 @@ const Checkout = () => {
   }, [user, order_id]);
 
   useEffect(() => {
-    if(userID) {
+    if(userId) {
       const fetchData = async () => {
         try {        
-          const response = await fetch(`${SERVER_HOST}/orders/${userID}`, {
+          const response = await fetch(`${SERVER_HOST}/orders/${userId}`, {
             method: 'GET',
             credentials: 'include',
           });
-        if (response.ok) {        
-          const dataOrders = await response.json();
-          // console.log('my orders:', dataOrders);
-  
-          // Using the find method to find the first element that matches the condition
-          const foundOrder = dataOrders.find(order => order.order_id === Number(order_id));
-  
-          // if (foundOrder) {
-          //   console.log('Знайдено замовлення:', foundOrder);
-          // } else {
-          //   console.log(`Замовлення з таким id: ${order_id} - не знайдено`);
-          // }
-          setTotalPrice(foundOrder.total_amount);
-          // setOrders(dataOrders);
-        }
-          
+          if (response.ok) {        
+            const dataOrders = await response.json();
+            // console.log('my orders:', dataOrders);    
+            // Using the find method to find the first element that matches the condition
+            const foundOrder = dataOrders.find(order => order.order_id === Number(order_id));
+            setTotalPrice(foundOrder.total_amount);
+            // setOrders(dataOrders);
+          }          
         } catch (error) {
           console.log('Помилка при спробі глянути історію покупок:( :')
           console.error('Error fetching data:', error);
         }
       };
       fetchData()
-    }    
-    
-  }, [userID, order_id]);
+    }        
+  }, [userId, order_id]);
 
   // console.log('order items: ', orderItems);
   // console.log('user: ', user);
@@ -166,7 +124,6 @@ const Checkout = () => {
     });
     const { sessionId } = await response.json();
     // console.log('sessionId : ', sessionId)
-
     // redirection to the Stripe page for further payment
     const { error } = await stripe.redirectToCheckout({
       sessionId
@@ -174,7 +131,6 @@ const Checkout = () => {
     if (error) {
       console.log('error : ', error);
     }
-
   };
 
   return (
@@ -200,3 +156,38 @@ const Checkout = () => {
 };
 
 export default Checkout;
+
+
+// // ============================= Obtaining user data
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     // console.log('startet Home before fitch')
+  //     // console.log(isAuthenticated)
+  //     try {        
+  //       const authResponse = await fetch(`${SERVER_HOST}/check-auth`, {
+  //         method: 'GET',
+  //         credentials: 'include',
+  //       });
+  //       const authData = await authResponse.json();
+
+  //       if (authData.isAuthenticated) {
+  //         // console.log('isAuthenticated --> true')
+  //         // If the user is authenticated, we will make a request to obtain information about the user
+  //         const profileResponse = await fetch(`${SERVER_HOST}/profile`, {
+  //           method: 'GET',
+  //           credentials: 'include',
+  //         });
+  //         const profileData = await profileResponse.json();
+  //         // console.log(profileData);
+  //         setUserId(profileData.user_id);
+  //         setUser(profileData);
+  //         // setIsAuthenticated(true);
+  //       } 
+  //     } catch (error) {
+  //       console.log('користувач не автентифікований:')
+  //       console.error('Error fetching data:', error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);

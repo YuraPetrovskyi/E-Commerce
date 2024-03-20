@@ -3,7 +3,7 @@ const stripeAPI = require('./stripe');
 async function createCheckoutSession(req, res) {
   const domainUrl = process.env.WEB_APP_URL;
   const { line_items, customer_email, order_id } = req.body;
-  console.log(domainUrl, line_items, customer_email, order_id );
+  console.log(domainUrl, line_items, customer_email, order_id);
 
   // check req body has line items and email
   if (!line_items || !customer_email) {
