@@ -6,89 +6,36 @@ import './Cart.css';
 import Layout from './Layout';
 
 const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
-
 // require('dotenv').config();
+
 const Cart = () => {
   // const [user, setUser] = useState(null);
   // const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [cart, setCart] = useState([]);
-  const [cartID, setCartId] = useState(null);
+  // const [cart, setCart] = useState([]);
+  // const [cartID, setCartId] = useState(null);
   const [products, setProducts] = useState([]); 
   const [totalPrice, setTotalPrice] = useState(0);
   const [cartEmpty, setCartEmpty] = useState('');
   
-  const { setCartLenght } = useContext(CartContext);
+  const { setCartLenght, setCart } = useContext(CartContext);
+  const { cartlenght, cartId, cart } = useContext(CartContext);
+
   const navigate = useNavigate();
-
-  // ============================= Отримання даних про користувача
-  useEffect(() => {
-    const fetchData = async () => {
-      // console.log('startet Cart before fitch')
-      console.log(`${SERVER_HOST}/check-auth`)
-      try {        
-        const authResponse = await fetch(`${SERVER_HOST}/check-auth`, {
-          method: 'GET',
-          credentials: 'include',
-        });
-        const authData = await authResponse.json();
-
-        if (authData.isAuthenticated) {
-          // console.log('isAuthenticated --> true')
-          // Якщо користувач аутентифікований, зробимо запит для отримання інформації про користувача
-          const profileResponse = await fetch(`${SERVER_HOST}/profile`, {
-            method: 'GET',
-            credentials: 'include',
-          });
-          const profileData = await profileResponse.json();
-          // console.log(profileData);
-          // setUser(profileData);
-          // setIsAuthenticated(true);
-          setCartId(profileData.user_id)
-        } 
-      } catch (error) {
-        console.log('користувач не автентифікований:')
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   useEffect(() => {    
     const fetchData = async () => {
-      try {
-        if (!cartID) return;
-  
-        const response = await fetch(`${SERVER_HOST}/cart_items/${cartID}`);
-        
-        // Перевіряємо, чи відповідь вдала
-        if (!response.ok) {
-          if (response.status === 404) {
-            // Відобразити повідомлення, якщо корзина порожня
-            console.log('Your basket is empty :)');
-            setCartEmpty('Your basket is empty :)');
-            // alert('Your basket is empty :)');
-            setProducts([]);
-            setCart([]);
-            setCartLenght(null);
-          } else {
-            // Інші статуси можуть сигналізувати про помилку на сервері або інші проблеми
-            console.error('Unexpected response status:', response.status);
-          }
-          return;
-        }
-  
-        // Отримуємо дані корзини
-        const cartData = await response.json();
-        // console.log('cartData : ', cartData );
-        setCart(cartData);
-        
+      if (!cartlenght) {
+        console.log('Your basket is empty :)');
+        setCartEmpty('Your basket is empty :)');          
+        setProducts([]);        
+        return;
+      }
+      try {        
         // Отримуємо дані про кожен продукт у корзині та оновлюємо стан products
-        const productPromises = cartData.map(async (item) => {
+        const productPromises = cart.map(async (item) => {
           const productResponse = await fetch(`${SERVER_HOST}/products/${item.product_id}`);
           return productResponse.json();
-        });          
-        
+        });    
         const productData = await Promise.all(productPromises);
         setProducts(productData);
       } catch (error) {
@@ -97,7 +44,7 @@ const Cart = () => {
     };
   
     fetchData();
-  }, [cartID, setCartLenght]);
+  }, [cart, cartlenght]);
 
   // ============================= Обчислення загальної суми
   useEffect(() => {
@@ -146,7 +93,7 @@ const Cart = () => {
       // Оновлюємо стан корзини, видаляючи відповідний товар з масиву products
       const updatedProducts = products.filter((product) => product[0].product_id !== productId);
       setProducts(updatedProducts);      
-      setCartId(cartID);// Оновлюємо cartID, щоб спровокувати оновлення useEffect
+      // setCartId(cartId);// Оновлюємо cartID, щоб спровокувати оновлення useEffect
       alert(`Product with productId ${productId} and cartItemId ${cartItemId} was deleted`);
     } catch (error) {
       console.error('Error deleting product:', error);
@@ -180,7 +127,7 @@ const Cart = () => {
           item.cart_item_id === cartItemId ? { ...item, quantity: newQuantity } : item
         );
         setCart(updatedCart);
-        setCartId(cartID); // Спровокує оновлення useEffect
+        // setCartId(cartId); // Спровокує оновлення useEffect
       } else {
         console.error('Failed to update quantity');
         alert('Failed to update quantity');
@@ -192,7 +139,7 @@ const Cart = () => {
 
   const handleCheckout = async () => {
     try {
-      const featch_heckout = await fetch(`${SERVER_HOST}/orders/${cartID}`, {
+      const featch_heckout = await fetch(`${SERVER_HOST}/orders/${cartId}`, {
             method: 'POST',
             credentials: 'include',
           });
@@ -202,7 +149,7 @@ const Cart = () => {
         setProducts([]);
         setCartLenght(null);
         setCartEmpty('');
-        setCartId(cartID);// Оновлюємо cartID, щоб спровокувати оновлення useEffect 
+        setCart([]);// Оновлюємо cartID, щоб спровокувати оновлення useEffect 
         alert(`Замовлення створено`); 
         navigate('/order_created');       
       } else {
@@ -294,3 +241,39 @@ return (
 };
 
 export default Cart;
+
+
+
+  // ============================= Отримання даних про користувача
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     // console.log('startet Cart before fitch')
+  //     console.log(`${SERVER_HOST}/check-auth`)
+  //     try {        
+  //       const authResponse = await fetch(`${SERVER_HOST}/check-auth`, {
+  //         method: 'GET',
+  //         credentials: 'include',
+  //       });
+  //       const authData = await authResponse.json();
+
+  //       if (authData.isAuthenticated) {
+  //         // console.log('isAuthenticated --> true')
+  //         // Якщо користувач аутентифікований, зробимо запит для отримання інформації про користувача
+  //         const profileResponse = await fetch(`${SERVER_HOST}/profile`, {
+  //           method: 'GET',
+  //           credentials: 'include',
+  //         });
+  //         const profileData = await profileResponse.json();
+  //         // console.log(profileData);
+  //         // setUser(profileData);
+  //         // setIsAuthenticated(true);
+  //         setCartId(profileData.user_id)
+  //       } 
+  //     } catch (error) {
+  //       console.log('користувач не автентифікований:')
+  //       console.error('Error fetching data:', error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);

@@ -7,7 +7,11 @@ export const CartProvider = ({ children }) => {
   const [cartlenght, setCartLenght] = useState(null);
   const [authenticated, setAuthenticated] = useState(false);
   const [user, setUser] = useState({});
-  const [carts, setCart] = useState([]);  
+  const [cart, setCart] = useState([]);  
+  const [cartId, setCartId] = useState(null);
+  const [userId, setUserId] = useState(null);
+
+
 
   useEffect(() => {    
     setCartLenght(cartlenght);
@@ -26,17 +30,20 @@ export const CartProvider = ({ children }) => {
         if (respons.isAuthenticated) {
           setAuthenticated(true);
           setUser(respons.user);
-          setCart([]);
+          setUserId(user.user_id);
+          setCartId(user.user_id);
         } else {
           setAuthenticated(false);
           setUser({});
           setCart([]);
+          setCartId(null)
         }
       } catch (error) {
         console.error('Error CartProvider fetching data:', error);
         setAuthenticated(false);
         setUser({});  
         setCart([]);
+        setCartId(null)
       }
     };
     fetchData();
@@ -44,9 +51,9 @@ export const CartProvider = ({ children }) => {
 
     useEffect(() => {
     const fetchData = async () => {
-      if (user.user_id) {
+      if (cartId) {
         try {
-          const response = await fetch(`${SERVER_HOST}/cart_items/${user.user_id}`);
+          const response = await fetch(`${SERVER_HOST}/cart_items/${cartId}`);
           if(response.ok) {            
             const cartrespons = await response.json();
             console.log('response: ', response);
@@ -63,14 +70,14 @@ export const CartProvider = ({ children }) => {
         }
       };      
     };
-
     fetchData();
-  }, [cartlenght]);
+  }, [cartId, cartlenght]);
 
   console.log('CartContext user:', user);
-  // console.log('CartContext cartID:', cartID);
+  console.log('CartContext carts:', cart);
   console.log('CartContext cartlenght:', cartlenght);
-  console.log('CartContext authenticated:', authenticated);
+  console.log('CartContext authenticated:', authenticated);  
+  console.log('CartContext cartId:', cartId);
 
   return (
     <CartContext.Provider 
@@ -78,7 +85,9 @@ export const CartProvider = ({ children }) => {
         cartlenght, setCartLenght, 
         authenticated, setAuthenticated,
         user, setUser,
-        carts, setCart
+        cart, setCart,
+        cartId, setCartId,
+        userId, setUserId
       }}>
       {children}
     </CartContext.Provider>

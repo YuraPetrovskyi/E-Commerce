@@ -9,23 +9,14 @@ const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
 
 const ProductDetail = () => {
   const { product_id } = useParams();
-  const [product, setProduct] = useState(null);
-  // const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [quantity, setQuantity] = useState(1);
-  const [user_id, setUserID] = useState(null);
 
-  // const [carts, setCart] = useState([]);  
-  const [renue, setRenue] = useState(0);
-  
+  const [product, setProduct] = useState(null);
+  const [quantity, setQuantity] = useState(1);  
+  const { cartlenght, authenticated, cart, userId} = useContext(CartContext);
+  const { setCartLenght,} = useContext(CartContext);
+
   const navigate = useNavigate();
 
-  const { cartlenght, setCartLenght, user, authenticated, carts, setCart} = useContext(CartContext);
-
-  // useEffect(() => {
-  //   checkAuthentication();       
-  // }, []);
-  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -36,7 +27,6 @@ const ProductDetail = () => {
         console.error('Error fetching product details:', error);
       }
     };
-
     fetchData();
   }, [product_id]);
   
@@ -44,14 +34,14 @@ const ProductDetail = () => {
   const handleAddToCart = async () => {
     try {
       // Перевірка, чи є товар з таким самим product_id в корзині
-    const existingCartItem = carts.find((item) => item.product_id === product.product_id);    
-    if (existingCartItem) {
-      // Якщо товар вже є в корзині, виводимо повідомлення користувачу та пропонуємо перейти до корзини
-      alert(`Product ${product.name} ${product.model} is already in the cart!`);
-      return;
-    }
-    // Якщо товар відсутній в корзині, відправляємо запит на сервер для додавання його в корзину    
-      await fetch(`${SERVER_HOST}/cart_items/${user.user_id}`, {
+      const existingCartItem = cart.find((item) => item.product_id === product.product_id);    
+      if (existingCartItem) {
+        // Якщо товар вже є в корзині, виводимо повідомлення користувачу та пропонуємо перейти до корзини
+        alert(`Product ${product.name} ${product.model} is already in the cart!`);
+        return;
+      }
+      // Якщо товар відсутній в корзині, відправляємо запит на сервер для додавання його в корзину    
+      await fetch(`${SERVER_HOST}/cart_items/${userId}`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -61,7 +51,6 @@ const ProductDetail = () => {
       });
       console.log(`Product ${product.name} ${product.model} added to the cart!`);      
       setQuantity(1);
-      setRenue(1);
       setCartLenght(cartlenght + 1);
       alert(`${quantity} of product ${product.name} ${product.model} added to the cart!`);
     } catch (error) {
