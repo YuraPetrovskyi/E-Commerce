@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Login.css';
+import { CartContext } from './CartContext';
 
 const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
 
@@ -9,9 +10,9 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [isAuthenticated] = useState(false);
 
-
+  const { authenticated, setAuthenticated } = useContext(CartContext);
 
   const navigate = useNavigate();
 
@@ -32,6 +33,7 @@ const Login = () => {
       console.log('finish fetch');
       if (response.ok) {
         const data = await response.json();
+        setAuthenticated(true);
         console.log('data', data);
         if (data.redirect) {
           navigate(data.redirect); // Перенаправити за допомогою useNavigate
@@ -47,7 +49,7 @@ const Login = () => {
       console.error('Error during login:', error);
     }
   };
-  console.log('isAuthenticated', isAuthenticated)
+  console.log('isAuthenticated', authenticated);
   return (
     <div className="login-container">
       <h2>Login</h2>

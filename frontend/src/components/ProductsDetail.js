@@ -15,16 +15,16 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [user_id, setUserID] = useState(null);
 
-  const [carts, setCart] = useState([]);  
+  // const [carts, setCart] = useState([]);  
   const [renue, setRenue] = useState(0);
   
   const navigate = useNavigate();
 
-  const { cartlenght, setCartLenght } = useContext(CartContext);
+  const { cartlenght, setCartLenght, user, authenticated, carts, setCart} = useContext(CartContext);
 
-  useEffect(() => {
-    checkAuthentication();       
-  }, []);
+  // useEffect(() => {
+  //   checkAuthentication();       
+  // }, []);
   
   useEffect(() => {
     const fetchData = async () => {
@@ -41,51 +41,6 @@ const ProductDetail = () => {
   }, [product_id]);
   
   
-
-  const checkAuthentication = async () => {
-    try {
-      const response = await fetch(`${SERVER_HOST}/check-auth`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-      console.log('response: ',response)
-      if (response.ok) {
-        const data = await response.json();
-        // console.log('data from respons: ', data)
-        // setUser(data.username);
-        setIsAuthenticated(true);
-        setUserID(data.user_id);
-      }
-    } catch (error) {
-      console.error('Error fetching checkAuthentication:', error);
-    }
-  };
-
-  useEffect(() => {
-    if (user_id) {
-      const fetchData = async () => {
-        try {
-          const response = await fetch(`${SERVER_HOST}/cart_items/${user_id}`);
-          if(response.ok) {            
-            const cartrespons = await response.json();
-            // console.log('response: ', response);
-            // console.log('cartrespons: ', cartrespons);
-            setCart(cartrespons);
-          }
-          if(response.status === 404){
-            const text = await response.text()  
-            console.log('response: ', text);  
-          } 
-        } catch (error) {
-          console.error('Error fetching product data:', error);
-        }
-      };
-      fetchData();
-    }
-  }, [user_id, renue, quantity]);
-  // console.log('carts', carts);
-
-
   const handleAddToCart = async () => {
     try {
       // Перевірка, чи є товар з таким самим product_id в корзині
@@ -96,7 +51,7 @@ const ProductDetail = () => {
       return;
     }
     // Якщо товар відсутній в корзині, відправляємо запит на сервер для додавання його в корзину    
-      await fetch(`${SERVER_HOST}/cart_items/${user_id}`, {
+      await fetch(`${SERVER_HOST}/cart_items/${user.user_id}`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -121,7 +76,7 @@ const ProductDetail = () => {
   return (
     <Layout>
       <div className="product-container">
-        {isAuthenticated ? (
+        {authenticated ? (
           <div className="back-product-container">
             <button onClick={() => navigate(-1)} className="button-back">
               <img src="/images/back.png" alt="shopping-cart-icon" />
@@ -160,7 +115,7 @@ const ProductDetail = () => {
           ) : (
             <h3>This product is almost out of stock</h3>
           )}
-          {isAuthenticated && (
+          {authenticated && (
                 <div className="add-to-cart">
                   <label htmlFor="quantity">Quantity</label>
                   <select id="quantity" value={quantity} onChange={(e) => setQuantity(parseInt(e.target.value))}>
@@ -178,3 +133,50 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
+
+
+
+
+  // const checkAuthentication = async () => {
+  //   try {
+  //     const response = await fetch(`${SERVER_HOST}/check-auth`, {
+  //       method: 'GET',
+  //       credentials: 'include',
+  //     });
+  //     console.log('response: ',response)
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       // console.log('data from respons: ', data)
+  //       // setUser(data.username);
+  //       setIsAuthenticated(true);
+  //       setUserID(data.user_id);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching checkAuthentication:', error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if (user.user_id) {
+  //     const fetchData = async () => {
+  //       try {
+  //         const response = await fetch(`${SERVER_HOST}/cart_items/${user.user_id}`);
+  //         if(response.ok) {            
+  //           const cartrespons = await response.json();
+  //           // console.log('response: ', response);
+  //           // console.log('cartrespons: ', cartrespons);
+  //           setCart(cartrespons);
+  //         }
+  //         if(response.status === 404){
+  //           const text = await response.text()  
+  //           console.log('response: ', text);  
+  //         } 
+  //       } catch (error) {
+  //         console.error('Error fetching product data:', error);
+  //       }
+  //     };
+  //     fetchData();
+  //   }
+  // }, [user_id, renue, quantity]);
+  // console.log('carts', carts);
+

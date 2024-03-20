@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Register.css';
+import { CartContext } from './CartContext';
+
 const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
 
 
@@ -9,40 +11,9 @@ const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { authenticated, setAuthenticated } = useContext(CartContext);
 
-  const navigate = useNavigate();
-
-
-  
-  useEffect(() => {
-    console.log('checkAuthentication()')
-
-    checkAuthentication();       
-  }, []);
-  
-  // useEffect(() => {
-
-  //   if (isAuthenticated) {
-  //     console.log('navigate("/")')
-  //     navigate('/');
-  //   }
-  // }, [isAuthenticated, navigate]);
-
-  const checkAuthentication = async () => {
-    try {
-      const response = await fetch(`${SERVER_HOST}/check-auth`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-      console.log(response)
-      if (response.ok) {
-        setIsAuthenticated(true);
-      }
-    } catch (error) {
-      console.error('Error fetching checkAuthentication:', error);
-    }
-  }
+  const navigate = useNavigate();  
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -73,6 +44,7 @@ const Register = () => {
             console.log(data);
             if (data.redirect) {
               navigate(data.redirect); // Перенаправити за допомогою useNavigate
+              setAuthenticated(true);
             } else {
               console.error('Login failed 4');
             }
@@ -92,7 +64,8 @@ const Register = () => {
       setErrorMessage(error);
     }
   };
-  console.log('isAuthenticated', isAuthenticated)
+  
+  console.log('isAuthenticated', authenticated);
 
   return (
     <div className="register-container">
@@ -120,3 +93,33 @@ const Register = () => {
 };
 
 export default Register;
+
+
+// useEffect(() => {
+  //   console.log('checkAuthentication()')
+
+  //   checkAuthentication();       
+  // }, []);
+  
+  // useEffect(() => {
+
+  //   if (isAuthenticated) {
+  //     console.log('navigate("/")')
+  //     navigate('/');
+  //   }
+  // }, [isAuthenticated, navigate]);
+
+  // const checkAuthentication = async () => {
+  //   try {
+  //     const response = await fetch(`${SERVER_HOST}/check-auth`, {
+  //       method: 'GET',
+  //       credentials: 'include',
+  //     });
+  //     console.log(response)
+  //     if (response.ok) {
+  //       setIsAuthenticated(true);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching checkAuthentication:', error);
+  //   }
+  // }

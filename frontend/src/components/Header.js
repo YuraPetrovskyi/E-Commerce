@@ -1,21 +1,75 @@
-import React, { useEffect, useState, useContext }from "react";
+import React, { useContext }from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { CartContext } from './CartContext';
 
 const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
 
-
-
-const Header = () => {
-  // const [user, setUser] = useState(null);
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+const Header = () => {  
   const navigate = useNavigate();
+  const { cartlenght, user, authenticated } = useContext(CartContext);
+  const { setAuthenticated } = useContext(CartContext);
+  
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch(`${SERVER_HOST}/logout`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+      if (response.ok) {
+        setAuthenticated(false);
+        const data = await response.json();
+        console.log(data);
+        if (data.redirect) {
+          navigate(data.redirect); // Перенаправити за допомогою useNavigate
+        } else {
+          console.error('Login failed');
+        }
+      }      
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
+
+  return (
+    <div className="header-container">
+      <div className="header-emblem">
+        <Link to="/">E-COMMERS</Link>        
+      </div>
+      {authenticated ? (
+        <div className='header-customer'>
+          <p>Welcome, {user?.username}!</p>
+          {/* {authenticated ? (<p>authenticated</p>) :(<p>none</p>)} */}
+          <button onClick={handleLogout}>Logout</button>  
+          <Link to="/cart" className='cart-image-container'>
+            <img src="/images/shopping.png" alt="shopping-cart-icon" />
+            <span className='cart-count'>{cartlenght}</span>
+          </Link>
+        </div>
+      ) : (
+        <div className='header-customer'>
+          <p>Please sign in or register.</p>
+          {/* {authenticated ? (<p>authenticated</p>) :(<p>none</p>)} */}
+          <Link to="/login">
+            <button>Login</button>
+          </Link>
+          <Link to="/register">
+            <button>Register</button>
+          </Link>
+        </div>
+      )}
+    </div>
+  )}
+
+export default Header;
+
+  // const cartItemCount = carts.reduce((total, cartItem) => total + cartItem.quantity, 0);
+
+// const [user, setUser] = useState(null);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
   // const [cartID, setCartId] = useState(null);
   // const [carts, setCart] = useState([]);
-
-  const { cartlenght, setCartLenght, user, setUser } = useContext(CartContext);
-  const { authenticated, setAuthenticated, cartID} = useContext(CartContext);
-
   // useEffect(() => {
   //   const fetchData = async () => {
   //     // console.log('startet Home before fetch');
@@ -84,61 +138,3 @@ const Header = () => {
 
   //   fetchData();
   // }, [cartID, setCartLenght]);
-
-  const handleLogout = async () => {
-    try {
-      const response = await fetch(`${SERVER_HOST}/logout`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-      // Додаткові дії при виході користувача, якщо потрібно
-      if (response.ok) {
-        // setIsAuthenticated(false);
-        setAuthenticated(false);
-        setUser(null);
-        const data = await response.json();
-        // console.log(data);
-        if (data.redirect) {
-          navigate(data.redirect); // Перенаправити за допомогою useNavigate
-        } else {
-          console.error('Login failed');
-        }
-      }      
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  };
-
-  // const cartItemCount = carts.reduce((total, cartItem) => total + cartItem.quantity, 0);
-
-  return (
-    <div className="header-container">
-      <div className="header-emblem">
-        <Link to="/">E-COMMERS</Link>        
-      </div>
-      {authenticated ? (
-        <div className='header-customer'>
-          <p>Welcome, {user?.username}!</p>
-          {authenticated ? (<p>authenticated</p>) :(<p>none</p>)}
-          <button onClick={handleLogout}>Logout</button>  
-          <Link to="/cart" className='cart-image-container'>
-            <img src="/images/shopping.png" alt="shopping-cart-icon" />
-            <span className='cart-count'>{cartlenght}</span>
-          </Link>
-        </div>
-      ) : (
-        <div className='header-customer'>
-          <p>Please sign in or register.</p>
-          {authenticated ? (<p>authenticated</p>) :(<p>none</p>)}
-          <Link to="/login">
-            <button>Login</button>
-          </Link>
-          <Link to="/register">
-            <button>Register</button>
-          </Link>
-        </div>
-      )}
-    </div>
-  )}
-
-export default Header;

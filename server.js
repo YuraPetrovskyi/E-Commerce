@@ -209,7 +209,15 @@ function ensureAuthenticated(req, res, next) {
 
 app.get('/check-auth', ensureAuthenticated, (req, res) => {
   console.log('користувач аутентифікований :', req.isAuthenticated());
-  res.status(200).json({ isAuthenticated: true, username:  req.user.username, user_id: req.user.user_id});
+  console.log('користувач user :', req.user);
+
+  res.status(200).json({ 
+    isAuthenticated: true, 
+    // username: req.user.username, 
+    // user_id: req.user.user_id,
+    user: req.user,
+    // email: req.user.email
+  });
 });
 
   // 2 PRODUCTS
