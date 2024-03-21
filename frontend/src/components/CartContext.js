@@ -15,7 +15,8 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {    
     setCartLenght(cartlenght);
-  }, [cartlenght]);
+    setAuthenticated(authenticated);
+  }, [cartlenght, authenticated]);
 
   useEffect(() => {    
     const fetchData = async () => {
