@@ -2,16 +2,16 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require("bcrypt");
 
+// const jwt = require('jsonwebtoken');
 
 const find = require('../db/find_in_passprt');
 
 // require('./facebook-passport-config');
-
 require('./google-passport-config');
 
 
 passport.use(new LocalStrategy(
-  {usernameField: 'email'},
+  {usernameField: 'email'}, //визначає, що для аутентифікації буде використовуватися поле електронної пошти користувача замість типового поля, яке за замовчуванням має назву username.
   (email, password, done) => {   
     find.findByEmail(email, async (err, user) => { // Look up user in the db  
     console.log('Warnin!! new LocalStrategy email: ', email)      
@@ -23,7 +23,10 @@ passport.use(new LocalStrategy(
       const matchedPassword = await bcrypt.compare(password, user.password);
       if(!matchedPassword) return done(null, false, { message: 'Incorrect password.' });        // перевіряє, чи знайдено користувача, але пароль недійсний.
       
-      return done(null, user)             // Повертає done()функцію зворотного виклику з аргументами, які показують, що помилки НЕ було, і користувача знайдено.
+      // const token = jwt.sign({ user_id: user.user_id }, process.env.JWT_SECRET);
+      // console.log('token =============>', token);
+      // user.token = token;
+      return done(null, user); // Повертає done()функцію зворотного виклику з аргументами, які показують, що помилки НЕ було, і користувача знайдено.
     });
   }
 ));
@@ -33,12 +36,12 @@ passport.serializeUser((user, done) => {
   done(null, user.user_id);
 });
 
+
 passport.deserializeUser((id, done) => {  
   console.log("Attempting to deserialize user with ID:", id);
   find.findById(id, (err, user) => { 
     console.log(`Deserialize user passport  local==> ${id} user:`, user);
     if (err) return done(err); 
-    done(null, user.id);
+    done(null, user);
   });
 });
-

@@ -33,8 +33,10 @@ const Login = () => {
       console.log('finish fetch');
       if (response.ok) {
         const data = await response.json();
+        // localStorage.setItem('token', data.token);
         setAuthenticated(true);
         console.log('data', data);
+        // console.log('token', data.token);
         if (data.redirect) {
           navigate(data.redirect); // Перенаправити за допомогою useNavigate
         } else {

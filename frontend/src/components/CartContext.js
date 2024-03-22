@@ -25,9 +25,14 @@ export const CartProvider = ({ children }) => {
         const authResponse = await fetch(`${SERVER_HOST}/check-auth`, {
           method: 'GET',
           credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            // 'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
         });
         const respons = await authResponse.json();
         if (respons.isAuthenticated) {
+          console.log("CartProvider isAuthenticated respons", respons)
           setAuthenticated(true);
           setUser(respons.user);
           setUserId(respons.user.user_id);

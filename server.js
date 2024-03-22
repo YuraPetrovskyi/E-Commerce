@@ -2,45 +2,63 @@ const express = require('express');
 const cors = require('cors'); 
 const session = require('express-session');
 const passport = require('passport');
-
 const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
+const jwt = require('jsonwebtoken');
 
+// =================== Redis
+const { createClient } = require('redis');
+const RedisStore = require("connect-redis").default;
+
+const client = createClient({
+    password:  process.env.REDIS_PASSWORD,
+    socket: {
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT
+    }
+});
+
+// Ініціалізація підключення до Redis
+client.connect().catch((err) => {
+  console.error('Error connecting to Redis:', err);
+});
+
+const store = new RedisStore({ client: client });
 
 //================ MongoDB for session
-const MongoDBStore = require('connect-mongodb-session')(session);
-const uri =process.env.MONGODB_URI;
+// const MongoDBStore = require('connect-mongodb-session')(session);
+// const uri =process.env.MONGODB_URI;
 
-//================ MongoDB conection
-const { MongoClient } = require("mongodb");
-const client = new MongoClient(uri);
+// //================ MongoDB conection
+// const { MongoClient } = require("mongodb");
+// const client = new MongoClient(uri);
 
+//=====================================
 // Функція для підключення до MongoDB
-const connectToDatabase = async () => {
-  await client.connect();
-  return client;
-};
+// const connectToDatabase = async () => {
+//   await client.connect();
+//   return client;
+// };
 
-const run = async (request, response, client) => {
-  try {
-    console.log('started')
-    const database = client.db('sample_mflix');
-    const movies = database.collection('movies');
+// const run = async (request, response, client) => {
+//   try {
+//     console.log('started')
+//     const database = client.db('sample_mflix');
+//     const movies = database.collection('movies');
 
-    // Запит на пошук фільму з назвою 'Back to the Future'
-    const query = { title: 'Back to the Future' };
-    const movie = await movies.findOne(query);
+//     // Запит на пошук фільму з назвою 'Back to the Future'
+//     const query = { title: 'Back to the Future' };
+//     const movie = await movies.findOne(query);
 
-    console.log(movie);
-    response.status(200).json(movie);
-  } catch (error) {
-    console.error(error);
-    response.status(500).json({ error: 'Internal Server Error' });
-  }
-}
-
-
+//     console.log(movie);
+//     response.status(200).json(movie);
+//   } catch (error) {
+//     console.error(error);
+//     response.status(500).json({ error: 'Internal Server Error' });
+//   }
+// }
+//=====================================
 
 //================ Stripe
 const createCheckoutSession = require('./config/checkout'); //for stripe
@@ -54,30 +72,30 @@ const db_cart_items = require('./db/cart_items');
 const db_orders = require('./db/orders');
 const db_order_items = require('./db/order_items');
 
-
-
 const app = express();
 
-// ========== MongoDBStore
-const store = new MongoDBStore(
-  {
-    uri: uri,
-    databaseName: 'sample_mflix',
-    collection: 'session'
-  },
-  function(error) {
-    console.error('error! Помилка збереження сесій у MongoDB:', error);
-  });
+// // ========== MongoDBStore
+// const store = new MongoDBStore(
+//   {
+//     uri: uri,
+//     databaseName: 'sample_mflix',
+//     collection: 'session'
+//   },
+//   function(error) {
+//     console.error('error! Помилка збереження сесій у MongoDB:', error);
+//   }
+// );
 
-store.on('error', function(error) {
-  console.error('Помилка збереження сесій у MongoDB:', error);
-});
-const secret = process.env.secret;
+// store.on('error', function(error) {
+//   console.error('Помилка збереження сесій у MongoDB:', error);
+// });
+// const secret = process.env.secret;
+
 // const store = new session.MemoryStore();
 app.use(
   session({ 
-    secret: secret, 
-    // store: new RedisStore({ client: client }),
+    secret: process.env.secret, 
+    store: store,
     cookie: {
       path: '/',
       httpOnly: true, 
@@ -87,7 +105,6 @@ app.use(
     },    
     resave: false, 
     saveUninitialized: false,
-    store: store,
   })
 );
 app.use(cookieParser());
@@ -122,11 +139,11 @@ require('./config/passport')
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use((req, res, next) => {
-  console.log("Request headers:", req.headers);
-  console.log("Session ID from cookies:", req.cookies);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log("Request headers:", req.headers);
+//   console.log("Session ID from cookies:", req.cookies);
+//   next();
+// });
 
 
 //================ Google
@@ -146,6 +163,14 @@ app.get('/auth/google/callback',
   }
 );
 
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  console.log('ensureAuthenticated: you are not registreted');
+  // res.sendStatus(401);
+  return res.status(401).json({ message: 'Unauthorized' });
+}
 
 
 app.get('/', ensureAuthenticated, (req, res) => {  
@@ -154,11 +179,9 @@ app.get('/', ensureAuthenticated, (req, res) => {
   console.log('req method contains user: ', req.user);
 });
 
-
-
 app.post('/login', (req, res, next) => {
   console.log('start to login');
-  passport.authenticate('local', function(err, user, info){
+  passport.authenticate('local', (err, user, info) => {
     if (err) {
       console.log('return next(err)....');
       return next(err);
@@ -167,13 +190,17 @@ app.post('/login', (req, res, next) => {
       console.log("return res.status(401).json({ error: info.message || 'Incorrect name or password' });");
       return res.status(401).json({ error: info.message || 'Incorrect name or password' });
     }
-    req.logIn(user, function(err) {
+    req.logIn(user, (err) => {
       console.log(' req.logIn started ...');
       if (err) {
         return next(err);
       }
       console.log('req.logIn is ok, you will redirect: "/" ');
-      return res.json({ redirect: '/' }); // Відправити JSON з об'єктом з полем redirect
+      // console.log(' token: req.user.token', req.user.token);
+      return res.status(200).json({ 
+        redirect: '/login',
+        // token: req.user.token
+      }); // Відправити JSON з об'єктом з полем redirect
     })
   })(req, res, next)
 });
@@ -196,17 +223,7 @@ app.get('/admin', ensureAuthenticated, (req, res) => {
 });
 
 app.post('/register', db_users.createUser);
-
-
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  console.log('ensureAuthenticated: you are not registreted');
-  // res.sendStatus(401);
-  return res.status(401).json({ message: 'Unauthorized' });
-}
-
+// , passport.authenticate('jwt', { session: false }),
 app.get('/check-auth', ensureAuthenticated, (req, res) => {
   console.log('користувач аутентифікований :', req.isAuthenticated());
   console.log('користувач user :', req.user);
@@ -312,25 +329,3 @@ app.listen(port, () => {
 //   });
 
 
-//================ Redis for session
-// const RedisStore = require('connect-redis')(session);
-// const RedisStore = require("connect-redis").default;
-// const redis = require('redis');
-
-// const REDIS_HOST = process.env.REDIS_HOST;
-// const REDIS_PORT = process.env.REDIS_PORT;
-// const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
-
-// const redisOptions = {
-//   host: REDIS_HOST, // або IP-адреса вашого сервера Redis
-//   port: REDIS_PORT, // порт, на якому запущений сервер Redis
-//   password: REDIS_PASSWORD,
-// };
-
-// const client = redis.createClient(redisOptions);
-// const store = new RedisStore({ client: client });
-
-// Handle Redis connection error
-// client.on('error', (error) => {
-//   console.error('Error connecting to Redis:', error);
-// });
