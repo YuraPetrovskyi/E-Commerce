@@ -3,68 +3,63 @@ const cors = require('cors');
 const session = require('express-session');
 const passport = require('passport');
 const cookieParser = require('cookie-parser');
+// const MongoDBStore = require('connect-mongodb-session')(session);
 
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
-// =================== Redis
+// ================================ Redis
 const { createClient } = require('redis');
 const RedisStore = require("connect-redis").default;
 
-const client = createClient({
+const clientRedis = createClient({
     password:  process.env.REDIS_PASSWORD,
     socket: {
         host: process.env.REDIS_HOST,
         port: process.env.REDIS_PORT
     }
 });
-
 // Ініціалізація підключення до Redis
-client.connect().catch((err) => {
+clientRedis.connect().catch((err) => {
   console.error('Error connecting to Redis:', err);
 });
+const storeRedis = new RedisStore({ client: clientRedis });
 
-const store = new RedisStore({ client: client });
 
-//================ MongoDB for session
-// const MongoDBStore = require('connect-mongodb-session')(session);
-// const uri =process.env.MONGODB_URI;
+// ================================ MongoDB with mongoose
+const uri =process.env.MONGODB_URI;
+// Підключення до MongoDB за допомогою Mongoose
+const mongoose = require('mongoose');
+mongoose.connect(`${uri}`);
+// Створення моделі для сесій
+const Session = mongoose.model('Session', new mongoose.Schema({
+  _id: String,
+  session: Object,
+  expires: Date
+}));
+const storeMongo = new session.MemoryStore();
 
-// //================ MongoDB conection
-// const { MongoClient } = require("mongodb");
-// const client = new MongoClient(uri);
+// ================================ MongoDB with connect-mongodb-session
+const MongoDBStore = require('connect-mongodb-session')(session);
+const storeMongoDB = new MongoDBStore({
+    uri: uri,
+    databaseName: 'sample_mflix',
+    collection: 'session'
+  });
+storeMongoDB.on('error', function(error) {
+  console.log(error);
+});
+// ================================ MongoDB with connect-mongo
+const MongoStore = require('connect-mongo');
+const storeMongoConnect = MongoStore.create({ mongoUrl: process.env.MONGODB_URI });
+//=================================================================
 
-//=====================================
-// Функція для підключення до MongoDB
-// const connectToDatabase = async () => {
-//   await client.connect();
-//   return client;
-// };
 
-// const run = async (request, response, client) => {
-//   try {
-//     console.log('started')
-//     const database = client.db('sample_mflix');
-//     const movies = database.collection('movies');
-
-//     // Запит на пошук фільму з назвою 'Back to the Future'
-//     const query = { title: 'Back to the Future' };
-//     const movie = await movies.findOne(query);
-
-//     console.log(movie);
-//     response.status(200).json(movie);
-//   } catch (error) {
-//     console.error(error);
-//     response.status(500).json({ error: 'Internal Server Error' });
-//   }
-// }
-//=====================================
-
-//================ Stripe
+// ================================ Stripe
 const createCheckoutSession = require('./config/checkout'); //for stripe
 const webhook = require('./config/webhook');
 
-//================ DB
+// ================================ DB
 const db_users = require('./db/users');
 const db_products = require('./db/products');
 const db_carts = require('./db/carts');
@@ -72,30 +67,16 @@ const db_cart_items = require('./db/cart_items');
 const db_orders = require('./db/orders');
 const db_order_items = require('./db/order_items');
 
+// ================================ app
 const app = express();
 
-// // ========== MongoDBStore
-// const store = new MongoDBStore(
-//   {
-//     uri: uri,
-//     databaseName: 'sample_mflix',
-//     collection: 'session'
-//   },
-//   function(error) {
-//     console.error('error! Помилка збереження сесій у MongoDB:', error);
-//   }
-// );
-
-// store.on('error', function(error) {
-//   console.error('Помилка збереження сесій у MongoDB:', error);
-// });
-// const secret = process.env.secret;
-
-// const store = new session.MemoryStore();
+// ================================ MemoryStore
+const storeMemoryStore = new session.MemoryStore();
+// ================================ session
 app.use(
   session({ 
     secret: process.env.secret, 
-    store: store,
+    store: storeMongoDB,
     cookie: {
       path: '/',
       httpOnly: true, 
@@ -109,7 +90,7 @@ app.use(
 );
 app.use(cookieParser());
 
-//  ================> Cors
+//  ================================ Cors
 const WEB_APP_URL= process.env.WEB_APP_URL
 app.use(cors({
   origin: WEB_APP_URL,  // URL вашого клієнтського додатку
@@ -134,7 +115,7 @@ app.use(express.json({
 //   next();
 // });
 
-//================ Passport 
+// ================================ Passport 
 require('./config/passport')
 app.use(passport.initialize());
 app.use(passport.session());
@@ -145,8 +126,7 @@ app.use(passport.session());
 //   next();
 // });
 
-
-//================ Google
+// ================================ Google
 app.get('/auth/google', passport.authenticate('google', { 
   scope: ['profile', 'email']
 }));
@@ -198,9 +178,9 @@ app.post('/login', (req, res, next) => {
       console.log('req.logIn is ok, you will redirect: "/" ');
       // console.log(' token: req.user.token', req.user.token);
       return res.status(200).json({ 
-        redirect: '/login',
+        redirect: '/',
         // token: req.user.token
-      }); // Відправити JSON з об'єктом з полем redirect
+      }); 
     })
   })(req, res, next)
 });
@@ -285,11 +265,11 @@ app.get('/bad', (req, res) => {
   res.send('bad autorization!!');
 });
 
-app.get('/movies', async (req, res) => {
-  const client = await connectToDatabase();
-  await run(req, res, client);
-  await client.close(); // Закриття підключення після виконання запиту
-});
+// app.get('/movies', async (req, res) => {
+//   const clientM = await connectToDatabase();
+//   await run(req, res, clientM);
+//   await clientM.close(); // Закриття підключення після виконання запиту
+// });
 
 app.get("/health", (req, res) => { 
   res.sendStatus(200); 
@@ -329,3 +309,44 @@ app.listen(port, () => {
 //   });
 
 
+
+
+// //  MongoDB conection
+// const MongoDBStore = require('connect-mongodb-session')(session);
+
+// const { MongoClient } = require("mongodb");
+// const clientMongo = new MongoClient(uri);
+
+// // Функція для підключення до MongoDB
+// const connectToDatabase = async () => {
+//   console.log('storeMemoryStore...')
+//   await clientMongo.connect();
+//   return clientMongo;
+// };
+
+// const run = async (request, response, clientMongo) => {
+//   try {
+//     console.log('started')
+//     const database = clientMongo.db('sample_mflix');
+//     const movies = database.collection('movies');
+
+//     // Запит на пошук фільму з назвою 'Back to the Future'
+//     const query = { title: 'Back to the Future' };
+//     const movie = await movies.findOne(query);
+
+//     console.log(movie);
+//     response.status(200).json(movie);
+//   } catch (error) {
+//     console.error(error);
+//     response.status(500).json({ error: 'Internal Server Error' });
+//   }
+// }
+
+// const storeMongoDB = new MongoDBStore({
+//     uri: uri,
+//     databaseName: 'sample_mflix',
+//     collection: 'session'
+//   });
+//   storeMongoDB.on('error', function(error) {
+//     console.log(error);
+//   });

@@ -2,6 +2,7 @@ const { pool } = require('./pool');
 
 
 function findByEmail(email, callback) {
+  console.log('started findByEmail:')
   try {
     pool.query('SELECT * FROM users WHERE email = $1', [email], (error, results) => {
       if (error) {
