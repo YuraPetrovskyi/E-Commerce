@@ -76,7 +76,7 @@ const storeMemoryStore = new session.MemoryStore();
 app.use(
   session({ 
     secret: process.env.secret, 
-    store: storeMongoDB,
+    store: storeMongoConnect,
     cookie: {
       path: '/',
       httpOnly: true, 
