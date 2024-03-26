@@ -13,10 +13,10 @@ export const CartProvider = ({ children }) => {
 
 
 
-  useEffect(() => {    
-    setCartLenght(cartlenght);
-    setAuthenticated(authenticated);
-  }, [cartlenght, authenticated]);
+  // useEffect(() => {    
+  //   setCartLenght(cartlenght);
+  //   setAuthenticated(authenticated);
+  // }, [cartlenght, authenticated]);
 
   useEffect(() => {    
     const fetchData = async () => {

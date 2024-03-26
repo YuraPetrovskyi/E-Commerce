@@ -94,10 +94,24 @@ app.use(cookieParser());
 
 //  ================================ Cors
 const WEB_APP_URL= process.env.WEB_APP_URL
+// app.use(cors({
+//   origin: WEB_APP_URL,  // URL вашого клієнтського додатку
+//   credentials: true,
+// }));
+const allowedOrigins = ['https://e-commerce-jjez.onrender.com','http://localhost:3001'];
 app.use(cors({
-  origin: WEB_APP_URL,  // URL вашого клієнтського додатку
-  credentials: true,
+  origin: function(origin, callback){
+    // Дозвольте запити без 'origin' (наприклад, мобільні додатки або curl запити)
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = 'CORS policy does not allow access from the specified origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true // Дозволяє обробку cookies через CORS
 }));
+
 
 // app.use((req, res, next) => {
 //   res.setHeader('Access-Control-Allow-Origin', WEB_APP_URL);
