@@ -81,7 +81,7 @@ app.use(
       path: '/',
       // httpOnly: true, 
       // sameSite: 'none',
-      secure: true,
+      // secure: true,
       maxAge: 60*60*1000, // - maxAge - становлює кількість мілісекунд до завершення терміну дії файлу cookie. У цьому випадку ми встановлюємо термін його дії через 24 години. 
       // sameSite: "none",  // - sameSite -встановлюємо її "none", щоб дозволити міжсайтовий файл cookie через різні браузери.
       // secure: true, // - secure - щоб він надсилався на сервер лише через HTTPS.
