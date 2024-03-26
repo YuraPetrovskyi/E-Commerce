@@ -79,8 +79,8 @@ app.use(
     store: storeMongoConnect,
     cookie: {
       path: '/',
-      httpOnly: true, 
-      sameSite: 'none',
+      // httpOnly: true, 
+      // sameSite: 'none',
       secure: true,
       maxAge: 60*60*1000, // - maxAge - становлює кількість мілісекунд до завершення терміну дії файлу cookie. У цьому випадку ми встановлюємо термін його дії через 24 години. 
       // sameSite: "none",  // - sameSite -встановлюємо її "none", щоб дозволити міжсайтовий файл cookie через різні браузери.
@@ -99,13 +99,13 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', WEB_APP_URL);
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  next();
-});
+// app.use((req, res, next) => {
+//   res.setHeader('Access-Control-Allow-Origin', WEB_APP_URL);
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   res.setHeader('Access-Control-Allow-Credentials', true);
+//   next();
+// });
 
 app.use(express.urlencoded({ extended: false })); //Цей рядок дозволяє обробляти запити, які мають тип application/x-www-form-urlencoded
 app.use(express.json({
