@@ -60,7 +60,14 @@ export const CartProvider = ({ children }) => {
     const fetchData = async () => {
       if (cartId) {
         try {
-          const response = await fetch(`${SERVER_HOST}/cart_items/${cartId}`);
+          const response = await fetch(`${SERVER_HOST}/cart_items/${cartId}`, {
+            method: 'GET',
+            credentials: 'include', // Додаємо, щоб включити cookies
+            headers: {
+              'Content-Type': 'application/json',
+              // 'Authorization': `Bearer ${localStorage.getItem('token')}` // Якщо використовуєте автентифікацію через токен
+            }
+          });
           if(response.ok) {            
             const cartrespons = await response.json();
             console.log('response: ', response);

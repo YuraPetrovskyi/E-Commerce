@@ -79,11 +79,11 @@ app.use(
     store: storeMongoConnect,
     cookie: {
       path: '/',
-      // httpOnly: true, 
-      // sameSite: 'none',
-      secure: true,
+      httpOnly: true, 
+      // secure: true,
+      secure: process.env.NODE_ENV === "production", // Використовуйте secure cookies тільки в продакшні
       maxAge: 60*60*1000, // - maxAge - становлює кількість мілісекунд до завершення терміну дії файлу cookie. У цьому випадку ми встановлюємо термін його дії через 24 години. 
-      // sameSite: "none",  // - sameSite -встановлюємо її "none", щоб дозволити міжсайтовий файл cookie через різні браузери.
+      sameSite: process.env.NODE_ENV === "production" ? 'None' : 'Lax',  // - sameSite -встановлюємо її "none", щоб дозволити міжсайтовий файл cookie через різні браузери.
       // secure: true, // - secure - щоб він надсилався на сервер лише через HTTPS.
     },    
     resave: false, 
