@@ -13,7 +13,7 @@ function findByEmail(email, callback) {
         return callback(null, false);
       }    
       const user = results.rows[0];
-      // console.log('function findByEmail: user', user)
+      console.log('function findByEmail: user', user)
       // console.log('function findByEmail: results',results)
 
       return callback(null, user);

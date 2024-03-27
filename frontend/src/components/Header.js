@@ -15,11 +15,16 @@ const Header = () => {
       const response = await fetch(`${SERVER_HOST}/logout`, {
         method: 'GET',
         credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}` // Якщо використовуєте автентифікацію через токен
+        }
       });
       if (response.ok) {
         const data = await response.json();
         console.log(data);
         if (data.redirect) {
+          localStorage.removeItem('token');
           setAuthenticated(false);
           navigate(data.redirect); // Перенаправити за допомогою useNavigate
         } else {

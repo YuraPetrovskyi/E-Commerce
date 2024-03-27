@@ -4,19 +4,15 @@ export const CartContext = createContext();
 const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
 
 export const CartProvider = ({ children }) => {
-  const [cartlenght, setCartLenght] = useState(null);
   const [authenticated, setAuthenticated] = useState(false);
   const [user, setUser] = useState({});
-  const [cart, setCart] = useState([]);  
   const [cartId, setCartId] = useState(null);
   const [userId, setUserId] = useState(null);
 
+  const [cart, setCart] = useState([]);  
+  const [cartlenght, setCartLenght] = useState(null);
 
-
-  // useEffect(() => {    
-  //   setCartLenght(cartlenght);
-  //   setAuthenticated(authenticated);
-  // }, [cartlenght, authenticated]);
+  console.log('token: ',localStorage.getItem('token'));
 
   useEffect(() => {    
     const fetchData = async () => {
@@ -27,7 +23,7 @@ export const CartProvider = ({ children }) => {
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
-            // 'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         });
         const respons = await authResponse.json();
@@ -56,7 +52,8 @@ export const CartProvider = ({ children }) => {
     fetchData();
   }, [authenticated]);
 
-    useEffect(() => {
+  useEffect(() => {
+    console.log('stared useEffect')
     const fetchData = async () => {
       if (cartId) {
         try {
@@ -65,7 +62,7 @@ export const CartProvider = ({ children }) => {
             credentials: 'include', // Додаємо, щоб включити cookies
             headers: {
               'Content-Type': 'application/json',
-              // 'Authorization': `Bearer ${localStorage.getItem('token')}` // Якщо використовуєте автентифікацію через токен
+              'Authorization': `Bearer ${localStorage.getItem('token')}` // Якщо використовуєте автентифікацію через токен
             }
           });
           if(response.ok) {            
@@ -85,7 +82,7 @@ export const CartProvider = ({ children }) => {
       };      
     };
     fetchData();
-  }, [cartId, cartlenght]);
+  }, [cartId,cartlenght]);
 
   console.log('CartContext user:', user);
   console.log('CartContext carts:', cart);
@@ -110,5 +107,60 @@ export const CartProvider = ({ children }) => {
   );
 };
 
+  // useEffect(() => {    
+  //   setCartLenght(cartlenght);
+  //   setAuthenticated(authenticated);
+  // }, [cartlenght, authenticated]);
 
 
+  // useEffect(() => {
+  //   const checkAuth = async () => {
+  //     console.log('Checking auth status');
+  //     try {
+  //       const authResponse = await fetch(`${SERVER_HOST}/check-auth`, {
+  //         method: 'GET',
+  //         credentials: 'include',
+  //         headers: { 'Content-Type': 'application/json' },
+  //       });
+  //       const response = await authResponse.json();
+  //       if (response.isAuthenticated) {
+  //         setAuthenticated(true);
+  //         setUser(response.user);
+  //         // Використовуємо user_id з response.user для подальших запитів
+  //         fetchCartItems(response.user.user_id);
+  //         setUserId(response.user.user_id);          
+  //         setCartId(response.user.user_id);
+  //       } else {
+  //         throw new Error('User not authenticated');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching auth data:', error);
+  //       setAuthenticated(false);
+  //       setUser({});
+  //       setCart([]);
+  //       setCartLenght(0);
+  //     }
+  //   };
+
+  //   const fetchCartItems = async (userId) => {
+  //     console.log(`Fetching cart items for user ${userId}`);
+  //     try {
+  //       const response = await fetch(`${SERVER_HOST}/cart_items/${userId}`, {
+  //         method: 'GET',
+  //         credentials: 'include',
+  //         headers: { 'Content-Type': 'application/json' },
+  //       });
+  //       if (response.ok) {
+  //         const cartItems = await response.json();
+  //         setCart(cartItems);
+  //         setCartLenght(cartItems.length);
+  //       } else {
+  //         throw new Error('Failed to fetch cart items');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error fetching cart data:', error);
+  //     }
+  //   };
+
+  //   checkAuth();
+  // }, []); // Порожній масив залежностей гарантує, що ефект викликається лише один раз при монтуванні компонента

@@ -13,10 +13,9 @@ const Login = () => {
   // const [isAuthenticated] = useState(false);
 
   const { authenticated, setAuthenticated } = useContext(CartContext);
+  const { setUser, setUserId, setCartId } = useContext(CartContext);
 
-  const navigate = useNavigate();
-
-  
+  const navigate = useNavigate();  
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -35,6 +34,7 @@ const Login = () => {
         const data = await response.json();
         // localStorage.setItem('token', data.token);
         setAuthenticated(true);
+        
         console.log('data', data);
         // console.log('token', data.token);
         if (data.redirect) {
@@ -52,6 +52,40 @@ const Login = () => {
     }
   };
   console.log('isAuthenticated', authenticated);
+
+  const handleLoginJWT = async () => {
+    console.log('started handleLoginJWT', email, password);
+    try {
+      const response = await fetch(`${SERVER_HOST}/loginjwt`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ email, password }),
+      });
+      console.log('finish fetch');
+      if (response.ok) {
+        console.log('response.ok');
+        const data = await response.json();
+        localStorage.setItem('token', data.token);
+        setAuthenticated(true);
+        setUser(data.user);
+        setUserId(data.user.user_id);
+        setCartId(data.user.user_id);
+        console.log('data', data);
+        console.log('token', data.token);
+        navigate('/');        
+      } else {
+        console.error('Login failed 2');
+        const errorMessage = await response.json(); // Отримати текст повідомлення з тіла відповіді
+        console.log(errorMessage.message);
+        setErrorMessage(errorMessage.error);
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+    }
+  }
   return (
     <div className="login-container">
       <h2>Login</h2>
@@ -65,6 +99,7 @@ const Login = () => {
         
         <button type="submit">Login</button>
       </form>
+      <button onClick={handleLoginJWT}>Login JWT</button>
 
       <p>
         Don't have an account? <Link to="/register">Register here</Link>.

@@ -42,6 +42,10 @@ const OrderItem = () => {
         const response = await fetch(`${SERVER_HOST}/order_items/${order_id}`, {
           method: 'GET',
           credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
         });
       if (response.ok) {
         const dataOrders = await response.json();

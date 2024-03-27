@@ -30,7 +30,7 @@ const Register = () => {
       console.log('finish registered fetch');
       if (response.ok) {
         try {
-          const response = await fetch(`${SERVER_HOST}/login`, {
+          const response = await fetch(`${SERVER_HOST}/loginjwt`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -42,12 +42,14 @@ const Register = () => {
           if (response.ok) {
             const data = await response.json();
             console.log(data);
-            if (data.redirect) {
-              navigate(data.redirect); // Перенаправити за допомогою useNavigate
-              setAuthenticated(true);
-            } else {
-              console.error('Login failed 4');
-            }
+            setAuthenticated(true);
+            navigate('/');
+            // if (data.redirect) {
+            //   navigate(data.redirect); // Перенаправити за допомогою useNavigate
+            //   setAuthenticated(true);
+            // } else {
+            //   console.error('Login failed 4');
+            // }
           } else {
             console.error('Login failed 5');
           }

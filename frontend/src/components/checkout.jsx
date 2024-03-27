@@ -44,6 +44,10 @@ const Checkout = () => {
         const response = await fetch(`${SERVER_HOST}/order_items/${order_id}`, {
           method: 'GET',
           credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
         });
         if (response.ok) {
           const dataOrders = await response.json();
@@ -65,6 +69,10 @@ const Checkout = () => {
           const response = await fetch(`${SERVER_HOST}/orders/${userId}`, {
             method: 'GET',
             credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
           });
           if (response.ok) {        
             const dataOrders = await response.json();
@@ -119,8 +127,9 @@ const Checkout = () => {
       method: 'POST',
       ...(body && { body: JSON.stringify(body) }),
       headers: {
-        'Content-Type': 'application/json'
-      },
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
     });
     const { sessionId } = await response.json();
     // console.log('sessionId : ', sessionId)

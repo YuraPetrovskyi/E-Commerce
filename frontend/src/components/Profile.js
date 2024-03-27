@@ -8,6 +8,10 @@ const Profile = () => {
     fetch('/api/profile', {
       method: 'GET',
       credentials: 'include', // Для передачі куки
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
     })
       .then((response) => response.json())
       .then((data) => setUser(data))

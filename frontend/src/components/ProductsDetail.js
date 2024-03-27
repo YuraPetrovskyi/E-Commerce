@@ -46,6 +46,7 @@ const ProductDetail = () => {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}` // Якщо використовуєте автентифікацію через токен
         },
         body: JSON.stringify({ product_id, quantity }),
       });

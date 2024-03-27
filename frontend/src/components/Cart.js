@@ -35,7 +35,14 @@ const Cart = () => {
       try {        
         // Отримуємо дані про кожен продукт у корзині та оновлюємо стан products
         const productPromises = cart.map(async (item) => {
-          const productResponse = await fetch(`${SERVER_HOST}/products/${item.product_id}`);
+          const productResponse = await fetch(`${SERVER_HOST}/products/${item.product_id}`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
           return productResponse.json();
         });    
         const productData = await Promise.all(productPromises);
@@ -77,6 +84,10 @@ const Cart = () => {
       await fetch(`${SERVER_HOST}/cart_items/${cartItemId}`, {
         method: 'DELETE',
         credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
       });  
       // Оновлюємо стан корзини
       const updatedCart = cart.filter((item) => item.cart_item_id !== cartItemId);
@@ -121,6 +132,7 @@ const Cart = () => {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
         body: JSON.stringify({ quantity: newQuantity }),
       });
@@ -144,6 +156,10 @@ const Cart = () => {
       const featch_heckout = await fetch(`${SERVER_HOST}/orders/${cartId}`, {
             method: 'POST',
             credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
           });
       // console.log(featch_heckout);
       if (featch_heckout.ok) {
