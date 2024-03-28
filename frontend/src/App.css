@@ -44,6 +44,17 @@ button {
   padding: 8px 16px;
   font-size: 16px;
 }
+button {
+  background-color: #00aca3;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #01514d;
+}
 input, select {
   font-family: "Madimi One", sans-serif;
 }
@@ -98,6 +109,9 @@ input, select {
   justify-content: space-around;
   align-items: center;
   padding-right: 15px;
+}
+.welcome-customer p{
+  margin: 0;
 }
 .cart-image-container {
   background-color: white;
@@ -184,4 +198,32 @@ li p {
 .canceled-container {
   text-align: center;
   padding: 20px;
+}
+
+@media screen and (max-width: 560px) {
+  .header-emblem, p{
+    font-size: 1rem;
+    margin: 3px;
+  }
+  .header-customer {
+    padding: 0;
+  }
+  .welcome-customer {
+    align-items: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-container {
+    min-width: 375px;
+  }
+  .header-emblem, p{
+    /* font-size: 0.8rem; */
+    margin: 3px;
+  }
+  .botton {
+    font-size: 0.6rem;
+    margin: 0;
+  }
 }

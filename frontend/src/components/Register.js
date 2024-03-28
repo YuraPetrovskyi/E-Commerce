@@ -12,6 +12,7 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const { authenticated, setAuthenticated } = useContext(CartContext);
+  const { setUser, setUserId, setCartId } = useContext(CartContext);
 
   const navigate = useNavigate();  
 
@@ -40,18 +41,21 @@ const Register = () => {
           });
           console.log('finish login fetch');
           if (response.ok) {
+            console.log('response.ok');
             const data = await response.json();
-            console.log(data);
+            localStorage.setItem('token', data.token);
             setAuthenticated(true);
-            navigate('/');
-            // if (data.redirect) {
-            //   navigate(data.redirect); // Перенаправити за допомогою useNavigate
-            //   setAuthenticated(true);
-            // } else {
-            //   console.error('Login failed 4');
-            // }
+            setUser(data.user);
+            setUserId(data.user.user_id);
+            setCartId(data.user.user_id);
+            console.log('data', data);
+            console.log('token', data.token);
+            navigate('/');        
           } else {
-            console.error('Login failed 5');
+            console.error('Login failed 2');
+            const errorMessage = await response.json(); // Отримати текст повідомлення з тіла відповіді
+            console.log(errorMessage.message);
+            setErrorMessage(errorMessage.error);
           }
         } catch (error) {
           console.error('Error during login:', error);
@@ -89,7 +93,7 @@ const Register = () => {
       <p>
         Do you have an account? <Link to="/login">Login here</Link>.
       </p>
-      <Link to="/">Home</Link>
+      <Link className='home' to="/">Home</Link>
     </div>
   );
 };

@@ -17,8 +17,8 @@ const Login = () => {
 
   const navigate = useNavigate();  
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async () => {
+    // e.preventDefault();
     console.log('started handleLogin');
     try {
       const response = await fetch(`${SERVER_HOST}/login`, {
@@ -53,7 +53,8 @@ const Login = () => {
   };
   console.log('isAuthenticated', authenticated);
 
-  const handleLoginJWT = async () => {
+  const handleLoginJWT = async (e) => {
+    e.preventDefault();
     console.log('started handleLoginJWT', email, password);
     try {
       const response = await fetch(`${SERVER_HOST}/loginjwt`, {
@@ -90,7 +91,7 @@ const Login = () => {
     <div className="login-container">
       <h2>Login</h2>
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleLoginJWT}>
         <label>Email:</label>
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         
@@ -99,16 +100,16 @@ const Login = () => {
         
         <button type="submit">Login</button>
       </form>
-      <button onClick={handleLoginJWT}>Login JWT</button>
-
+      {/* <button onClick={handleLoginJWT}>Login JWT</button> */}
       <p>
         Don't have an account? <Link to="/register">Register here</Link>.
       </p>
-      <Link to="/">Home</Link>
-      <div>
-        <h2>Hey there!</h2>
-        <p>You'll be redirected to Google to login to your account!</p>
-        <a role="button" className="button" href={`${SERVER_HOST}/auth/google`}>Login with Google</a>
+      
+      <div className="login-link-container">
+        <Link to="/">Home</Link>
+        <Link to={`${SERVER_HOST}/auth/google`}>Login with Google</Link>
+        {/* <h2>Hey there!</h2> */}
+        {/* <p>You'll be redirected to Google to login to your account!</p> */}
         {/* <br/>
         <a href="http://localhost:3000/auth/facebook" className="button">Login with Facebook</a> */}
       </div>

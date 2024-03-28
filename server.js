@@ -7,7 +7,6 @@ const cookieParser = require('cookie-parser');
 
 require('dotenv').config();
 
-
 // ================================ JWT authenticate
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
@@ -30,7 +29,6 @@ clientRedis.connect().catch((err) => {
   console.error('Error connecting to Redis:', err);
 });
 const storeRedis = new RedisStore({ client: clientRedis });
-
 
 // ================================ MongoDB with mongoose
 const uri =process.env.MONGODB_URI;
@@ -117,15 +115,6 @@ app.use(cors({
   },
   credentials: true // Дозволяє обробку cookies через CORS
 }));
-
-
-// app.use((req, res, next) => {
-//   res.setHeader('Access-Control-Allow-Origin', WEB_APP_URL);
-//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-//   res.setHeader('Access-Control-Allow-Credentials', true);
-//   next();
-// });
 
 app.use(express.urlencoded({ extended: false })); //Цей рядок дозволяє обробляти запити, які мають тип application/x-www-form-urlencoded
 app.use(express.json({

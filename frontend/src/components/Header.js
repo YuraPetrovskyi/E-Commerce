@@ -40,11 +40,13 @@ const Header = () => {
   return (
     <div className="header-container">
       <div className="header-emblem">
-        <Link to="/">E-COMMERS</Link>        
+        <Link to="/">eCOMMERS</Link>        
       </div>
       {authenticated ? (
         <div className='header-customer'>
-          <p>Welcome, {user?.username}!</p>
+          <div className='welcome-customer'>
+            <p>Welcome, {user?.username}!</p>
+          </div>
           {/* {authenticated ? (<p>authenticated</p>) :(<p>none</p>)} */}
           <button onClick={handleLogout}>Logout</button>  
           <Link to="/cart" className='cart-image-container'>
@@ -54,7 +56,9 @@ const Header = () => {
         </div>
       ) : (
         <div className='header-customer'>
-          <p>Please sign in or register.</p>
+          <div className='welcome-customer'>
+            <p>Please sign in or register</p>
+          </div>
           {/* {authenticated ? (<p>authenticated</p>) :(<p>none</p>)} */}
           <Link to="/login">
             <button>Login</button>
