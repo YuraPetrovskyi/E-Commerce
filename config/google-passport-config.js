@@ -1,9 +1,13 @@
 const  passport = require('passport');
 const  GoogleStrategy = require('passport-google-oauth20').Strategy;
+
+const jwt = require('jsonwebtoken');
+const SECRET_KEY = process.env.JWT_SECRET;
+
+
 const find = require('../db/find_in_passprt');
 
 const db_users = require('../db/users');
-
 require("dotenv").config();
 
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
@@ -18,9 +22,9 @@ passport.use(new GoogleStrategy({
     prompt: 'select_account'
   },
   (accessToken, refreshToken, profile, done) => {
-    console.log('Warnin!! new GoogleStrategy profile: ', profile)
-    console.log('accessToken: ', accessToken)
-    console.log('refreshToken: ', refreshToken)
+    // console.log('Warnin!! new GoogleStrategy profile: ', profile)
+    // console.log('accessToken: ', accessToken)
+    // console.log('refreshToken: ', refreshToken)
     find.findByEmail(profile.emails[0].value, (err, user) => {
       if(err) return done(err);
       
@@ -31,9 +35,21 @@ passport.use(new GoogleStrategy({
             return done(err);
           }
           console.log('GoogleStrategy created a new profile : ', newUser);
+          const token = jwt.sign(
+            { user_id: newUser.user_id, email: newUser.email, username: newUser.username }, 
+            SECRET_KEY, 
+            { expiresIn: '1d' }
+          );
+          newUser.token = token;
           return done(null, newUser);
         });
       } else {
+        const token = jwt.sign(
+          { user_id: user.user_id, email: user.email, username: user.username }, 
+          SECRET_KEY, 
+          { expiresIn: '1d' }
+        );
+        user.token = token;
         return done(null, user);
       }
     });

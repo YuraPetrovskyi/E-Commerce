@@ -1,9 +1,12 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 export const CartContext = createContext();
 const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
 
 export const CartProvider = ({ children }) => {
+  const { token } = useParams();
+
   const [authenticated, setAuthenticated] = useState(false);
   const [user, setUser] = useState({});
   const [cartId, setCartId] = useState(null);
@@ -12,8 +15,24 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);  
   const [cartlenght, setCartLenght] = useState(null);
 
-  console.log('token: ',localStorage.getItem('token'));
+  useEffect(() => {
+    // Отримання токену з URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
 
+    if (token) {
+      console.log('Token from URL:', token);
+      localStorage.setItem('token', token);
+
+      // Ви можете тут встановити аутентифікацію або зробити запит для перевірки токена
+      setAuthenticated(true);
+
+      // Опціонально: Очистити параметр токена з URL, щоб він не відображався у адресному рядку після аутентифікації
+      // window.history.replaceState(null, '', window.location.pathname);
+    }
+  }, []);
+  console.log('localStorage token:', localStorage.getItem('token'));
+  
   useEffect(() => {    
     const fetchData = async () => {
       console.log('startet CartProvider check-auth');

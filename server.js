@@ -129,7 +129,7 @@ app.use(express.json({
 // ================================ Passport 
 require('./config/passport')
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 // app.use((req, res, next) => {
 //   console.log("Request headers:", req.headers);
@@ -139,10 +139,10 @@ app.use(passport.session());
 
 // ================================ check-auth
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    console.log('ensureAuthenticated - go to next without token!!!!!')
-    return next();
-  }
+  // if (req.isAuthenticated()) {
+  //   console.log('ensureAuthenticated - go to next without token!!!!!')
+  //   return next();
+  // }
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
   console.log('ensureAuthenticated authHeader: ==========>', authHeader);
@@ -173,8 +173,6 @@ app.get('/check-auth', ensureAuthenticated, (req, res) => {
   });
 });
 
-
-
 // ================================ JWT authenticate
 app.post('/loginjwt', (req, res) => {
   // Аутентифікація користувача...
@@ -204,12 +202,7 @@ app.post('/loginjwt', (req, res) => {
       res.status(500).json({ message: 'Internal server error during password comparison' });
     }
   }); 
-  // res.json({ token });
-
-  // res.status(200).json({ user });
 });
-
-
 
 // ================================ Passport authenticate
 //Google strategy
@@ -224,7 +217,10 @@ app.get('/auth/google/callback',
     // Successful authentication, redirect home.
     console.log('secces google sesion')
     console.log('host: ',`${WEB_APP_URL}`)
-    res.redirect(`${WEB_APP_URL}`);
+    const token = req.user.token;
+    console.log('secces google token: ===>', token)
+
+    res.redirect(`${WEB_APP_URL}/?token=${token}`);
   }
 );
 //Local strategy
