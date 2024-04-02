@@ -10,17 +10,16 @@ body {
   font-style: normal;
   letter-spacing: 1px;
 }
-body a {
+/* body a {
   text-decoration: none;
-
   /* font-family: "VT323", monospace; */
   /* font-style:italic; */
   /* color: aqua; */
-  text-shadow: 1px 1px 1px rgba(4, 192, 213, 0.583);
-}
-body a:hover {
+  /* text-shadow: 1px 1px 1px rgba(4, 192, 213, 0.583);
+} */ 
+/* body a:hover {
   text-decoration: none;
-}
+} */
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;    

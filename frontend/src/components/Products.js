@@ -33,13 +33,15 @@ const Products = () => {
       <h2>Product List</h2>
       <ul className='products-container'>
         {products.map((product) => (
-          <li key={product.product_id}>
+          
+          <li key={product.product_id} >
             <img src={product.image_url} alt={product.name} />
             <p>{product.name}</p>
             <p className='products-name'>{product.model}</p>
             <p className='products-price'>${product.price}</p>
             <Link to={`/products/${product.product_id}`} >More information...</Link>
           </li>
+          
         ))}
       </ul>
     </div>

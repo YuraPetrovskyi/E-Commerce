@@ -15,6 +15,9 @@
 .loyout a {  
   text-decoration: none; /* Забрати підкреслення */ 
 }
+.loyout a:link {  
+  color: inherit;  /* Забрати підкреслення */ 
+}
 .loyout a:hover {
   color: rgb(8, 188, 155);
 }
@@ -139,7 +142,7 @@ input, select {
 }
 
 /* Products */
-li {
+.products-container li {
   display: flex; /* Встановлюємо елементи в один рядок */
   background-color: white;
   flex-direction: column; /* Встановлюємо напрямок колонки */
@@ -147,18 +150,21 @@ li {
   border-radius: 15px; /* Закруглюємо кути */
   padding: 5px; /* Додаємо відступи */
   margin: 10px; /* Додаємо зовнішні відступи */
-  width: 200px; /* Задаємо ширину карточки */
+  width: 300px; /* Задаємо ширину карточки */
 }
-li a {
+.products-container li a {
   text-align: center;
   text-decoration: none; /* Видаляємо підкреслення з посилань */
   /* color: #0b15d2; Колір тексту посилань */
 }
-li p {
+.products-container li p {
   margin: 5px 0; /* Додаємо зовнішні відступи для параграфів */
 }
+.products-container img {
+  object-fit: contain;  /* none, fill, contain */
+  max-height: 350px;
+}
 
-/* Products */
 .products-container {
   display: flex; /* Встановлюємо елементи в один рядок */
   flex-wrap: wrap;
