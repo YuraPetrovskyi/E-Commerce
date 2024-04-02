@@ -62,6 +62,7 @@ const storeMongoConnect = MongoStore.create({ mongoUrl: process.env.MONGODB_URI 
 // ================================ Stripe
 const createCheckoutSession = require('./config/checkout'); //for stripe
 const webhook = require('./config/webhook');
+const email_stripe = require('./config/email-stripe');
 
 // ================================ DB
 const db_users = require('./db/users');
@@ -129,7 +130,7 @@ app.use(express.json({
 // ================================ Passport 
 require('./config/passport')
 app.use(passport.initialize());
-// app.use(passport.session());
+// app.use(passport.session());  // uncomment to activate sessions!!!!!
 
 // app.use((req, res, next) => {
 //   console.log("Request headers:", req.headers);
@@ -139,14 +140,15 @@ app.use(passport.initialize());
 
 // ================================ check-auth
 function ensureAuthenticated(req, res, next) {
+  // uncomment to activate sessions!!!!!
   // if (req.isAuthenticated()) {
   //   console.log('ensureAuthenticated - go to next without token!!!!!')
   //   return next();
   // }
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
-  console.log('ensureAuthenticated authHeader: ==========>', authHeader);
-  console.log('ensureAuthenticated token: ==========>', token);
+  // console.log('ensureAuthenticated authHeader: ==========>', authHeader);
+  // console.log('ensureAuthenticated token: ==========>', token);
   if (token == null) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
@@ -162,8 +164,8 @@ function ensureAuthenticated(req, res, next) {
 }
 
 app.get('/check-auth', ensureAuthenticated, (req, res) => {
-  console.log('користувач аутентифікований :', req.isAuthenticated());
-  console.log('користувач user :', req.user);
+  // console.log('користувач аутентифікований :', req.isAuthenticated());
+  console.log('/check-auth ==> користувач аутентифікований, user :', req.user);
   res.status(200).json({ 
     isAuthenticated: true, 
     // username: req.user.username, 
@@ -311,6 +313,9 @@ app.post('/create-checkout-session', createCheckoutSession);
 
 app.post('/webhook', webhook);
 
+const stripe = require('stripe')(process.env.SECRET_KEY);
+app.get('/api/checkout-session/:sessionId', email_stripe);
+
 
 // ================================ Addition
 app.get('/profile', ensureAuthenticated, (req, res) => {
@@ -411,3 +416,42 @@ app.listen(port, () => {
 //   storeMongoDB.on('error', function(error) {
 //     console.log(error);
 //   });
+
+// Stripe Hook
+// const stripe = require('stripe')(process.env.SECRET_KEY);
+// express.raw({type: 'application/json'}),
+// app.post('/webhook-1',  (request, response) => {
+//   const sig = request.headers['stripe-signature'];
+//   console.log('started webhook with:', process.env.WEB_HOOK_SECRET);
+
+//   let event;
+
+//   try {
+//     console.log('webhook try block');
+//     event = stripe.webhooks.constructEvent(request['rawBody'], sig, process.env.WEB_HOOK_SECRET);
+//   } catch (err) {
+//     console.log('webhook try block catch error: -', err);
+//     response.status(400).send(`Webhook Error: ${err.message}`);
+//     return;
+//   }
+//   console.log('webhook after try block');
+//   if (event.type === 'checkout.session.completed') {
+//     const session = event.data.object;
+//     console.log('Event data from Webhook: ', session);
+//   }
+//   // Handle the event
+//   switch (event.type) {
+//     case 'payment_intent.succeeded':
+//       const paymentIntentSucceeded = event.data.object;
+//       console.log('Event data from Webhook: ', paymentIntentSucceeded);
+
+//       // Then define and call a function to handle the event payment_intent.succeeded
+//       break;
+//     // ... handle other event types
+//     default:
+//       console.log(`Unhandled event type ${event.type}`);
+//   }
+
+//   // Return a 200 response to acknowledge receipt of the event
+//   response.send();
+// });

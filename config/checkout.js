@@ -11,7 +11,7 @@ async function createCheckoutSession(req, res) {
   }
 
   let session;
-    console.log('before try block');
+    console.log(' function createCheckoutSession ==> before try block');
     console.log('line_items : ', line_items[0]);
 
     try {

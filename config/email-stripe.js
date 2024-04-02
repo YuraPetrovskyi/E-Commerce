@@ -1,52 +1,20 @@
 const stripeAPI = require('./stripe');
 const nodemailer = require('nodemailer');
 
-
-// Функція для отримання деталей сесії Checkout і line items
-async function getSessionDetailsAndLineItems(sessionId) {
+const email_stripe = async (req, res) => {
   try {
-    // Отримання деталей сесії Checkout
-    const session = await stripeAPI.checkout.sessions.retrieve(sessionId);
+    const session = await stripeAPI.checkout.sessions.retrieve(req.params.sessionId);
+    console.log('get /api/checkout-session/: Stripe: ', session)
+    const lineItems = await stripeAPI.checkout.sessions.listLineItems(session.id, {limit: 100});
+    console.log('get /api/checkout-session/: Stripe: lineItems ======>: ', lineItems.data)
+    
+    await sendEmail(session.customer_email, "New purches on e-commers", session, lineItems.data);
 
-    // Отримання line items, асоційованих з сесією Checkout
-    const lineItems = await stripeAPI.checkout.sessions.listLineItems(sessionId, {limit: 100});
-
-    return {session, lineItems};
+    res.status(200).json(session);
   } catch (error) {
-    console.error('Error retrieving session details and line items:', error);
-    throw error;
+    console.error('Failed to retrieve checkout session:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-}
-
-
-
-const webhook = async (req, res) => {
-  console.log('started webhook with:', process.env.WEB_HOOK_SECRET);
-  const sig = req.headers['stripe-signature'];
-  let event;
-
-  try {
-    console.log('webhook try block');
-    event = stripeAPI.webhooks.constructEvent(req['rawBody'], sig, process.env.WEB_HOOK_SECRET);
-  } catch(error) {
-    console.log(`Webhook error: ${error.message}`);
-    return res.status(400).send(`Webhook error: ${error.message}`);
-  }
-  console.log('webhook after try block');
-
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
-    const sessionId = session.id;
-    // Отримання деталей line items
-    const {lineItems} = await getSessionDetailsAndLineItems(sessionId);
-    
-    await sendEmail(session.customer_email, "webhook: Деталі Вашої Покупки", session, lineItems.data);
-    
-    console.log('Event data from Webhook: ', session);
-  }
-
-  // Return a 200 response to acknowledge receipt of the event
-  res.status(200).send();
 }
 
 async function sendEmail(to, subject, session, lineItems) {
@@ -112,4 +80,4 @@ async function sendEmail(to, subject, session, lineItems) {
   });
 }
 
-module.exports = webhook;
+module.exports = email_stripe;
