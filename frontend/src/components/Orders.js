@@ -50,8 +50,8 @@ const Orders = () => {
   const orders_paid = orders.filter(order => order.status === 'Paid');
   const orders_unpaid = orders.filter(order => order.status === null);
 
-  // console.log('orders_paid', orders_paid);
-  // console.log('orders_unpaid', orders_unpaid);
+  console.log('orders_paid', orders_paid);
+  console.log('orders_unpaid', orders_unpaid);
 
   return (
     <Layout>
@@ -64,10 +64,12 @@ const Orders = () => {
             <h2>Unpaid orders</h2>
           </div>          
         </div>
+        {orders_unpaid.length ? (<p></p>) : (<p> You have no orders that are waiting for payment </p>)}
         <ul className='orders-ul-container'>
+          
           {orders_unpaid.map((order) => (
+            
             <li key={order.order_id} className='order-list'>
-              
               <div className='orders-number'>
                 <h3>Order №{order.order_id}</h3>
                 <p>{new Date(order.order_date).toLocaleString()}</p>

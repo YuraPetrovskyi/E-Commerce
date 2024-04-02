@@ -39,7 +39,7 @@ const Success = () => {
       // console.log(response);
       if (response.ok) {
         console.log(`The status of the order with id: ${order_id} has been changed to Paid`);
-        alert(`The status of the order with id: ${order_id} has been changed to Paid`);
+        // alert(`The status of the order with id: ${order_id} has been changed to Paid`);
       }
     } catch (error) {
       console.error(`Error fetching payment of order with id:${order_id} : `, error);
@@ -76,7 +76,10 @@ const Success = () => {
       // Витягуємо session_id з URL
       const query = new URLSearchParams(location.search);
       const sessionId = query.get('session_id');
-      console.log('sessionId', sessionId);      
+      console.log('sessionId', sessionId); 
+      if (!sessionId) {
+        navigate('/');
+      }     
       if (sessionId) {
         // Виконуємо запит до нашого бекенду для отримання деталей сесії
         fetch(`${SERVER_HOST}/api/checkout-session/${sessionId}`)
@@ -106,12 +109,17 @@ const Success = () => {
       <div className='success-container'>
         
         <h2>Thank you for your purchase!</h2>
-        <p>Order ID: {sessionDetails.id}</p>
+        
         {/* Відобразити іншу інформацію про замовлення */}
         
         <p>We are currently processing your order and 
           will send you a confirmation email shortly
         </p>
+        <p>Your order will be delivered to this address:</p>
+        <p>{sessionDetails.shipping_details.address.city}</p>
+        <p>{sessionDetails.shipping_details.address.line1}, {sessionDetails.shipping_details.address.postal_code}</p>
+        <p>{sessionDetails.shipping_details.name}</p>
+        
         <div>
           <button onClick={goToHome}>
             Continue Shopping
