@@ -25,7 +25,7 @@ export const CartProvider = ({ children }) => {
       setAuthenticated(true);
 
       // Опціонально: Очистити параметр токена з URL, щоб він не відображався у адресному рядку після аутентифікації
-      // window.history.replaceState(null, '', window.location.pathname);
+      window.history.replaceState(null, '', window.location.pathname);
     }
   }, []);
   console.log('localStorage token:', localStorage.getItem('token'));

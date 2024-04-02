@@ -313,7 +313,6 @@ app.post('/create-checkout-session', createCheckoutSession);
 
 app.post('/webhook', webhook);
 
-const stripe = require('stripe')(process.env.SECRET_KEY);
 app.get('/api/checkout-session/:sessionId', email_stripe);
 
 
