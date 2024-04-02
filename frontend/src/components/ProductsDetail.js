@@ -2,19 +2,20 @@ import React, { useEffect, useState, useContext }from "react";
 import { useParams, useNavigate } from 'react-router-dom';
 import './ProductsDetail.css';
 import Layout from './Layout';
-
 import { CartContext } from './CartContext';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
 
 const ProductDetail = () => {
   const { product_id } = useParams();
-
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);  
   const { cartlenght, authenticated, cart, userId} = useContext(CartContext);
   const { setCartLenght,} = useContext(CartContext);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,7 +38,10 @@ const ProductDetail = () => {
       const existingCartItem = cart.find((item) => item.product_id === product.product_id);    
       if (existingCartItem) {
         // Якщо товар вже є в корзині, виводимо повідомлення користувачу та пропонуємо перейти до корзини
-        alert(`Product ${product.name} ${product.model} is already in the cart!`);
+        toast.warn(`Product ${product.name} ${product.model} is already in the cart!`,{
+          position: "top-right",
+          autoClose: 3000
+        });
         return;
       }
       // Якщо товар відсутній в корзині, відправляємо запит на сервер для додавання його в корзину    
@@ -53,9 +57,13 @@ const ProductDetail = () => {
       console.log(`Product ${product.name} ${product.model} added to the cart!`);      
       setQuantity(1);
       setCartLenght(cartlenght + 1);
-      alert(`${quantity} of product ${product.name} ${product.model} added to the cart!`);
+      toast.success(`${quantity} of product ${product.name} ${product.model} added to the cart!`, {
+        position: "top-right",
+        autoClose: 2000
+      });
     } catch (error) {
       console.error('Error adding product to the cart:', error);
+      toast.error('Error adding product to the cart.');
     }
   };
 
@@ -65,6 +73,7 @@ const ProductDetail = () => {
 
   return (
     <Layout>
+      <ToastContainer />
       <div className="product-container">
         {authenticated ? (
           <div className="back-product-container">

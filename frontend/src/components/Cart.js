@@ -2,8 +2,10 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CartContext } from './CartContext';
 import './Cart.css';
-
 import Layout from './Layout';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
 // require('dotenv').config();
@@ -48,7 +50,7 @@ const Cart = () => {
         const productData = await Promise.all(productPromises);
         setProducts(productData);
       } catch (error) {
-        console.error('Error fetching product data:', error);
+        toast.error('Error fetching product data:', error);
       }
     };
   
@@ -76,7 +78,7 @@ const Cart = () => {
       if (!cartItem) {
         // Якщо відповідний товар не знайдено в корзині
         console.error('Product not found in cart');
-        alert(`Product not found in cart`);
+        toast.error(`Product not found in cart`);
         return;
       }  
       const cartItemId = cartItem.cart_item_id;  
@@ -107,7 +109,10 @@ const Cart = () => {
       const updatedProducts = products.filter((product) => product[0].product_id !== productId);
       setProducts(updatedProducts);      
       // setCartId(cartId);// Оновлюємо cartID, щоб спровокувати оновлення useEffect
-      alert(`Product with productId ${productId} and cartItemId ${cartItemId} was deleted`);
+      toast.success(`Product was deleted`, {
+        position: "top-right",
+        autoClose: 1000
+      });
     } catch (error) {
       console.error('Error deleting product:', error);
     }
@@ -123,7 +128,7 @@ const Cart = () => {
       const cartItem = cart.find((item) => item.product_id === productId);
       if (!cartItem) {
         console.error('Product not found in cart');
-        alert(`Product not found in cart`);
+        toast.warn(`Product not found in cart`);
         return;
       }
       const cartItemId = cartItem.cart_item_id;
@@ -144,7 +149,7 @@ const Cart = () => {
         // setCartId(cartId); // Спровокує оновлення useEffect
       } else {
         console.error('Failed to update quantity');
-        alert('Failed to update quantity');
+        toast.error('Failed to update quantity');
       }
     } catch (error) {
       console.error('Error updating quantity:', error);
@@ -168,19 +173,20 @@ const Cart = () => {
         setCartLenght(null);
         setCartEmpty('');
         setCart([]);// Оновлюємо cartID, щоб спровокувати оновлення useEffect 
-        alert(`Замовлення створено`); 
+        toast.success(`Замовлення створено`); 
         navigate('/order_created');       
       } else {
-        alert(`Помилка при створенні ордеру!`);
+        toast.error(`Помилка при створенні ордеру!`);
       } 
     } catch (error) {
       console.error('Error during checkout:', error);
+      toast.error('Error during checkout!', error);
     }
   };
 
 return (
   <Layout>
-
+    <ToastContainer />
     <div className="cart-back-container">
       <div className="back-cart-container">
         <button onClick={() => navigate(-1)} className="button-back">

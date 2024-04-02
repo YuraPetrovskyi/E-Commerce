@@ -71,7 +71,7 @@ const Orders = () => {
             
             <li key={order.order_id} className='order-list'>
               <div className='orders-number'>
-                <h3>Order №{order.order_id}</h3>
+                <h3>Id Order #{order.order_id}</h3>
                 <p>{new Date(order.order_date).toLocaleString()}</p>
               </div>
               
@@ -93,23 +93,20 @@ const Orders = () => {
         <div className="paid-orders-container">        
           <h2>Paid orders</h2> 
           <ul className='orders-ul-container'>
-          {orders_paid.map((order) => (
-
-            <li key={order.order_id} className='order-list'>
-
-              <div className='orders-number'>
-                <h3>Order № {order.order_id}</h3>
-                <p>{new Date(order.order_date).toLocaleString()}</p>
-              </div>
-              
-              <Link to={`/order_items/${order.order_id}`}>Order details</Link>
-              
-              <div className='orders-total-price'>
-                <h3>Total</h3>
-                <p>${order.total_amount}</p>   
-              </div>
-
-            </li>
+          {orders_paid.map((order) => (            
+              <li key={order.order_id} className='order-list'>
+                <Link to={`/order_items/${order.order_id}`}>
+                  <div className='orders-number'>
+                    <h3>Id Order #{order.order_id}</h3>
+                    <p>{new Date(order.order_date).toLocaleString()}</p>
+                  </div>
+                  {/* <Link to={`/order_items/${order.order_id}`}>Details ...</Link> */}
+                  <div className='orders-total-price'>
+                    <h3>Total</h3>
+                    <p>${order.total_amount}</p>   
+                  </div>
+                </Link> 
+              </li>
             ))}
           </ul>
         </div>
