@@ -25,6 +25,27 @@
   min-height: 100vh; 
   text-align: center;
 } */
+
+.welcome-comtainer {
+  margin: 0 8px auto;
+  display: flex;
+  flex-direction: column;
+  /* padding: 0 15px; */
+}
+.welcome-comtainer h1{
+  color: #00aca3;
+}
+.welcome-comtainer p{
+  font-size: 1.3rem;
+  margin-top: 4%;
+}
+.welcome-comtainer h3{
+  font-size: 1.5rem;
+  margin-top: 10%;
+}
+.welcome-comtainer span{
+  font-weight: 800;
+}
 /* ------------------------------------ */
 .layout {
   display: grid;
@@ -162,11 +183,14 @@ input, select {
   width: 100%;
   display: flex;
   align-items: center;
-  max-height: 100px; 
+  min-height: 65px; 
   justify-content: space-around;  
   background-color: black;
   color: aliceblue;
   border-bottom: 2px  solid white;
+}
+.header-person-icon-container {
+  display: none;
 }
 .header-emblem {
   font-size: 1.5rem;
@@ -276,7 +300,52 @@ input, select {
   padding: 20px;
 }
 
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdown-content a{
+  color: black;
+  position: relative;
+  display: inline-block;
+}
 
+.dropdown-button {
+  /* background-color: #4CAF50; */
+  /* color: white; */
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: block;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 260px;
+  height: 200px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 12px 16px;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #32f8ee98;
+}
+.dropdown-content span {
+  color: black;
+
+}
+.dropdown {
+  display: none;
+}
 /* @import url("media.css");  */
 
 @media (min-width: 1200px) {  
@@ -379,18 +448,36 @@ input, select {
     grid-template-rows: 1fr auto;
   }
   .header-customer button{
-    margin: 5px;
+    /* margin: 5px; */
+  }
+  .header-person-icon-container {
+    border-radius: 12px;
+    margin: 0 5px;
+    display:block;
+  }
+  .header-person-icon-container button{
+    background-color: white;
+    margin: 0;
+    padding: 0;
+  }
+  .header-emblem {
+    display: none;
+  }
+  .dropdown {
+    display: block;
   }
   .categories-container {
     /* background-color: aqua; */
     order: 2; /* Зміщуємо Categories вниз */
-    height: 50px;
+    height: 65px;
     flex-direction: row;
-    border-top: 1px solid black;
+    border-top: 2px solid black;
     border-right: none;
+    justify-content: space-between;
   }
   .categories-container p{
     font-size: 1.3rem;
+    display: none;
   }
   .categories-container h3{
     display: none;
@@ -398,10 +485,18 @@ input, select {
   .categories-account {
     display: none;
   }
+  .categories-img-container {
+    width: 75px;
+  }
   .categories-container img{
-    display: none;
+    /* display: none; */
+    width: 45px;
+    height: 50px;
   }
   .products-container li {    
     width: 350px; /* Задаємо ширину карточки */
+  }
+  .categories-container a:active {
+    background-color: rgba(0, 255, 255, 0.218);
   }
 }

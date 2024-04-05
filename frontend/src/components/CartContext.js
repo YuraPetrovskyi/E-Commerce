@@ -43,6 +43,9 @@ export const CartProvider = ({ children }) => {
           }
         });
         const respons = await authResponse.json();
+        if (respons.message) {
+          console.log('respons check-auth:', respons.message)
+        }
         if (respons.isAuthenticated) {
           console.log("CartProvider isAuthenticated respons", respons)
           setAuthenticated(true);

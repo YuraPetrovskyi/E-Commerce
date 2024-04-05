@@ -89,7 +89,8 @@ const Register = () => {
         
         <button type="submit">Create account</button>
       </form>
-
+      <p>or</p>
+      <Link to={`${SERVER_HOST}/auth/google`}><button>Register with Google</button></Link>
       <p>
         Already have an account? <Link to="/login">Sign in</Link>.
       </p>

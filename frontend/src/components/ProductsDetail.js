@@ -81,7 +81,7 @@ const ProductDetail = () => {
               <img src="/images/back.png" alt="shopping-cart-icon" />
             </button>  
             <div className="back-product-h2">
-              <h2>{product.model}</h2>
+              <h2>{product.name}</h2>
             </div>         
           </div>
           ) : (
@@ -91,15 +91,17 @@ const ProductDetail = () => {
             </button>      
             <div className="back-product-h2">
               <h2>If you want to buy this item, please login.</h2>              
-            </div>     
+            </div>   
           </div>
         )}
         <div className="product-detail">
+          
           <div className="product-image">
             <img src={product.image_url} alt={product.name} />
           </div> 
           <div className="product-info">
             <div className="product-name">
+              <h3>{product.model}</h3>
               <p>Description:</p>
               <p>{product.description}</p>
             </div>

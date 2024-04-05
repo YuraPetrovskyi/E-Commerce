@@ -28,6 +28,10 @@ const clientRedis = createClient({
 clientRedis.connect().catch((err) => {
   console.error('Error connecting to Redis:', err);
 });
+//обробляє помилки, які можуть виникнути після успішного підключення 
+clientRedis.on('error', (err) => {
+  console.error('Помилка Redis після підключення:', err);
+});
 const storeRedis = new RedisStore({ client: clientRedis });
 
 // ================================ MongoDB with mongoose
@@ -156,7 +160,17 @@ function ensureAuthenticated(req, res, next) {
     console.log('JWT verification started, user:', user);
     if (err) {
       console.log('Token verification failed:', err);
-      return res.status(403).json({ message: 'Token is invalid, forbidden' });
+      // Додаємо перевірку на конкретний тип помилки
+      if (err instanceof jwt.JsonWebTokenError) {
+        // Повертаємо більш конкретне повідомлення про помилку
+        return res.status(403).json({ message: 'Token is invalid. Please provide a valid token.' });
+      } else if (err instanceof jwt.TokenExpiredError) {
+        // Обробка помилки, якщо токен прострочений
+        return res.status(403).json({ message: 'Token has expired. Please login again.' });
+      } else {
+        // Загальна помилка
+        return res.status(403).json({ message: 'An error occurred while verifying the token.' });
+      }
     }
     req.user = user;
     next();

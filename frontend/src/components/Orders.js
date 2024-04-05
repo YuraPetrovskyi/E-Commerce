@@ -14,11 +14,11 @@ const Orders = () => {
   // const [totalPrice, setTotalPrice] = useState(0);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if(!authenticated) {
-      navigate('/')
-    }    
-  }, [authenticated, navigate]);
+  // useEffect(() => {
+  //   if(!authenticated) {
+  //     navigate('/')
+  //   }    
+  // }, [authenticated, navigate]);
 
   useEffect(() => {
     if(authenticated) {
@@ -53,6 +53,13 @@ const Orders = () => {
   console.log('orders_paid', orders_paid);
   console.log('orders_unpaid', orders_unpaid);
 
+  if(!authenticated) {
+    return (
+      <Layout>
+        <h2> Ups! Please register first</h2>
+      </Layout>
+    )
+  }
   return (
     <Layout>
       <div className="orders-container">
@@ -62,7 +69,7 @@ const Orders = () => {
             <img src="/images/back.png" alt="shopping-cart-icon" />
           </button>
           <div className="back-product-h2">
-            <h2>Unpaid orders</h2>
+            <h2>Unpaid orders:</h2>
           </div>          
         </div>
 
@@ -94,10 +101,11 @@ const Orders = () => {
         </ul>
 
         <div className="paid-orders-container">        
-          <h2>Paid orders</h2> 
+          <h2>List of paid orders:</h2> 
           {orders_paid.length ? (<p></p>) : (<p> You have no paid orders </p>)}
+          {orders_paid ? (<p></p>) : (<p> Loading ... </p>)}
           <ul className='paid-orders-ul-container'>
-          {orders_paid.map((order) => (            
+            {orders_paid.map((order) => (            
               <li key={order.order_id} className='order-list'>
                 
                   <div className='paid-orders-number'>

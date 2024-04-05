@@ -1,0 +1,69 @@
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(21, 'Phone', '(6.72", IPS, 2400x1080) / MediaTek Helio G88 (2.0 Ghz) / RAM 8 GB/ 256 Gb', 310.00, 12, 'Realme C55', '/images/RealmeC55.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(22, 'Phone', '(6.67", AMOLED, 2400x1080) / MediaTek Dimensity 1080 (2.6 Ghz+ 2.0 Ghz) / RAM 6 Gb/ G2 / 5G / GPS', 450.00, 11, 'Xiaomi Redmi Note 12 Pro', '/images/XiaomiRedmiNote12Pro.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(23, 'Phone', '(6.74", IPS, 1600x720) / Unisoc Tiger T612 (1.8 Ghz) / 48 Mp/ RAM 6 Gb/ 128 Gb', 188.00, 20, 'Realme C53', '/images/RealmeC53.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(20, 'Phone', '(6.4", Super AMOLED, 2400x1080)/ Samsung Exynos 1380 (4 x 2.4 Ghz+ 4 x 2.0 Ghz)/ RAM 8 Gb/ 256 Gb', 350.00, 7, 'Samsung Galaxy A54', '/images/SamsungGalaxyA54.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(19, 'Phone', '6.6", PLS, 2408x1080) / Samsung Exynos 1330 (2.4 Ghz+ 2.0 Ghz) / 8Gb /128Gb / 48Mp', 260.00, 15, 'Samsung Galaxy M14', '/images/SamsungGalaxyM14.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(24, 'Phone', '(6.74", IPS, 1600x720) / Unisoc Tiger T612 (1.8 Ghz) / 8 Mp/ RAM 6 Gb/ 128 Gb', 300.00, 10, 'Realme C53 6/128GB', '/images/RealmeC53.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(25, 'Phone', '(6.5", P-OLED, 2400x1080) / Qualcomm Snapdragon 695 (2.2 Ghz+ 1.8 Ghz) / RAM 12 Gb/ 256 Gb', 333.00, 12, 'Motorola G84', '/images/MotorolaG84.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(26, 'Phone', '(6.72", IPS, 2400x1080) / Qualcomm Snapdragon 695 (2 x 2.2 Ghz+ 6 x 1.8 Ghz) / 8 Gb /128 GB / Android 13', 400.00, 10, 'OnePlus Nord CE 3 Lite 5G', '/images/OnePlusNordCE3Lite5G.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(27, 'Phone', '(6.5", Super AMOLED, 2340x1080) / Samsung Exynos 1280 (2.0 Ghz+ 2.4 Ghz) / RAM 8 Gb/ 128 Gb / 48Mp', 320.00, 20, 'Samsung Galaxy M34 5G', '/images/SamsungGalaxyM34.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(28, 'Phone', '(6.67", AMOLED, 2400x1080) / Qualcomm Snapdragon 695 (2.2 Ghz+ 1.8 Ghz) / RAM 8 Gb/ 256 Gb / 50 Mp', 350.00, 4, 'Honor Magic5 Lite 5G', '/images/HonorMagic5Lite5G.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(29, 'Phone', '(6.6", IPS, 2408x1080) / Unisoc T820 (2.7 Ghz+ 2.3 Ghz+ 2.1 Ghz) / RAM 8 Gb/ 256 Gb / 108Mp', 270.00, 5, 'ZTE Nubia NEO', '/images/ZTENubiaNEO.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(30, 'Watch', 'Home Smart Tech Smart watches and fitness Smart watches APPLE Watch Series 9 - 45 mm Midnight Aluminium Case with Midnight Sport Band, M/L SC_CE_WK44_SMART_BNPL6AL_COM_WK32_APPLE_WATCH_FNDD Tracks sports / steps / distance / calories / sleep Monitors heart rate with ECG / blood oxygen / temperature Battery life: Up to 18 hours Water resistant GPS Compatible with iOS', 379.00, 20, 'APPLE Watch Series 9', '/images/APPLEWatchSeries9.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(31, 'Watch', 'Tracks sports / steps / distance / calories / sleep Monitors heart rate with ECG / blood oxygen / temperature Battery life: Up to 40 hours Waterproof (IP68) GPS Compatible with Android', 289.00, 15, 'SAMSUNG Galaxy Watch6 BT with Bixby', '/images/SAMSUNGGalaxyWatch6.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(32, 'Watch', 'GARMIN Venu 3S - Silver & Sage Grey/ Tracks sports / steps / distance / calories / sleep Monitors heart rate / VO2 Max / blood oxygen / stress Battery life: Up to 10 days Water resistant (5 ATM) GPS Compatible with Android / iOS WiFi / Bluetooth 2 year guarantee', 399.00, 15, 'GARMIN Venu 3S', '/images/GARMINVenu3S.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(34, 'Watch', 'Tracks sports / steps / distance / calories / sleep Monitors heart rate with ECG / blood oxygen / temperature Battery life: Up to 18 hours Water resistant GPS Compatible with iOS', 349.00, 20, 'APPLE Watch Series 9 -', '/images/APPLEWatchSeries9Starlight.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(35, 'Watch', 'Tracks sports / steps / distance / calories / sleep Monitors heart rate / VO2 Max / blood oxygen / stress Battery life: Up to 11 days Water resistant (5 ATM) GPS Compatible with Android / iOS WiFi / Bluetooth 2 year guarantee', 229.00, 15, 'GARMIN vivoactive 5 Smart Watch', '/images/GARMINvivoactive5Smart.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(36, 'Watch', 'Tracks sports / steps / distance / calories / sleep Monitors heart rate Battery life: Up to 18 hours Water resistant GPS Compatible with iOS', 209.00, 20, 'APPLE Watch SE (2023)', '/images/APPLEWatchSE.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(37, 'Watch', 'Tracks sports / steps / distance / calories / sleep Monitors heart rate with ECG / blood oxygen / stress Battery life: Up to 40 hours Waterproof (IP68) GPS Compatible with Android', 399.00, 15, 'SAMSUNG Galaxy Watch6 Classic BT with Bixby', '/images/SAMSUNGGalaxyWatch6Classic.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(38, 'Watch', 'Home Smart Tech Smart watches and fitness Smart watches FITBIT Versa 4 Smart Watch - Pink Sand & Copper Rose SC_CE_WK47_MUSTENDTUESDAY_3.4.24_9.4.24KG_CE_WK45_IFC3 Tracks sports / steps / distance / calories / sleep Monitors heart rate with ECG / blood oxygen / stress Battery life: 6 days + Waterproof (IPX7) GPS 2 year guarantee', 149.00, 10, 'FITBIT Versa 4 Smart Watch - Pink Sand & Copper Rose', '/images/FITBITVersa4.webp');
+INSERT INTO yyproducts (product_id, name, description, price, inventory, model, image_url) VALUES 
+(1, 'Watch', 'Tracks sports / steps / distance / calories / sleep Monitors heart rate with ECG / blood oxygen / temperature Battery life: Up to 14 days Waterproof (IP68) GPS 2 year guarantee', 239.00, 20, 'HUAWEI Watch GT 3 Pro Titanium - Black, 46 mm', '/images/HUAWEIWatchGT3Pro.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(40, 'Watch', 'Tracks sports / steps / distance / calories / sleep Monitors heart rate / blood oxygen / stress Battery life: Up to 9 days Water resistant (5 ATM) GPS Compatible with Android / iOS Bluetooth 2 year guarantee', 64.00, 25, 'HUAWEI Watch Fit Special Edition - Starly Black, Medium', '/images/HUAWEIWatchFitSpecialEdition.webp');
+
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(41, 'TVs', 'Naturally bright colour with Quantum Dot technology Intelligent upscaling with Quantum Processor 4K Refresh rate: 120 Hz (up to 144 Hz) HDMI 2.1 x 4 5 year guarantee Samsung Smart TV has a large choice of apps and services', 1599.00, 15, 'SAMSUNG QE65S90CATXXU 65" Smart 4K Ultra HD HDR OLED TV with Bixby * Amazon Alexa', '/images/SAMSUNGQE65S90CATXXU65.webp');
+
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(2, 'TVs', 'Advanced OLED α9 AI processor with AI Super Upscaling Incredible brightness with Brightness Booster Refresh rate: 120 Hz HDMI 2.1 x 4 5 year guarantee LG"s webOS gives you easy access to all your must-have apps', 1249.00, 15, 'LG OLED55C34LA 55" Smart 4K Ultra HD HDR OLED TV with Amazon Alexa', '/images/LGOLED55C34LA55.webp');
+
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(43, 'TVs', 'Naturally bright colour with Quantum Dot technology Intelligent upscaling with Quantum Processor 4K Refresh rate: 120 Hz (up to 144 Hz) HDMI 2.1 x 4 5 year guarantee Samsung Smart TV has a large choice of apps and services', 1199.00, 20, 'SAMSUNG QE55S90CATXXU 55 Smart 4K Ultra HD HDR OLED TV with Amazon Alexa', '/images/SAMSUNGQE55S90CATXXU55.webp');
+
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(44, 'TVs', 'Sharp 4K UHD picture / AI Sound Pro with  AI processor Refresh rate: 60 Hz HDMI 2.0b x 3 webOS gives you easy access to all your must-have apps HDR: HDR10 / Hybrid Log-Gamma (HLG) Freeview HD with Freeview Play / Freesat H', 449.00, 15, 'LG 65UR73006LA 65 Smart 4K Ultra HD HDR LED TV', '/images/LG65UR73006LA65.webp');
+
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(45, 'TVs', 'FreeSync Premium / 144 Hz VRR for great responsive gaming Quantum Dot 1 billion colours for brighter detailed scenes Refresh rate: 120 Hz (up to 144 Hz) HDMI 2.1 x 4 2 year guarantee ', 999.00, 20, 'TCL 75 Smart 4K Ultra HD QLED TV', '/images/TCL75C745K75.webp');
+
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(46, 'TVs', 'Sharp 4K UHD pictureAI processor Sleek / slim design with crescent stand Refresh rate: 60 Hz HDMI 2.0 x 3 webOS gives you easy access to all your must-have apps HDR: HDR10 / Hybrid Log-Gamma (HLG)', 349.00, 10, 'LG 43UR81006LJ 43 Smart', '/images/LG43UR81006LJ43.webp');
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(48, 'TVs', 'Advanced OLED  AI processor with AI Super Upscaling Incredible brightness with Brightness Booster Refresh rate: 120 Hz HDMI 2.1 x 4 5 year guaranteeto', 1599.00, 15, 'LG OLED65C34LA 65', '/images/LGOLED65C34LA.webp');
+
+
+INSERT INTO products (product_id, name, description, price, inventory, model, image_url) VALUES 
+(51, 'TVs', 'Picture quality: 120 Hz Full Array LED brings brightness 4K120 HDMI 2.1 x 2 / HDMI 2.0b x 2 Claim a 5 year guarantee BRAVIA CORE streaming service', 899.00, 20, 'SONY BRAVIA KD-55X85LU 55', '/images/SONYBRAVIAKD-55X85LU.webp');
+

@@ -1,4 +1,4 @@
-import React, { useContext }from "react";
+import React, { useContext, useState  }from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { CartContext } from './CartContext';
 
@@ -8,7 +8,10 @@ const Header = () => {
   const navigate = useNavigate();
   const { cartlenght, user, authenticated } = useContext(CartContext);
   const { setAuthenticated } = useContext(CartContext);
-  
+  const [isOpen, setIsOpen] = useState(false);
+
+
+  const toggleDropdown = () => setIsOpen(!isOpen);
 
   const handleLogout = async () => {
     try {
@@ -41,6 +44,20 @@ const Header = () => {
     <div className="header-container">
       <div className="header-emblem">
         <Link to="/">eCOMMERS</Link>        
+      </div>
+      {/* <div className="header-person-icon-container">
+        <button>
+          <img src="/images/person.svg" alt="person-icon" />
+        </button>
+      </div> */}
+      <div className="dropdown">
+        <button onClick={toggleDropdown} className="dropdown-button"><img src="/images/person.svg" alt="person-icon" /></button>
+        {isOpen && (
+          <div className="dropdown-content">
+            <Link to="/cart"><span>Backet</span></Link>
+            <Link to="/orders"><span>Orders</span></Link>
+          </div>
+        )}
       </div>
       {authenticated ? (
         <div className='header-customer'>

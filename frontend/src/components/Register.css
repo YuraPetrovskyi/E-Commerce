@@ -1,10 +1,10 @@
 .register-container {
   max-width: 400px;
   margin: 10px auto 0;
-  padding: 20px;
-  border: 1px solid #ccc;
+  padding: 10px;
+  /* border: 1px solid #ccc; */
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
 }
 .register-container button {
   font-size: 1.2rem;
@@ -17,6 +17,7 @@ h2 {
 .register-container a {
   font-size: 1.3rem;
   color:  rgb(8, 188, 155);
+  text-decoration: none;
 }
 .register-container a:hover {
   font-size: 1.4rem;
@@ -26,4 +27,12 @@ h2 {
 .home {
   display: block;
   margin-top: 25px;
+}
+
+.register-container p{
+  text-align: center;
+  margin: 0;
+}
+.register-container button{
+  width: 100%;
 }

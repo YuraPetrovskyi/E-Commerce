@@ -101,14 +101,18 @@ const Login = () => {
         
         <button type="submit">Sign in</button>
       </form>      
+      
+      
+      <div className="login-link-container">
+        <p>or</p>
+        <Link to={`${SERVER_HOST}/auth/google`}><button>Sign in with Google</button></Link>
+        
+        {/* <Link to={`${SERVER_HOST}/auth/google`}>Sign in with Google</Link> */}
+      </div>
+      <Link to="/">Home</Link>
       <p>
         Not a member? <Link to="/register">Create an account</Link>.
       </p>
-      
-      <div className="login-link-container">
-        <Link to="/">Home</Link>
-        <Link to={`${SERVER_HOST}/auth/google`}>Sign in with Google</Link>
-      </div>
     </div>
   );
 };

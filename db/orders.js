@@ -20,20 +20,26 @@ const getOrders = (request, response) => {
 // Create a new order for user by user_id.
 const createOrder = (request, response) => {
   const { user_id } = request.params;
+  console.log('createOrder started');
 
   // we will get information from the user's basket.
   pool.query('SELECT cart_items.product_id, cart_items.quantity, products.price FROM cart_items INNER JOIN products ON cart_items.product_id = products.product_id WHERE cart_items.cart_id = $1', [user_id], (cartItemsError, cartItemsResults) => {
     if (cartItemsError) {
+      console.log('Internal Server Error ');
+
       response.status(500).send('Internal Server Error 1');
     } else if (cartItemsResults.rows.length === 0) {
+      console.log('cartItemsResults.rows.length === 0 ');
       response.status(400).send('The basket is empty. First, add products to the shopping cart.');
     } else {
+      console.log('else ');
       // Let's create a new order and get the ID of this order.
       const totalAmount = cartItemsResults.rows.reduce((total, cartItem) => {
         return total + cartItem.quantity * cartItem.price;
       }, 0);
 
       pool.query('INSERT INTO orders (user_id, total_amount) VALUES ($1, $2) RETURNING order_id', [user_id, totalAmount], (orderError, orderResults) => {
+        console.log('pool ');        
         if (orderError) {
           response.status(500).send('Internal Server Error 2');
         } else {

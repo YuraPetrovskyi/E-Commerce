@@ -79,7 +79,7 @@ const OrderItem = () => {
           // Знаходимо відповідний продукт за його product_id
           const product = products.find((prod) => prod.product_id === item.product_id);
           // Перевіряємо, чи знайдено продукт
-          if (product) {
+          if (product) {            
             return (
               <li key={item.order_item_id} className='container-items'>
                 <div className="cart-item-info">
@@ -87,7 +87,7 @@ const OrderItem = () => {
                     <img src={product.image_url} alt={product.name} />
                   </div>                             
                 </div>
-
+                
                 <div className='container-discription-price'>
                   <Link to={`/products/${product.product_id}`}>
                     <p>{product.model}</p>

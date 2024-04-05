@@ -40,7 +40,7 @@ const Products = () => {
 
   return (
     <Layout>
-      <h2>Product List</h2>
+      <h2>{category}</h2>
       <ul className='products-container'>
         {productfilter.map((product) => (
           

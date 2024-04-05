@@ -20,11 +20,9 @@ const Cart = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if(!authenticated) {
-      navigate('/')
-    }    
-  }, [authenticated, navigate]);
+  
+        
+  
 
   useEffect(() => {    
     const fetchData = async () => {
@@ -168,7 +166,7 @@ const Cart = () => {
           });
       // console.log(featch_heckout);
       if (featch_heckout.ok) {
-        // console.log('featch_heckout.ok : ', featch_heckout.ok);
+        console.log('featch_heckout.ok : ', featch_heckout.ok);
         setProducts([]);
         setCartLenght(null);
         setCartEmpty('');
@@ -176,6 +174,8 @@ const Cart = () => {
         toast.success(`Замовлення створено`); 
         navigate('/order_created');       
       } else {
+        console.log('featch_heckout : ', featch_heckout);
+
         toast.error(`Помилка при створенні ордеру!`);
       } 
     } catch (error) {
@@ -184,83 +184,95 @@ const Cart = () => {
     }
   };
 
-return (
-  <Layout>
-    <ToastContainer />
-    
-    <div className="back-cart-container">
-      <button onClick={() => navigate(-1)} className="button-back">
-        <img src="/images/back.png" alt="shopping-cart-icon" />
-      </button>                  
-      <h2>My basket</h2>      
-      <Link to="/orders"><button>Orders</button></Link>
-    </div>
-    
-    <div className="cart-empty-message">
-      {cartEmpty && <h3>{cartEmpty}</h3>}
-    </div> 
-    
-    <ul className='container-cart'>
+  if (cartlenght > 0) {
+    while(!products.length) {
+      return <div>Loading...</div>;
+    }
+  }
+  if(!authenticated) {
+    return (
+      <Layout>
+        <h2> Ups! Basket is available for registered users</h2>
+      </Layout>
+    )
+  }
+  return (
+    <Layout>
+      <ToastContainer />
       
-      {products.map((product, index) => {
-        const item = cart[index];
-        const productInfo = product[0];
-        const subtotal = parseFloat(productInfo.price) * item.quantity;
-        const inventoryOptions = Array.from({ length: productInfo.inventory }, (_, i) => i + 1); // Варіанти кількості товару
+      <div className="back-cart-container">
+        <button onClick={() => navigate(-1)} className="button-back">
+          <img src="/images/back.png" alt="shopping-cart-icon" />
+        </button>                  
+        <h2>My basket</h2>      
+        <Link to="/orders">Go to Orders</Link>
+      </div>
+      
+      <div className="cart-empty-message">
+        {cartEmpty && <p>{cartEmpty}</p>}
+      </div> 
+      
+      <ul className='container-cart'>
         
-        return (
-          <li key={productInfo.product_id} className='container-items'>
-            
-            <div className="cart-item-info">
-              <div className="cart-item-image">
-                <img src={productInfo.image_url} alt={productInfo.name} />
-              </div>                             
-            </div>
-
-            <div className='container-discription'>              
-              <div className='container-discription-price'>
-                <Link to={`/products/${productInfo.product_id}`}>
-                  <p>{productInfo.model}</p>
-                </Link>
-                
-                <div className="cart-price">
-                  <p>${productInfo.price}</p>
-                  <select
-                    value={item.quantity}
-                    onChange={(e) => handleQuantityChange(productInfo.product_id, e.target.value)}
-                  >
-                    {inventoryOptions.map((option) => (
-                      <option key={option} value={option}>{option}</option>
-                    ))}
-                  </select> 
-                  <p>Total: ${subtotal.toFixed(2)}</p>               
-                </div>
-              </div> 
+        {products.map((product, index) => {
+          const item = cart[index];
+          const productInfo = product[0];
+          const subtotal = parseFloat(productInfo.price) * item.quantity;
+          const inventoryOptions = Array.from({ length: productInfo.inventory }, (_, i) => i + 1); // Варіанти кількості товару
+          
+          return (
+            <li key={productInfo.product_id} className='container-items'>
               
-              <div className='container-delete-button'>                
-                <button onClick={() => handleDelete(productInfo.product_id)}>Delete</button>
-              </div>              
-            </div> 
-                    
-          </li>
-        );
-      })}
-    </ul>
+              <div className="cart-item-info">
+                <div className="cart-item-image">
+                  <img src={productInfo.image_url} alt={productInfo.name} />
+                </div>                             
+              </div>
 
-    <div>
-      {cartEmpty ?
-        (
-          <div></div>
-        ) : (
-          <div className="total-price"> 
-            <p>Total: ${totalPrice.toFixed(2)}</p>
-            <button className="checkout-button" onClick={() => handleCheckout()}>Create an order</button>
-          </div>
-        )}
-    </div>  
+              <div className='container-discription'>              
+                <div className='container-discription-price'>
+                  <Link to={`/products/${productInfo.product_id}`}>
+                    <p>{productInfo.model}</p>
+                  </Link>
+                  
+                  <div className="cart-price">
+                    <p>${productInfo.price}</p>
+                    <select
+                      value={item.quantity}
+                      onChange={(e) => handleQuantityChange(productInfo.product_id, e.target.value)}
+                    >
+                      {inventoryOptions.map((option) => (
+                        <option key={option} value={option}>{option}</option>
+                      ))}
+                    </select> 
+                    <p>Total: ${subtotal.toFixed(2)}</p>               
+                  </div>
+                </div> 
+                
+                <div className='container-delete-button'>                
+                  <button onClick={() => handleDelete(productInfo.product_id)}>Delete</button>
+                </div>              
+              </div> 
+                      
+            </li>
+          );
+        })}
+      </ul>
 
-  </Layout>
-);
+      <div>
+        {cartEmpty ?
+          (
+            <div></div>
+          ) : (
+            <div className="total-price"> 
+              <p>Total: ${totalPrice.toFixed(2)}</p>
+              <button className="checkout-button" onClick={() => handleCheckout()}>Create an order</button>
+            </div>
+          )}
+      </div>  
+
+    </Layout>
+  );
 
 };
 
