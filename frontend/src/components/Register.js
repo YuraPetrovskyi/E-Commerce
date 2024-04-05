@@ -87,11 +87,11 @@ const Register = () => {
         <label>Password:</label>
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         
-        <button type="submit">Register</button>
+        <button type="submit">Create account</button>
       </form>
 
       <p>
-        Do you have an account? <Link to="/login">Login here</Link>.
+        Already have an account? <Link to="/login">Sign in</Link>.
       </p>
       <Link className='home' to="/">Home</Link>
     </div>

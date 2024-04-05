@@ -90,7 +90,7 @@ const Login = () => {
   
   return (
     <div className="login-container">
-      <h2>Login</h2>
+      <h2>Sign in</h2>
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
       <form onSubmit={handleLoginJWT}>
         <label>Email:</label>
@@ -99,15 +99,15 @@ const Login = () => {
         <label>Password:</label>
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         
-        <button type="submit">Login</button>
+        <button type="submit">Sign in</button>
       </form>      
       <p>
-        Don't have an account? <Link to="/register">Register here</Link>.
+        Not a member? <Link to="/register">Create an account</Link>.
       </p>
       
       <div className="login-link-container">
         <Link to="/">Home</Link>
-        <Link to={`${SERVER_HOST}/auth/google`}>Login with Google</Link>
+        <Link to={`${SERVER_HOST}/auth/google`}>Sign in with Google</Link>
       </div>
     </div>
   );

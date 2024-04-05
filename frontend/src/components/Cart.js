@@ -187,15 +187,15 @@ const Cart = () => {
 return (
   <Layout>
     <ToastContainer />
-    <div className="cart-back-container">
-      <div className="back-cart-container">
-        <button onClick={() => navigate(-1)} className="button-back">
-          <img src="/images/back.png" alt="shopping-cart-icon" />
-        </button>                  
-        <h2>My basket</h2>      
-        <Link to="/orders"><button>Orders</button></Link>
-      </div>
+    
+    <div className="back-cart-container">
+      <button onClick={() => navigate(-1)} className="button-back">
+        <img src="/images/back.png" alt="shopping-cart-icon" />
+      </button>                  
+      <h2>My basket</h2>      
+      <Link to="/orders"><button>Orders</button></Link>
     </div>
+    
     <div className="cart-empty-message">
       {cartEmpty && <h3>{cartEmpty}</h3>}
     </div> 

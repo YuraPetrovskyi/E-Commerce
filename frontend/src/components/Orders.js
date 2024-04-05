@@ -56,6 +56,7 @@ const Orders = () => {
   return (
     <Layout>
       <div className="orders-container">
+
         <div className="back-product-container">
           <button onClick={() => navigate(-1)} className="button-back">
             <img src="/images/back.png" alt="shopping-cart-icon" />
@@ -64,7 +65,9 @@ const Orders = () => {
             <h2>Unpaid orders</h2>
           </div>          
         </div>
+
         {orders_unpaid.length ? (<p></p>) : (<p> You have no orders that are waiting for payment </p>)}
+        
         <ul className='orders-ul-container'>
           
           {orders_unpaid.map((order) => (
@@ -92,20 +95,23 @@ const Orders = () => {
 
         <div className="paid-orders-container">        
           <h2>Paid orders</h2> 
-          <ul className='orders-ul-container'>
+          {orders_paid.length ? (<p></p>) : (<p> You have no paid orders </p>)}
+          <ul className='paid-orders-ul-container'>
           {orders_paid.map((order) => (            
               <li key={order.order_id} className='order-list'>
-                <Link to={`/order_items/${order.order_id}`}>
-                  <div className='orders-number'>
+                
+                  <div className='paid-orders-number'>
+                  <Link to={`/order_items/${order.order_id}`}>
                     <h3>Id Order #{order.order_id}</h3>
                     <p>{new Date(order.order_date).toLocaleString()}</p>
+                    </Link>
                   </div>
                   {/* <Link to={`/order_items/${order.order_id}`}>Details ...</Link> */}
-                  <div className='orders-total-price'>
-                    <h3>Total</h3>
+                  <div className='paid-orders-total-price'>
+                    <p>Total</p>
                     <p>${order.total_amount}</p>   
                   </div>
-                </Link> 
+                
               </li>
             ))}
           </ul>

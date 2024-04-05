@@ -12,7 +12,7 @@ import Checkout from './components/checkout';
 import Canceled from './components/Canceled';
 import Success from './components/Success';
 import OrderCreated from './components/OrderCreated';
-
+import Welcome from './components/Welcome';
 
 function App() {
   return (
@@ -23,6 +23,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/:category" element={<Products />} />
         <Route path="/products" element={<Products />} />
         <Route path="/products/:product_id" element={<ProductDetail />} />
         <Route path="/cart" element={<Cart />} />

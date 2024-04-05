@@ -1,18 +1,22 @@
 import React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
-
+import Categories from "./Categories";
 
 const Layout = ({ children }) => {
 
 
   return (
-    <div className="loyout">
+    <div className="layout ">
       <Header/>
+      
       <main className="main-container">
-        {children}
+        <Categories/>
+        <div className="children-container">
+          {children}
+        </div>        
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   )
 

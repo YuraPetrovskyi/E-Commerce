@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import Layout from './Layout';
+
 const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
 
 
 
 const Products = () => {
   const [products, setProducts] = useState([]);
+  const { category } = useParams();
 
   useEffect(() => {
   console.log('Products useEffect');
@@ -27,12 +30,19 @@ const Products = () => {
   }, []);
 
   console.log(products);
+  console.log(category);
+
+  let productfilter = [];
+  if(category) {
+    productfilter = products.filter((product) => product.name === category);    
+  }
+  console.log(productfilter);
 
   return (
-    <div>
+    <Layout>
       <h2>Product List</h2>
       <ul className='products-container'>
-        {products.map((product) => (
+        {productfilter.map((product) => (
           
           <li key={product.product_id} >
             <img src={product.image_url} alt={product.name} />
@@ -44,7 +54,7 @@ const Products = () => {
           
         ))}
       </ul>
-    </div>
+    </Layout>
   );
 };
 

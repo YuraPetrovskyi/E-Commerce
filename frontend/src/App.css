@@ -1,4 +1,22 @@
-.loyout {
+
+/* .categories-container{
+  display: flex;
+  flex-direction: column; */
+  /* position: absolute; */
+  /* top: 90px */
+/* } */
+/* .main-container {
+  display: flex;
+  height: 80vh;
+  margin: 0 auto;
+  justify-content: center; */
+  /* max-width: 1000px; */
+  /* min-width: 375px;
+  background-color: rgb(232, 240, 239);
+  flex: 1;  */
+  /* margin-left: 0;*/
+/* } */
+/* .loyout {
   display: flex;
   flex-direction: column;
   background-color: rgb(154, 154, 154);
@@ -6,30 +24,82 @@
   margin: 0 auto;  
   min-height: 100vh; 
   text-align: center;
-}
-
-.loyout a:visited {
-  color: inherit; /* Застосувати колір, визначений для батьківського елементу */
-  text-decoration: none; /* Забрати підкреслення */  
-}
-.loyout a {  
-  text-decoration: none; /* Забрати підкреслення */ 
-}
-.loyout a:link {  
-  color: inherit;  /* Забрати підкреслення */ 
-}
-.loyout a:hover {
-  color: rgb(8, 188, 155);
+} */
+/* ------------------------------------ */
+.layout {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
 }
 
 .main-container {
-  margin: 0 auto;
-  max-width: 1000px;
-  min-width: 375px;
-  background-color: rgb(232, 240, 239);
-  flex: 1;
-  /* margin-left: 0; */
+  display: grid;
+  /* margin: 0 auto; */
+  /* max-width: 1450px; */
+  grid-template-columns: 200px 3fr;
+  overflow: hidden;
+  text-align: center;
 }
+
+/* ------------------------------------ */
+
+.children-container {
+  overflow-y: auto;
+  scrollbar-width: none;
+  /* min-width: 1000px; */
+}
+
+/* ------------------------------------ */
+
+.categories-container {
+  overflow-y: auto;
+  /* background-color: #00aca3; */
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: none; 
+  margin-top: 5px;  
+  border-right: 2px solid black;
+}
+/* .categories-container a {
+  margin-bottom: 15px;
+} */
+.categories-container h3 {
+  margin-bottom: 10px;
+}
+.categories-link-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+  margin-left: 25px;
+  align-items: center;
+}
+.categories-img-container {  
+  width: 45px;
+}
+.categories-link-container p{  
+  margin: 10px;
+}
+
+
+/* ------------------------------------ */
+
+.layout a:visited {
+  color: inherit; /* Застосувати колір, визначений для батьківського елементу */
+  text-decoration: none; /* Забрати підкреслення */  
+}
+.layout a {  
+  text-decoration: none; /* Забрати підкреслення */ 
+  color: inherit; /* Застосувати колір, визначений для батьківського елементу */
+
+}
+.layout a:link {  
+  color: inherit;  /* Забрати підкреслення */ 
+}
+.layout a:hover {
+  color: rgb(8, 188, 155);
+}
+
+
 
 h2 {
   font-size: 1.5rem;
@@ -206,7 +276,64 @@ input, select {
   padding: 20px;
 }
 
-@media screen and (max-width: 560px) {
+
+/* @import url("media.css");  */
+
+@media (min-width: 1200px) {  
+  .children-container {
+    /* min-width: 790px; */
+  }
+  .products-container li {    
+    width: 350px; /* Задаємо ширину карточки */
+  }
+} 
+@media (max-width: 1200px) {  
+  .children-container {
+    /* min-width: 670px; */
+  }
+}
+
+@media (max-width: 870px) {
+  .children-container {
+    /* min-width: 570px; */
+  }
+  .main-container {
+    grid-template-columns: 125px 3fr;
+  }
+  .categories-link-container {
+    justify-content: left;
+    margin-left: 5px;
+    align-items: center;
+  }
+  .categories-img-container {  
+    width: 30px;
+  }
+  .products-container li {    
+    width: 280px; /* Задаємо ширину карточки */
+  }
+}
+@media (max-width: 760px) {
+  .children-container {
+    /* min-width: 500px; */
+  }
+  .products-container li {    
+    width: 250px; /* Задаємо ширину карточки */
+    margin: 3px;
+  }
+}
+@media (max-width: 660px) {
+  .children-container {
+    /* min-width: 400px; */
+  }
+  .products-container li {    
+    width: 330px; /* Задаємо ширину карточки */
+    margin: 5px;
+  }
+}
+@media (max-width: 560px) {
+  .children-container {
+    /* min-width: 350px; */
+  }
   .header-emblem, p{
     font-size: 1rem;
     margin: 3px;
@@ -221,8 +348,14 @@ input, select {
 }
 
 @media (max-width: 480px) {
+  .children-container {
+    /* min-width: 300px; */
+  }
   .header-container {
-    min-width: 375px;
+    /* min-width: 375px; */
+  }
+  .header-customer {
+    margin-right: 5px;
   }
   .header-emblem, p{
     /* font-size: 0.8rem; */
@@ -231,5 +364,44 @@ input, select {
   .botton {
     font-size: 0.6rem;
     margin: 0;
+  }
+  .products-container li {    
+    width: 280px; /* Задаємо ширину карточки */
+    margin: 5px;
+  }
+  
+}
+
+/* Для малих екранів */
+@media (max-width: 460px) {
+  .main-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+  }
+  .header-customer button{
+    margin: 5px;
+  }
+  .categories-container {
+    /* background-color: aqua; */
+    order: 2; /* Зміщуємо Categories вниз */
+    height: 50px;
+    flex-direction: row;
+    border-top: 1px solid black;
+    border-right: none;
+  }
+  .categories-container p{
+    font-size: 1.3rem;
+  }
+  .categories-container h3{
+    display: none;
+  }
+  .categories-account {
+    display: none;
+  }
+  .categories-container img{
+    display: none;
+  }
+  .products-container li {    
+    width: 350px; /* Задаємо ширину карточки */
   }
 }

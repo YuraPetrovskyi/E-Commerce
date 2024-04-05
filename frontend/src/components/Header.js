@@ -50,7 +50,7 @@ const Header = () => {
           {/* {authenticated ? (<p>authenticated</p>) :(<p>none</p>)} */}
           <button onClick={handleLogout}>Logout</button>  
           <Link to="/cart" className='cart-image-container'>
-            <img src="/images/shopping.png" alt="shopping-cart-icon" />
+            <img src="/images/shopping.svg" alt="shopping-cart-icon" />
             <span className='cart-count'>{cartlenght}</span>
           </Link>
         </div>
