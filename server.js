@@ -13,26 +13,26 @@ const jwt = require('jsonwebtoken');
 const find = require('./db/find_in_passprt');
 const SECRET_KEY = process.env.JWT_SECRET;
 
-// ================================ Redis
-const { createClient } = require('redis');
-const RedisStore = require("connect-redis").default;
+// // ================================ Redis
+// const { createClient } = require('redis');
+// const RedisStore = require("connect-redis").default;
 
-const clientRedis = createClient({
-    password:  process.env.REDIS_PASSWORD,
-    socket: {
-        host: process.env.REDIS_HOST,
-        port: process.env.REDIS_PORT
-    }
-});
-// Ініціалізація підключення до Redis
-clientRedis.connect().catch((err) => {
-  console.error('Error connecting to Redis:', err);
-});
-//обробляє помилки, які можуть виникнути після успішного підключення 
-clientRedis.on('error', (err) => {
-  console.error('Помилка Redis після підключення:', err);
-});
-const storeRedis = new RedisStore({ client: clientRedis });
+// const clientRedis = createClient({
+//     password:  process.env.REDIS_PASSWORD,
+//     socket: {
+//         host: process.env.REDIS_HOST,
+//         port: process.env.REDIS_PORT
+//     }
+// });
+// // Ініціалізація підключення до Redis
+// clientRedis.connect().catch((err) => {
+//   console.error('Error connecting to Redis:', err);
+// });
+// //обробляє помилки, які можуть виникнути після успішного підключення 
+// clientRedis.on('error', (err) => {
+//   console.error('Помилка Redis після підключення:', err);
+// });
+// const storeRedis = new RedisStore({ client: clientRedis });
 
 // ================================ MongoDB with mongoose
 const uri =process.env.MONGODB_URI;
@@ -80,7 +80,7 @@ const db_order_items = require('./db/order_items');
 const app = express();
 
 // ================================ MemoryStore
-const storeMemoryStore = new session.MemoryStore();
+// const storeMemoryStore = new session.MemoryStore();
 // ================================ session
 app.use(
   session({ 
