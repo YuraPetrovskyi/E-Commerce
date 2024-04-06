@@ -98,7 +98,8 @@ const Success = () => {
       }
       window.history.replaceState(null, '', window.location.pathname);
     }   
-  }, [location.search]);
+  }, [ location.search ]);
+// }, [location.search]);
 
   if (!sessionDetails) {
     return <div>Loading...</div>;

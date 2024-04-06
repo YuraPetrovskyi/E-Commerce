@@ -12,7 +12,10 @@ import Checkout from './components/checkout';
 import Canceled from './components/Canceled';
 import Success from './components/Success';
 import OrderCreated from './components/OrderCreated';
-import Welcome from './components/Welcome';
+// import Welcome from './components/Welcome';
+
+import './App.css';
+
 
 function App() {
   return (
