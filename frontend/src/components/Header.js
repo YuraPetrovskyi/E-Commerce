@@ -11,7 +11,6 @@ const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
 
 
-  const toggleDropdown = () => setIsOpen(!isOpen);
 
   const handleLogout = async () => {
     try {
@@ -39,6 +38,8 @@ const Header = () => {
     }
   };
 
+  const toggleDropdown = () => setIsOpen(!isOpen);
+  const toggleDropdownClose = () => setIsOpen(!isOpen);
 
   return (
     <div className="header-container">
@@ -51,11 +52,18 @@ const Header = () => {
         </button>
       </div> */}
       <div className="dropdown">
-        <button onClick={toggleDropdown} className="dropdown-button"><img src="/images/person.svg" alt="person-icon" /></button>
+        <button onClick={toggleDropdown} className="dropdown-button">
+          <img src="/images/person.svg" alt="person-icon" />
+        </button>
         {isOpen && (
-          <div className="dropdown-content">
-            <Link to="/cart"><span>Backet</span></Link>
+          <div className="dropdown-content" onClick={toggleDropdownClose}>
+            <Link to="/cart" ><span>Backet</span></Link>
             <Link to="/orders"><span>Orders</span></Link>
+            <p>Category</p>   
+            <Link to="/Laptop"><span>Laptop</span></Link>
+            <Link to="/Phone"><span>Phone</span></Link>
+            <Link to="/Watch"><span>Watch</span></Link>
+            <Link to="/TVs"><span>TVs</span></Link>            
           </div>
         )}
       </div>
