@@ -71,24 +71,24 @@ const OrderItem = () => {
             <img src="/images/back.png" alt="shopping-cart-icon" />
           </button>                  
           <h2>Order details</h2>      
-          <Link to="/orders"><button>Orders</button></Link>
+          <Link to="/orders">Go to Orders</Link>
         </div>
       </div>     
-      <ul className='container-cart'>
+      <ul className='order-items'>
         {orderItems.map((item) => {
           // Знаходимо відповідний продукт за його product_id
           const product = products.find((prod) => prod.product_id === item.product_id);
           // Перевіряємо, чи знайдено продукт
           if (product) {            
             return (
-              <li key={item.order_item_id} className='container-items'>
-                <div className="cart-item-info">
-                  <div className="cart-item-image">
+              <li key={item.order_item_id} className='container-order-items'>
+                <div className="cart-order-items">
+                  <div className="cart-order-items">
                     <img src={product.image_url} alt={product.name} />
                   </div>                             
                 </div>
                 
-                <div className='container-discription-price'>
+                <div className='container-order-items-discription'>
                   <Link to={`/products/${product.product_id}`}>
                     <p>{product.model}</p>
                   </Link>                
