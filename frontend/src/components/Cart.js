@@ -192,7 +192,7 @@ const Cart = () => {
   if(!authenticated) {
     return (
       <Layout>
-        <h2> Ups! Basket is available for registered users</h2>
+        <p className='empty-backet-massege'> Ups! Basket is available for registered users</p>
       </Layout>
     )
   }
@@ -212,65 +212,65 @@ const Cart = () => {
         {cartEmpty && <p>{cartEmpty}</p>}
       </div> 
       
-      <ul className='container-cart'>
-        
-        {products.map((product, index) => {
-          const item = cart[index];
-          const productInfo = product[0];
-          const subtotal = parseFloat(productInfo.price) * item.quantity;
-          const inventoryOptions = Array.from({ length: productInfo.inventory }, (_, i) => i + 1); // Варіанти кількості товару
+      <div className='cart-main-container'>
+        <ul className='container-cart'>
           
-          return (
-            <li key={productInfo.product_id} className='container-items'>
-              
-              <div className="cart-item-info">
-                <div className="cart-item-image">
-                  <img src={productInfo.image_url} alt={productInfo.name} />
-                </div>                             
-              </div>
-
-              <div className='container-discription'>              
-                <div className='container-discription-price'>
-                  <Link to={`/products/${productInfo.product_id}`}>
-                    <p>{productInfo.model}</p>
-                  </Link>
-                  
-                  <div className="cart-price">
-                    <p>${productInfo.price}</p>
-                    <select
-                      value={item.quantity}
-                      onChange={(e) => handleQuantityChange(productInfo.product_id, e.target.value)}
-                    >
-                      {inventoryOptions.map((option) => (
-                        <option key={option} value={option}>{option}</option>
-                      ))}
-                    </select> 
-                    <p>Total: ${subtotal.toFixed(2)}</p>               
-                  </div>
-                </div> 
+          {products.map((product, index) => {
+            const item = cart[index];
+            const productInfo = product[0];
+            const subtotal = parseFloat(productInfo.price) * item.quantity;
+            const inventoryOptions = Array.from({ length: productInfo.inventory }, (_, i) => i + 1); // Варіанти кількості товару
+            
+            return (
+              <li key={productInfo.product_id} className='container-items'>
                 
-                <div className='container-delete-button'>                
-                  <button onClick={() => handleDelete(productInfo.product_id)}>Delete</button>
-                </div>              
-              </div> 
-                      
-            </li>
-          );
-        })}
-      </ul>
+                <div className="cart-item-info">
+                  <div className="cart-item-image">
+                    <img src={productInfo.image_url} alt={productInfo.name} />
+                  </div>                             
+                </div>
 
-      <div>
+                <div className='container-discription'>              
+                  <div className='container-discription-price'>
+                    <Link to={`/products/${productInfo.product_id}`}>
+                      <p>{productInfo.model}</p>
+                    </Link>
+                    
+                    <div className="cart-price">
+                      <p>${productInfo.price}</p>
+                      <select
+                        value={item.quantity}
+                        onChange={(e) => handleQuantityChange(productInfo.product_id, e.target.value)}
+                      >
+                        {inventoryOptions.map((option) => (
+                          <option key={option} value={option}>{option}</option>
+                        ))}
+                      </select> 
+                      <p>Total: ${subtotal.toFixed(2)}</p>               
+                    </div>
+                  </div> 
+                  
+                  <div className='container-delete-button'>                
+                    <button onClick={() => handleDelete(productInfo.product_id)}>Delete</button>
+                  </div>              
+                </div> 
+                        
+              </li>
+            );
+          })}
+        </ul>   
+
         {cartEmpty ?
           (
             <div></div>
           ) : (
-            <div className="total-price"> 
-              <p>Total: ${totalPrice.toFixed(2)}</p>
+            <div className="total-price">
+              <p>Total: ${totalPrice.toFixed(2)}</p> 
               <button className="checkout-button" onClick={() => handleCheckout()}>Create an order</button>
             </div>
-          )}
-      </div>  
-
+          )
+        } 
+      </div>   
     </Layout>
   );
 

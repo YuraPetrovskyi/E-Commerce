@@ -1,4 +1,6 @@
-
+.empty-order-massege{
+  font-size: 2rem;
+}
 .orders-container {
   margin: 10px;
   align-items: center;

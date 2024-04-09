@@ -457,6 +457,10 @@ input, select {
     margin: 5px;
   }
   
+  /*Cart*/
+  .cart-item-info {    
+    margin-left: 2px;
+  }
 }
 
 /* Для малих екранів */
@@ -517,4 +521,5 @@ input, select {
   .categories-container a:active {
     background-color: rgba(0, 255, 255, 0.218);
   }
+  
 }

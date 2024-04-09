@@ -56,7 +56,7 @@ const Orders = () => {
   if(!authenticated) {
     return (
       <Layout>
-        <h2> Ups! Please register first</h2>
+        <p className='empty-order-massege'> Ups! Please register first</p>
       </Layout>
     )
   }
