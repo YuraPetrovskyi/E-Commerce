@@ -1,34 +1,57 @@
 const Pool = require('pg').Pool // or const { Pool }  = require('pg') ---> npm install pg
-// ============================= 3 for RENDER_EXTERNAL_DATABASE_URL
-const connectionString = process.env.RENDER_EXTERNAL_DATABASE_URL;
-const pool = new Pool({
-  connectionString: connectionString,
-  ssl: {
-    rejectUnauthorized: false // Опція для виключення перевірки сертифікату SSL (необхідно для Render)
-  }
-});
+
+const isProduction = process.env.NODE_ENV === "production";
+
+const connectionStringRender = process.env.RENDER_EXTERNAL_DATABASE_URL;
+const connectionStringLocal = `postgresql://${process.env.user}:${process.env.password}@localhost:5432/e_commerce`;
+
+const poolConfig = isProduction ? {
+    connectionString: connectionStringRender,
+    ssl: {
+      rejectUnauthorized: false // Необхідно для Render, щоб виключити перевірку сертифікату SSL
+    }
+  } : {
+    connectionString: connectionStringLocal
+}; 
+
+const pool = new Pool(poolConfig);
+
 module.exports = {
-  pool,
+  pool  
 };
 
 
-// ============================= 1 for localhost
-// const userNameENV = process.env.user;
-// const password = process.env.password;
 
+// ============================= 1 only for Render DB
+// const connectionStringRender = process.env.RENDER_EXTERNAL_DATABASE_URL;
 // const pool = new Pool({
-//   user: userNameENV,
-//   host: 'localhost',
-//   database: 'e_commerce',
-//   password: password,
-//   port: 5432,
-// })
-
+//   connectionString: connectionStringRender,
+//   ssl: {
+//     rejectUnauthorized: false // Опція для виключення перевірки сертифікату SSL (необхідно для Render)
+//   }
+// });
 // module.exports = {
 //   pool,
 // };
 
-// ============================= 2
+
+
+// ============================= 2 only for localhost
+// const userNameENV = process.env.user;
+// const password = process.env.password;
+
+// const pool = new Pool({
+//   user: process.env.user,
+//   host: 'localhost',
+//   database: 'e_commerce',
+//   password: process.env.password,
+//   port: 5432,
+// })
+// module.exports = {
+//   pool,
+// };
+
+// ============================= 3
 // const RENDER_DATABASE_USERNAME = process.env.RENDER_DATABASE_USERNAME
 // const RENDER_DATABASE_HOST = process.env.RENDER_DATABASE_HOST
 // const RENDER_DATABASE_NAME = process.env.RENDER_DATABASE_NAME
