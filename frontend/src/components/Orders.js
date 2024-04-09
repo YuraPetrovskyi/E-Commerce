@@ -73,13 +73,14 @@ const Orders = () => {
           </div>          
         </div>
 
-        {orders_unpaid.length ? (<p></p>) : (<p> You have no orders that are waiting for payment </p>)}
+        
         
         <div className='orders-main-container'>
           <div className="unpaid-orders-container">
             <div className='h2-orders-container'>
               <h2>List of unpaid orders:</h2> 
             </div>  
+            {orders_unpaid.length ? (<p></p>) : (<p> You have no orders that are waiting for payment </p>)}
             <ul className='orders-ul-container'>
                           
               {orders_unpaid.map((order) => (                
@@ -104,7 +105,9 @@ const Orders = () => {
               ))}
             </ul>
           </div>        
+
           <div className="orders-black-line"></div>
+
           <div className="paid-orders-container"> 
             <div className='h2-orders-container'>
               <h2>List of paid orders:</h2> 
