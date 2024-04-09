@@ -57,7 +57,7 @@ const Header = () => {
         </button>
         {isOpen && (
           <div className="dropdown-content" onClick={toggleDropdownClose}>
-            <Link to="/cart" ><span>Backet</span></Link>
+            <Link to="/cart" ><span>Basket</span></Link>
             <Link to="/orders"><span>Orders</span></Link>
             <p>Category</p>   
             <Link to="/Laptop"><span>Laptop</span></Link>
