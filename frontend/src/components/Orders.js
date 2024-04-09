@@ -69,61 +69,71 @@ const Orders = () => {
             <img src="/images/back.png" alt="shopping-cart-icon" />
           </button>
           <div className="back-product-h2">
-            <h2>Unpaid orders:</h2>
+            <h2>Orders:</h2>
           </div>          
         </div>
 
         {orders_unpaid.length ? (<p></p>) : (<p> You have no orders that are waiting for payment </p>)}
         
-        <ul className='orders-ul-container'>
-          
-          {orders_unpaid.map((order) => (
-            
-            <li key={order.order_id} className='order-list'>
-              <div className='orders-number'>
-                <h3>Id Order #{order.order_id}</h3>
-                <p>{new Date(order.order_date).toLocaleString()}</p>
-              </div>
-              
-              
-              <Link to={`/order_items/${order.order_id}`}>Order details....</Link>
-              
-              <div className='orders-total-price'>
-                <h3>Total</h3>
-                <p>${order.total_amount}</p>   
-              </div>
-
-              <Link to={`/checkout/${order.order_id}`}>
-                <button>Checkout Summary</button>
-              </Link> 
-            </li>
-          ))}
-        </ul>
-
-        <div className="paid-orders-container">        
-          <h2>List of paid orders:</h2> 
-          {orders_paid.length ? (<p></p>) : (<p> You have no paid orders </p>)}
-          {orders_paid ? (<p></p>) : (<p> Loading ... </p>)}
-          <ul className='paid-orders-ul-container'>
-            {orders_paid.map((order) => (            
-              <li key={order.order_id} className='order-list'>
-                
-                  <div className='paid-orders-number'>
-                  <Link to={`/order_items/${order.order_id}`}>
+        <div className='orders-main-container'>
+          <div className="unpaid-orders-container">
+            <div className='h2-orders-container'>
+              <h2>List of unpaid orders:</h2> 
+            </div>  
+            <ul className='orders-ul-container'>
+                          
+              {orders_unpaid.map((order) => (                
+                <li key={order.order_id} className='order-list'>
+                  <div className='orders-number'>
                     <h3>Id Order #{order.order_id}</h3>
                     <p>{new Date(order.order_date).toLocaleString()}</p>
-                    </Link>
                   </div>
-                  {/* <Link to={`/order_items/${order.order_id}`}>Details ...</Link> */}
-                  <div className='paid-orders-total-price'>
-                    <p>Total</p>
+                  
+                  
+                  <Link to={`/order_items/${order.order_id}`}>Order details....</Link>
+                  
+                  <div className='orders-total-price'>
+                    <h3>Total</h3>
                     <p>${order.total_amount}</p>   
                   </div>
-                
-              </li>
-            ))}
-          </ul>
+
+                  <Link to={`/checkout/${order.order_id}`}>
+                    <button>Checkout Summary</button>
+                  </Link> 
+                </li>
+              ))}
+            </ul>
+          </div>        
+          <div className="orders-black-line"></div>
+          <div className="paid-orders-container"> 
+            <div className='h2-orders-container'>
+              <h2>List of paid orders:</h2> 
+            </div>       
+            {orders_paid.length ? (<p></p>) : (<p> You have no paid orders </p>)}
+            {orders_paid ? (<p></p>) : (<p> Loading ... </p>)}
+            <ul className='paid-orders-ul-container'>
+              {orders_paid.map((order) => (            
+                <li key={order.order_id} className='order-list'>
+                  
+                    <div className='paid-orders-number'>
+                    <Link to={`/order_items/${order.order_id}`}>
+                      <h3>Id Order #{order.order_id}</h3>
+                      <p>{new Date(order.order_date).toLocaleString()}</p>
+                      </Link>
+                    </div>
+                    {/* <Link to={`/order_items/${order.order_id}`}>Details ...</Link> */}
+                    <div className='paid-orders-total-price'>
+                      <p>Total</p>
+                      <p>${order.total_amount}</p>   
+                    </div>
+                  
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
+        
+        
       </div>
     </Layout>
   );

@@ -48,7 +48,7 @@
   margin-left: 5px;
 }
 
-.paid-orders-container h2{
+.h2-orders-container h2{
   /* color: white;  */
   padding: 10px; 
   margin-top: 10px;
@@ -73,6 +73,27 @@
   font-size: 1.5rem;
   margin-right: 10px;
 }
+
+@media (min-width: 1180px) {
+  .orders-main-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+  .orders-black-line {
+    background-color: black;
+    width: 3px;
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  .paid-orders-container {
+    width: 100%;
+  }
+  .unpaid-orders-container {
+    width: 100%;
+  }
+}
+
 @media (max-width: 560px) {
   .order-list {
     min-height: 100px;

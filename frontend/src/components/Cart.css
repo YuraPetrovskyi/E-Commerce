@@ -172,3 +172,29 @@
   }
 }
 
+@media (max-width: 860px) {  
+  .cart-item-info {    
+    margin-left: 2px;
+  }
+  .container-cart {
+    padding: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    /* justify-content: center; */
+    flex-direction: column;
+    margin: 0 10px;
+  }
+}
+@media (max-width: 520px) {  
+  .cart-item-info {    
+    margin-left: 0px;
+  }
+  .container-cart {
+    padding: 2px;
+    display: flex;
+    flex-wrap: wrap;
+    /* justify-content: center; */
+    flex-direction: column;
+    margin: 0 5px;
+  }
+}
