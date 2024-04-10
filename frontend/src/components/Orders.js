@@ -50,8 +50,8 @@ const Orders = () => {
   const orders_paid = orders.filter(order => order.status === 'Paid');
   const orders_unpaid = orders.filter(order => order.status === null);
 
-  console.log('orders_paid', orders_paid);
-  console.log('orders_unpaid', orders_unpaid);
+  // console.log('orders_paid', orders_paid);
+  // console.log('orders_unpaid', orders_unpaid);
 
   if(!authenticated) {
     return (

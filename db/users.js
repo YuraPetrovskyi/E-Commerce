@@ -91,7 +91,7 @@ const createGoogleUser = async (profile) => {
 
     const password = generateRandomPassword();
     // const user = { username, email, password };
-    console.log('password, username, email:  ',password, username, email);
+    console.log('password, username, email:  ', password, username, email);
     
     let salt, hashedPassword;
     try {
@@ -116,10 +116,10 @@ const createGoogleUser = async (profile) => {
     }
     console.log(`User registered with ID: ${userId}, Name: ${username}, Email: ${email}, Password: ${hashedPassword}, Carts added at: ${cartsCreated}`);
     return { user_id: userId, username, email, hashedPassword, cartsCreated };
-
+    // response.status(201).send(`User registered with ID: ${userId}, Name: ${username}, Email: ${email}, Password: ${hashedPassword}, Carts added at: ${cartsCreated}`);
   } catch (error) {
     console.error('Error creating Google user:', error);
-    throw error;
+    throw new Error('Failed to create Google user');
   }
 };
 

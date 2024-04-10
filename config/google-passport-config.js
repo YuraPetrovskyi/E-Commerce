@@ -29,20 +29,33 @@ passport.use(new GoogleStrategy({
       if(err) return done(err);
       
       if (!user) {
-        db_users.createGoogleUser(profile, (err, newUser) => {
-          if (err) {
-            console.log('Error creating Google user:', err);
-            return done(err);
-          }
-          console.log('GoogleStrategy created a new profile : ', newUser);
+        db_users.createGoogleUser(profile).then(newUser => {
+          console.log('GoogleStrategy created a new profile:', newUser);
           const token = jwt.sign(
             { user_id: newUser.user_id, email: newUser.email, username: newUser.username }, 
             SECRET_KEY, 
             { expiresIn: '1d' }
           );
-          newUser.token = token;
-          return done(null, newUser);
+          newUser.token = token;  
+          done(null, newUser);
+        }).catch(err => {
+          console.log('Error creating Google user:', err);
+          done(err);
         });
+        // db_users.createGoogleUser(profile, (err, newUser) => {
+        //   if (err) {
+        //     console.log('Error creating Google user:', err);
+        //     return done(err);
+        //   }
+        //   console.log('GoogleStrategy created a new profile : ', newUser);
+        //   const token = jwt.sign(
+        //     { user_id: newUser.user_id, email: newUser.email, username: newUser.username }, 
+        //     SECRET_KEY, 
+        //     { expiresIn: '1d' }
+        //   );
+        //   newUser.token = token;
+        //   return done(null, newUser);
+        // });
       } else {
         const token = jwt.sign(
           { user_id: user.user_id, email: user.email, username: user.username }, 

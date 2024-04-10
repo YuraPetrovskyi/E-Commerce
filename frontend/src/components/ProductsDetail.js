@@ -54,10 +54,10 @@ const ProductDetail = () => {
         },
         body: JSON.stringify({ product_id, quantity }),
       });
-      console.log(`Product ${product.name} ${product.model} added to the cart!`);      
+      // console.log(`Product ${product.name} ${product.model} added to the cart!`);      
       setQuantity(1);
       setCartLenght(cartlenght + 1);
-      toast.success(`${quantity} of product ${product.name} ${product.model} added to the cart!`, {
+      toast.success(`added to the cart!`, {
         position: "top-right",
         autoClose: 2000
       });
@@ -68,8 +68,13 @@ const ProductDetail = () => {
   };
 
   if (!product) {
-    return <div>Loading...</div>;
-  }
+    return (
+      <Layout>
+        <div>Loading...</div>
+      </Layout>
+      
+    )
+  }  
 
   return (
     <Layout>

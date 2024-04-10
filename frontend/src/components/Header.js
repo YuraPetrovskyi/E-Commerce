@@ -24,7 +24,7 @@ const Header = () => {
       });
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         if (data.redirect) {
           localStorage.removeItem('token');
           setAuthenticated(false);

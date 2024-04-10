@@ -18,7 +18,7 @@ export const CartProvider = ({ children }) => {
     const token = urlParams.get('token');
 
     if (token) {
-      console.log('Token from URL:', token);
+      // console.log('Token from URL:', token);
       localStorage.setItem('token', token);
 
       // Ви можете тут встановити аутентифікацію або зробити запит для перевірки токена
@@ -28,11 +28,11 @@ export const CartProvider = ({ children }) => {
       window.history.replaceState(null, '', window.location.pathname);
     }
   }, []);
-  console.log('localStorage token:', localStorage.getItem('token'));
+  // console.log('localStorage token:', localStorage.getItem('token'));
 
   useEffect(() => {    
     const fetchData = async () => {
-      console.log('startet CartProvider check-auth');
+      // console.log('startet CartProvider check-auth');
       try {        
         const authResponse = await fetch(`${SERVER_HOST}/check-auth`, {
           method: 'GET',
@@ -43,11 +43,11 @@ export const CartProvider = ({ children }) => {
           }
         });
         const respons = await authResponse.json();
-        if (respons.message) {
-          console.log('respons check-auth:', respons.message)
-        }
+        // if (respons.message) {
+        //   // console.log('respons check-auth:', respons.message)
+        // }
         if (respons.isAuthenticated) {
-          console.log("CartProvider isAuthenticated respons", respons)
+          // console.log("CartProvider isAuthenticated respons", respons)
           setAuthenticated(true);
           setUser(respons.user);
           setUserId(respons.user.user_id);
@@ -60,7 +60,7 @@ export const CartProvider = ({ children }) => {
           setCartLenght(null);
         }
       } catch (error) {
-        console.error('Error CartProvider fetching data:', error);
+        // console.error('Error CartProvider fetching data:', error);
         setAuthenticated(false);
         setUser({});  
         setCart([]);
@@ -72,7 +72,7 @@ export const CartProvider = ({ children }) => {
   }, [authenticated]);
 
   useEffect(() => {
-    console.log('stared useEffect')
+    // console.log('stared useEffect')
     const fetchData = async () => {
       if (cartId) {
         try {
@@ -86,8 +86,8 @@ export const CartProvider = ({ children }) => {
           });
           if(response.ok) {            
             const cartrespons = await response.json();
-            console.log('response: ', response);
-            console.log('cartrespons: ', cartrespons);
+            // console.log('response: ', response);
+            // console.log('cartrespons: ', cartrespons);
             setCart(cartrespons);
             setCartLenght(cartrespons.length);
           }
@@ -103,12 +103,12 @@ export const CartProvider = ({ children }) => {
     fetchData();
   }, [cartId,cartlenght]);
 
-  console.log('CartContext user:', user);
-  console.log('CartContext carts:', cart);
-  console.log('CartContext cartlenght:', cartlenght);
-  console.log('CartContext authenticated:', authenticated);  
-  console.log('CartContext cartId:', cartId);
-  console.log('CartContext user:', user);
+  // console.log('CartContext user:', user);
+  // console.log('CartContext carts:', cart);
+  // console.log('CartContext cartlenght:', cartlenght);
+  // console.log('CartContext authenticated:', authenticated);  
+  // console.log('CartContext cartId:', cartId);
+  // console.log('CartContext user:', user);
 
 
   return (

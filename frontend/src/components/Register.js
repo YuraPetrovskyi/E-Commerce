@@ -11,7 +11,7 @@ const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const { authenticated, setAuthenticated } = useContext(CartContext);
+  const { setAuthenticated } = useContext(CartContext);
   const { setUser, setUserId, setCartId } = useContext(CartContext);
 
   const navigate = useNavigate();  
@@ -28,7 +28,7 @@ const Register = () => {
         credentials: 'include',
         body: JSON.stringify({username, email, password }),
       });
-      console.log('finish registered fetch');
+      // console.log('finish registered fetch');
       if (response.ok) {
         try {
           const response = await fetch(`${SERVER_HOST}/loginjwt`, {
@@ -39,20 +39,20 @@ const Register = () => {
             credentials: 'include',
             body: JSON.stringify({ email, password }),
           });
-          console.log('finish login fetch');
+          // console.log('finish login fetch');
           if (response.ok) {
-            console.log('response.ok');
+            // console.log('response.ok');
             const data = await response.json();
             localStorage.setItem('token', data.token);
             setAuthenticated(true);
             setUser(data.user);
             setUserId(data.user.user_id);
             setCartId(data.user.user_id);
-            console.log('data', data);
-            console.log('token', data.token);
+            // console.log('data', data);
+            // console.log('token', data.token);
             navigate('/');        
           } else {
-            console.error('Login failed 2');
+            // console.error('Login failed 2');
             const errorMessage = await response.json(); // Отримати текст повідомлення з тіла відповіді
             console.log(errorMessage.message);
             setErrorMessage(errorMessage.error);
@@ -63,7 +63,7 @@ const Register = () => {
       } else {
         const errorMessage = await response.text(); // Отримати текст повідомлення з тіла відповіді
         setErrorMessage(errorMessage);
-        console.log(errorMessage);
+        // console.log(errorMessage);
         console.error(`Login failed: ${errorMessage}`);
       }
     } catch (error) {
@@ -71,7 +71,7 @@ const Register = () => {
     }
   };
   
-  console.log('isAuthenticated', authenticated);
+  // console.log('isAuthenticated', authenticated);
 
   return (
     <div className="register-container">

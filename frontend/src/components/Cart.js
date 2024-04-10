@@ -166,7 +166,7 @@ const Cart = () => {
           });
       // console.log(featch_heckout);
       if (featch_heckout.ok) {
-        console.log('featch_heckout.ok : ', featch_heckout.ok);
+        // console.log('featch_heckout.ok : ', featch_heckout.ok);
         setProducts([]);
         setCartLenght(null);
         setCartEmpty('');
@@ -174,19 +174,24 @@ const Cart = () => {
         toast.success(`Замовлення створено`); 
         navigate('/order_created');       
       } else {
-        console.log('featch_heckout : ', featch_heckout);
+        // console.log('featch_heckout : ', featch_heckout);
 
         toast.error(`Помилка при створенні ордеру!`);
       } 
     } catch (error) {
-      console.error('Error during checkout:', error);
+      // console.error('Error during checkout:', error);
       toast.error('Error during checkout!', error);
     }
   };
 
   if (cartlenght > 0) {
     while(!products.length) {
-      return <div>Loading...</div>;
+      return (
+        <Layout>
+          <div>Loading...</div>
+        </Layout>
+        
+      )
     }
   }
   if(!authenticated) {

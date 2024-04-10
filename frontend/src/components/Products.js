@@ -11,7 +11,7 @@ const Products = () => {
   const { category } = useParams();
 
   useEffect(() => {
-  console.log('Products useEffect');
+  // console.log('Products useEffect');
 
     const fetchData = async () => {
       try {
@@ -21,7 +21,7 @@ const Products = () => {
         });
         const data = await response.json();
         setProducts(data);
-        console.log('Products useEffect after fetch - ok');
+        // console.log('Products useEffect after fetch - ok');
       } catch (error) {
         console.error('Error fetching product data:', error);
       }
@@ -29,14 +29,14 @@ const Products = () => {
     fetchData();
   }, []);
 
-  console.log(products);
-  console.log(category);
+  // console.log(products);
+  // console.log(category);
 
   let productfilter = [];
   if(category) {
     productfilter = products.filter((product) => product.name === category);    
   }
-  console.log(productfilter);
+  // console.log(productfilter);
 
   return (
     <Layout>

@@ -12,7 +12,7 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState('');
   // const [isAuthenticated] = useState(false);
 
-  const { authenticated, setAuthenticated } = useContext(CartContext);
+  const { setAuthenticated } = useContext(CartContext);
   const { setUser, setUserId, setCartId } = useContext(CartContext);
 
   const navigate = useNavigate();  
@@ -51,11 +51,11 @@ const Login = () => {
   //     console.error('Error during login:', error);
   //   }
   // };
-  console.log('isAuthenticated', authenticated);
+  // console.log('isAuthenticated', authenticated);
 
   const handleLoginJWT = async (e) => {
     e.preventDefault();
-    console.log('started handleLoginJWT', email, password);
+    // console.log('started handleLoginJWT', email, password);
     try {
       const response = await fetch(`${SERVER_HOST}/loginjwt`, {
         method: 'POST',
@@ -65,7 +65,7 @@ const Login = () => {
         credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
-      console.log('finish fetch');
+      // console.log('finish fetch');
       if (response.ok) {
         console.log('response.ok');
         const data = await response.json();
@@ -74,19 +74,23 @@ const Login = () => {
         setUser(data.user);
         setUserId(data.user.user_id);
         setCartId(data.user.user_id);
-        console.log('data', data);
-        console.log('token', data.token);
+        // console.log('data', data);
+        // console.log('token', data.token);
         navigate('/');        
       } else {
+
         console.error('Login failed 2');
         const errorMessage = await response.json(); // Отримати текст повідомлення з тіла відповіді
         console.log(errorMessage.message);
-        setErrorMessage(errorMessage.error);
+        // setErrorMessage(errorMessage.error);
+        setErrorMessage(errorMessage.message);
+
       }
     } catch (error) {
       console.error('Error during login:', error);
     }
   }
+  console.log(errorMessage)
   
   return (
     <div className="login-container">

@@ -1,6 +1,6 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, useLocation  } from 'react-router-dom';
-import { CartContext } from './CartContext';
+// import { CartContext } from './CartContext';
 import Layout from './Layout';
 
 const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
@@ -8,15 +8,15 @@ const SERVER_HOST = process.env.REACT_APP_SERVER_HOST;
 const Success = () => {
   const navigate = useNavigate()
   const { order_id } = useParams()
-  const { authenticated } = useContext(CartContext);
+  // const { authenticated } = useContext(CartContext);
 
   const location = useLocation();
   const [sessionDetails, setSessionDetails] = useState(null);
 
 
-  console.log('order_id:', order_id);
-  console.log('authenticated:', authenticated);
-  console.log('sessionDetails:', sessionDetails);
+  // console.log('order_id:', order_id);
+  // console.log('authenticated:', authenticated);
+  // console.log('sessionDetails:', sessionDetails);
 
   const goToHome = () => {
     navigate('/')
@@ -38,7 +38,7 @@ const Success = () => {
       });
       // console.log(response);
       if (response.ok) {
-        console.log(`The status of the order with id: ${order_id} has been changed to Paid`);
+        console.log(`The status of the order has been changed to Paid`);
         // alert(`The status of the order with id: ${order_id} has been changed to Paid`);
       }
     } catch (error) {
@@ -67,7 +67,7 @@ const Success = () => {
   
   useEffect(() => {  
     const respons = isAuthenticated();
-    console.log('respons: ', respons);
+    // console.log('respons: ', respons);
     if(!respons) {
       console.log( 'respons : --- you are not registered!!!!!!')
       navigate('/')
@@ -76,7 +76,7 @@ const Success = () => {
       // Витягуємо session_id з URL
       const query = new URLSearchParams(location.search);
       const sessionId = query.get('session_id');
-      console.log('sessionId', sessionId); 
+      // console.log('sessionId', sessionId); 
       if (!sessionId) {
         navigate('/');
       }     
@@ -86,7 +86,7 @@ const Success = () => {
           .then(response => response.json())
           .then(data => {
             // Зберігаємо деталі сесії в стані
-            console.log('data session Stripe: --', data)
+            // console.log('data session Stripe: --', data)
             setSessionDetails(data);
           })
           .catch(error => {
