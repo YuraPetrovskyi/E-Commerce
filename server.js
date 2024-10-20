@@ -35,33 +35,46 @@ const SECRET_KEY = process.env.JWT_SECRET;
 // const storeRedis = new RedisStore({ client: clientRedis });
 
 // ================================ MongoDB with mongoose
-const uri =process.env.MONGODB_URI;
-// Підключення до MongoDB за допомогою Mongoose
-const mongoose = require('mongoose');
-mongoose.connect(`${uri}`);
-// Створення моделі для сесій
-const Session = mongoose.model('Session', new mongoose.Schema({
-  _id: String,
-  session: Object,
-  expires: Date
-}));
-const storeMongo = new session.MemoryStore();
+// const uri =process.env.MONGODB_URI;
+// // Підключення до MongoDB за допомогою Mongoose
+// const mongoose = require('mongoose');
+// mongoose.connect(`${uri}`);
+// // Створення моделі для сесій
+// const Session = mongoose.model('Session', new mongoose.Schema({
+//   _id: String,
+//   session: Object,
+//   expires: Date
+// }));
+// const storeMongo = new session.MemoryStore();
 
 // ================================ MongoDB with connect-mongodb-session
-const MongoDBStore = require('connect-mongodb-session')(session);
-const storeMongoDB = new MongoDBStore({
-    uri: uri,
-    databaseName: 'sample_mflix',
-    collection: 'session'
-  });
-storeMongoDB.on('error', function(error) {
-  console.log(error);
-});
+// const MongoDBStore = require('connect-mongodb-session')(session);
+// const storeMongoDB = new MongoDBStore({
+//     uri: uri,
+//     databaseName: 'sample_mflix',
+//     collection: 'session'
+//   });
+// storeMongoDB.on('error', function(error) {
+//   console.log('storeMongoDB', error);
+// });
 // ================================ MongoDB with connect-mongo
-const MongoStore = require('connect-mongo');
-const storeMongoConnect = MongoStore.create({ mongoUrl: process.env.MONGODB_URI });
+// const MongoStore = require('connect-mongo');
+// const storeMongoConnect = MongoStore.create({ mongoUrl: process.env.MONGODB_URI });
 //=================================================================
 
+// ================================ MySQL and Hostinger
+const MySQLStore = require('express-mysql-session')(session);
+
+const options = {
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+};
+
+const sessionStoreHostinger = new MySQLStore(options);
+//=================================================================
 
 // ================================ Stripe
 const createCheckoutSession = require('./config/checkout'); //for stripe
@@ -84,8 +97,9 @@ const app = express();
 // ================================ session
 app.use(
   session({ 
+    key: 'session_cookie_name',
     secret: process.env.secret, 
-    store: storeMongoConnect,
+    store: sessionStoreHostinger,
     cookie: {
       path: '/',
       httpOnly: true, 
@@ -99,6 +113,7 @@ app.use(
     saveUninitialized: false,
   })
 );
+
 app.use(cookieParser());
 
 //  ================================ Cors
