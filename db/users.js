@@ -1,6 +1,16 @@
-const { pool } = require('../db/pool');
+const { pgPool, mysqlPool } = require('./pool');
+
+// Визначаємо базу даних, з якою працюємо
+const dbType = process.env.DB_TYPE || 'postgres'; // Вибираємо 'postgres' або 'mysql' з .env файлу
+// Визначаємо, який пул використовувати
+const pool = dbType === 'postgres' ? pgPool : mysqlPool;
 
 const bcrypt = require("bcrypt");
+
+// Функція для вибору правильного плейсхолдера
+function getPlaceholder(index) {
+  return dbType === 'postgres' ? `$${index}` : `?`;
+}
 
 // Get a list of all users.
 const getUsers = (request, response) => {
@@ -8,18 +18,20 @@ const getUsers = (request, response) => {
     if (error) {
       throw error
     }
-    response.status(200).json(results.rows)
+    const rows = dbType === 'postgres' ? results.rows : results; // Для MySQL results
+    response.status(200).json(rows)
   })
 }
 // Get information about a specific user by his user_id.
 const getUserById = (request, response) => {
-  const user_id = parseInt(request.params.user_id)
-
-  pool.query('SELECT * FROM users WHERE user_id = $1', [user_id], (error, results) => {
+  const user_id = parseInt(request.params.user_id);
+  const query = `SELECT * FROM users WHERE user_id = ${getPlaceholder(1)}`;
+  pool.query(query, [user_id], (error, results) => {
     if (error) {
       throw error
     }
-    response.status(200).json(results.rows)
+    const rows = dbType === 'postgres' ? results.rows : results; // Для MySQLresults
+    response.status(200).json(rows);
   })
 }
 
@@ -32,8 +44,10 @@ const createUser = async (request, response) => {
   console.log('Received data: ', { username, email, password });
 
   // Check if the email already exists in the database
-  const existingUser = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-  if (existingUser.rows.length > 0) {
+  const querySelect = `SELECT * FROM users WHERE email = ${getPlaceholder(1)}`;
+  const existingUser = await pool.query(querySelect, [email]);
+  const rows = dbType === 'postgres' ? existingUser.rows : existingUser[0];
+  if (rows.length > 0) {
     // Email already exists, return an error response
     console.log(`A user with email address: ${email}  - already exists! Please choose a different email address or sign in.`)
     return response.status(400).send(`A user with email address: ${email}  - already exists! Please choose a different email address or login.`);
@@ -51,15 +65,22 @@ const createUser = async (request, response) => {
       }
     }
 
-    const userInsertResult = await pool.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *', [username, email, hashedPassword]);
-    const userId = userInsertResult.rows[0].user_id;
-    if (!Array.isArray(userInsertResult.rows) || userInsertResult.rows.length < 1) {
+    const queryInsertUser = `INSERT INTO users (username, email, password) VALUES (${getPlaceholder(1)}, ${getPlaceholder(2)}, ${getPlaceholder(3)}) RETURNING *`;
+    const userInsertResult = await pool.query(queryInsertUser, [username, email, hashedPassword]);
+    
+    const userRows = dbType === 'postgres' ? userInsertResult.rows : userInsertResult[0];
+    if (!Array.isArray(userRows) || userRows.length < 1) {
       return response.status(500).send('Internal Server Error');
     }
 
-    const cartInsertResult = await pool.query('INSERT INTO carts (cart_id, user_id) VALUES ($1, $2) RETURNING *', [userId, userId]);
-    const cartsCreated = cartInsertResult.rows[0].created_at;
-    if (!Array.isArray(cartInsertResult.rows) || cartInsertResult.rows.length < 1) {
+    const userId = userRows[0].user_id;
+
+    const queryInsertCart = `INSERT INTO carts (cart_id, user_id) VALUES (${getPlaceholder(1)}, ${getPlaceholder(2)}) RETURNING *`;
+    const cartInsertResult = await pool.query(queryInsertCart, [userId, userId]);
+    const cartRows = dbType === 'postgres' ? cartInsertResult.rows : cartInsertResult[0]
+    const cartsCreated = cartRows[0].created_at;
+
+    if (!Array.isArray(cartRows) || cartRows.length < 1) {
       return response.status(500).send('Internal Server Error');
     }
     console.log(`User registered with ID: ${userId}, Name: ${username}, Email: ${email}, Password: ${hashedPassword}, Carts added at: ${cartsCreated}`);
@@ -103,15 +124,22 @@ const createGoogleUser = async (profile) => {
       response.status(500).send('Internal Server Error');
     }
 
-    const userInsertResult = await pool.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *', [username, email, hashedPassword]);
-    const userId = userInsertResult.rows[0].user_id;
-    if (!Array.isArray(userInsertResult.rows) || userInsertResult.rows.length < 1) {
+    // Додавання користувача
+    const queryInsertUser = `INSERT INTO users (username, email, password) VALUES (${getPlaceholder(1)}, ${getPlaceholder(2)}, ${getPlaceholder(3)}) RETURNING *`;
+    const userInsertResult = await pool.query(queryInsertUser, [username, email, hashedPassword]);
+    const userRows = dbType === 'postgres' ? userInsertResult.rows : userInsertResult[0];
+    const userId = userRows[0].user_id;
+    if (!Array.isArray(userRows) || userRows.length < 1) {
       return response.status(500).send('Internal Server Error');
     }
+    // Додавання кошика для користувача
+    const queryInsertCart = `INSERT INTO carts (cart_id, user_id) VALUES (${getPlaceholder(1)}, ${getPlaceholder(2)}) RETURNING *`;
+    const cartInsertResult = await pool.query(queryInsertCart, [userId, userId]);
 
-    const cartInsertResult = await pool.query('INSERT INTO carts (cart_id, user_id) VALUES ($1, $2) RETURNING *', [userId, userId]);
-    const cartsCreated = cartInsertResult.rows[0].created_at;
-    if (!Array.isArray(cartInsertResult.rows) || cartInsertResult.rows.length < 1) {
+    const cartRows = dbType === 'postgres' ? cartInsertResult.rows : cartInsertResult[0];
+    const cartsCreated = cartRows[0].created_at;
+
+    if (!Array.isArray(cartRows) || cartRows.length < 1) {
       return response.status(500).send('Internal Server Error');
     }
     console.log(`User registered with ID: ${userId}, Name: ${username}, Email: ${email}, Password: ${hashedPassword}, Carts added at: ${cartsCreated}`);
@@ -145,8 +173,9 @@ const updateUser = async (request, response) => {
       response.status(500).send('Internal Server Error');
     }
   } 
+  const queryUpdateUser = `UPDATE users SET username = ${getPlaceholder(1)}, email = ${getPlaceholder(2)}, password = COALESCE(${getPlaceholder(3)}, password) WHERE user_id = ${getPlaceholder(4)} RETURNING *`;
   pool.query(
-    'UPDATE users SET username = $1, email = $2, password = COALESCE($3, password) WHERE user_id = $4 RETURNING *',
+    queryUpdateUser,
     // 'UPDATE users SET username = $1, email = $2, password = $3 WHERE user_id = $4  RETURNING *',
     // [username, email, password, user_id ],
     [username, email, hashedPassword, user_id],
@@ -154,26 +183,29 @@ const updateUser = async (request, response) => {
       if (error) {
         throw error
       } 
-      if (typeof results.rows == 'undefined') {
+      const rows = dbType === 'postgres' ? results.rows : results;
+      if (typeof rows == 'undefined') {
         response.status(404).send(`Resource not found`)
         return
-      } else if (Array.isArray(results.rows) && results.rows.length < 1) {
+      } else if (Array.isArray(rows) && rows.length < 1) {
         response.status(404).send(`User not found`)
         return
       } 
-      const userId = results.rows[0].user_id;
+      const userId = rows[0].user_id;
 
+      const queryUpdateCart = `UPDATE carts SET user_id = ${getPlaceholder(1)} WHERE user_id = ${getPlaceholder(2)} RETURNING *`;
       pool.query(
-        'UPDATE carts SET user_id = $1 WHERE user_id = $2 RETURNING *',
+        queryUpdateCart,
         [userId, user_id],
         (cartError, cartResults) => {
           if (cartError) {
             throw cartError;
           }
-          if (typeof cartResults.rows == 'undefined') {
+          const cartRows = dbType === 'postgres' ? cartResults.rows : cartResults[0];
+          if (typeof cartRows == 'undefined') {
             response.status(404).send(`Cart not found`);
             return;
-          } else if (Array.isArray(cartResults.rows) && cartResults.rows.length < 1) {
+          } else if (Array.isArray(cartRows) && cartRows.length < 1) {
             response.status(404).send(`Cart not found`);
             return;
           }
@@ -187,8 +219,9 @@ const updateUser = async (request, response) => {
 // DELETE a user by their user_id.
 const deleteUser = (request, response) => {
   const user_id = parseInt(request.params.user_id)
+  const query = `DELETE FROM users WHERE user_id = ${getPlaceholder(1)}`;
 
-  pool.query('DELETE FROM users WHERE user_id = $1', [user_id], (error, results) => {
+  pool.query(query, [user_id], (error, results) => {
     if (error) {
       response.status(500).send('Internal Server Error');
     } else if (results.rowCount === 0) {

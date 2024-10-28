@@ -164,10 +164,11 @@ function ensureAuthenticated(req, res, next) {
   //   console.log('ensureAuthenticated - go to next without token!!!!!')
   //   return next();
   // }
+  // console.log("req.headers", req.headers);
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
-  // console.log('ensureAuthenticated authHeader: ==========>', authHeader);
-  // console.log('ensureAuthenticated token: ==========>', token);
+  console.log('ensureAuthenticated authHeader: ==========>', authHeader);
+  console.log('ensureAuthenticated token: ==========>', token);
   if (token == null) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
@@ -205,35 +206,67 @@ app.get('/check-auth', ensureAuthenticated, (req, res) => {
 });
 
 // ================================ JWT authenticate
-app.post('/loginjwt', (req, res) => {
-  // Аутентифікація користувача...
+// app.post('/loginjwt', (req, res) => {
+//   // Аутентифікація користувача...
+//   console.log('req body ===========> ', req.body);
+//   const { email, password } = req.body;
+    
+//   find.findByEmail(email, async (err, user) => { // Look up user in the db  
+//     console.log('Warnin!! JWT Strategy is starting findByEmail')      
+//     if (err) {
+//       console.error('Authentication error:', err);
+//       return res.status(500).json({ message: 'Internal server error' });
+//     }
+//     if (!user) {
+//       return res.status(401).json({ message: 'Incorrect username or password.' });
+//     }
+
+//     try {
+//       const matchedPassword = await bcrypt.compare(password, user.password);
+//       if (!matchedPassword) {
+//         return res.status(401).json({ message: 'Incorrect username or password.' });
+//       }
+//       console.log('user is finded ==========>', user);
+//       const token = jwt.sign({ user_id: user.user_id, email: user.email, username: user.username}, SECRET_KEY, { expiresIn: '1d' });
+//       res.status(200).json({ token, user }); // Відправлення токена клієнту
+//     } catch (passwordError) {
+//       console.error('Password comparison error:', passwordError);
+//       res.status(500).json({ message: 'Internal server error during password comparison' });
+//     }
+//   }); 
+// });
+
+app.post('/loginjwt', async (req, res) => {
   console.log('req body ===========> ', req.body);
   const { email, password } = req.body;
+  
+  try {
+    const user = await find.findByEmail(email); // Використовуємо await, оскільки findByEmail тепер повертає проміс
+    console.log('JWT Strategy is starting findByEmail');
     
-  find.findByEmail(email, async (err, user) => { // Look up user in the db  
-    console.log('Warnin!! JWT Strategy is starting findByEmail')      
-    if (err) {
-      console.error('Authentication error:', err);
-      return res.status(500).json({ message: 'Internal server error' });
-    }
     if (!user) {
       return res.status(401).json({ message: 'Incorrect username or password.' });
     }
 
-    try {
-      const matchedPassword = await bcrypt.compare(password, user.password);
-      if (!matchedPassword) {
-        return res.status(401).json({ message: 'Incorrect username or password.' });
-      }
-      console.log('user is finded ==========>', user);
-      const token = jwt.sign({ user_id: user.user_id, email: user.email, username: user.username}, SECRET_KEY, { expiresIn: '1d' });
-      res.status(200).json({ token, user }); // Відправлення токена клієнту
-    } catch (passwordError) {
-      console.error('Password comparison error:', passwordError);
-      res.status(500).json({ message: 'Internal server error during password comparison' });
+    const matchedPassword = await bcrypt.compare(password, user.password);
+    if (!matchedPassword) {
+      return res.status(401).json({ message: 'Incorrect username or password.' });
     }
-  }); 
+    
+    console.log('user is found ==========>', user);
+    const token = jwt.sign(
+      { user_id: user.user_id, email: user.email, username: user.username },
+      SECRET_KEY,
+      { expiresIn: '1d' }
+    );
+    
+    res.status(200).json({ token, user });
+  } catch (error) {
+    console.error('Error during login process:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 });
+
 
 // ================================ Passport authenticate
 //Google strategy
@@ -254,7 +287,7 @@ app.get('/auth/google/callback',
     res.redirect(`${WEB_APP_URL}/?token=${token}`);
   }
 );
-//Local strategy
+// ================================ Local strategy
 app.post('/login', (req, res, next) => {
   console.log('start to login');
   passport.authenticate('local', (err, user, info) => {

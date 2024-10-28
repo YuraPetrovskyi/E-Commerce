@@ -14,12 +14,24 @@ const poolConfig = isProduction ? {
     connectionString: connectionStringLocal
 }; 
 
-const pool = new Pool(poolConfig);
+const pgPool = new Pool(poolConfig);
+
+const mysql = require('mysql2/promise');  // MySQL (promise-based)
+// Підключення до MySQL на Hostinger
+const mysqlConfig = {
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,};
+
+// Функція для створення підключення до MySQL
+const mysqlPool = mysql.createPool(mysqlConfig);
 
 module.exports = {
-  pool  
+  pgPool,
+  mysqlPool    
 };
-
 
 
 // ============================= 1 only for Render DB

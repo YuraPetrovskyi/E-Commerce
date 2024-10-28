@@ -41,6 +41,8 @@ CREATE TABLE order_items (
   quantity INT NOT NULL
 );
 
+ALTER TABLE products ADD model VARCHAR(255);
+ALTER TABLE products ADD image_url VARCHAR(255);
 ------------
 INSERT INTO users ( username, email, password ) 
   VALUES ( 'Yurii' , ' yurii@example.com ', '123456789' ), ( 'Ana' , ' ana@example.com ', '11334466779' );

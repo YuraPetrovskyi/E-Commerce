@@ -32,7 +32,7 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {    
     const fetchData = async () => {
-      // console.log('startet CartProvider check-auth');
+      console.log('startet CartProvider check-auth');
       try {        
         const authResponse = await fetch(`${SERVER_HOST}/check-auth`, {
           method: 'GET',
@@ -47,7 +47,7 @@ export const CartProvider = ({ children }) => {
         //   // console.log('respons check-auth:', respons.message)
         // }
         if (respons.isAuthenticated) {
-          // console.log("CartProvider isAuthenticated respons", respons)
+          console.log("CartProvider isAuthenticated respons", respons)
           setAuthenticated(true);
           setUser(respons.user);
           setUserId(respons.user.user_id);
@@ -60,7 +60,7 @@ export const CartProvider = ({ children }) => {
           setCartLenght(null);
         }
       } catch (error) {
-        // console.error('Error CartProvider fetching data:', error);
+        console.error('Error CartProvider fetching data:', error);
         setAuthenticated(false);
         setUser({});  
         setCart([]);
@@ -72,7 +72,7 @@ export const CartProvider = ({ children }) => {
   }, [authenticated]);
 
   useEffect(() => {
-    // console.log('stared useEffect')
+    console.log('stared useEffect')
     const fetchData = async () => {
       if (cartId) {
         try {
@@ -86,10 +86,14 @@ export const CartProvider = ({ children }) => {
           });
           if(response.ok) {            
             const cartrespons = await response.json();
-            // console.log('response: ', response);
-            // console.log('cartrespons: ', cartrespons);
-            setCart(cartrespons);
-            setCartLenght(cartrespons.length);
+            if (cartrespons.length === 0) {
+              console.log('cart is empty: ');
+            } else {
+              console.log('response: ', response);
+              console.log('cartrespons: ', cartrespons);
+              setCart(cartrespons);
+              setCartLenght(cartrespons.length);
+            }
           }
           if(response.status === 404){
             const text = await response.text()  

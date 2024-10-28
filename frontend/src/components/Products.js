@@ -29,8 +29,8 @@ const Products = () => {
     fetchData();
   }, []);
 
-  // console.log(products);
-  // console.log(category);
+  console.log(products);
+  console.log(category);
 
   let productfilter = [];
   if(category) {
