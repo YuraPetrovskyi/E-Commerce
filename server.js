@@ -122,7 +122,7 @@ const WEB_APP_URL= process.env.WEB_APP_URL
 //   origin: WEB_APP_URL,  // URL вашого клієнтського додатку
 //   credentials: true,
 // }));
-const allowedOrigins = ['https://e-commerce-jjez.onrender.com','http://localhost:3001'];
+const allowedOrigins = ['https://e-commerce-jjez.onrender.com','http://localhost:3001', 'https://yuriipetrovskyi.co.uk/ecommerce'];
 app.use(cors({
   origin: function(origin, callback){
     // Дозвольте запити без 'origin' (наприклад, мобільні додатки або curl запити)
