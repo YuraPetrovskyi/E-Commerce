@@ -55,7 +55,7 @@ const Checkout = () => {
           setOrderItems(dataOrders);
         }        
       } catch (error) {
-        console.log('Помилка при спробі глянути деталі покупок:( :')
+        // console.log('Помилка при спробі глянути деталі покупок:( :')
         console.error('Error fetching data:', error);
       }
     };
@@ -83,7 +83,7 @@ const Checkout = () => {
             // setOrders(dataOrders);
           }          
         } catch (error) {
-          console.log('Помилка при спробі глянути історію покупок:( :')
+          // console.log('Помилка при спробі глянути історію покупок:( :')
           console.error('Error fetching data:', error);
         }
       };
@@ -147,7 +147,7 @@ const Checkout = () => {
       <div className="cart-back-container">
         <div className="back-cart-container">
           <button onClick={() => navigate(-1)} className="button-back">
-            <img src="/images/back.png" alt="shopping-cart-icon" />
+            <img src={`${process.env.PUBLIC_URL}/images/back.png`} alt="shopping-cart-icon" />
           </button>                  
           <h2>Checkout Summary</h2>      
           <Link to="/orders"><button>Orders</button></Link>

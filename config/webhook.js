@@ -55,7 +55,7 @@ async function sendEmail(to, subject, session, lineItems) {
     service: 'gmail',  // Використовуйте свій постачальник поштових послуг Наприклад, для Gmail
     auth: {
       user: 'yurakarpaty@gmail.com',
-      pass: 'ubha slvg lrsj srgx',
+      pass: process.env.EMAIL_SEND_PASSWORD,
     },
   });
 

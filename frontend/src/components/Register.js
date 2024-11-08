@@ -28,7 +28,7 @@ const Register = () => {
         credentials: 'include',
         body: JSON.stringify({username, email, password }),
       });
-      console.log('finish registered fetch');
+      // console.log('finish registered fetch');
       if (response.ok) {
         try {
           const response = await fetch(`${SERVER_HOST}/loginjwt`, {
@@ -41,7 +41,7 @@ const Register = () => {
           });
           // console.log('finish login fetch');
           if (response.ok) {
-            console.log('response.ok');
+            // console.log('response.ok');
             const data = await response.json();
             localStorage.setItem('token', data.token);
             setAuthenticated(true);
@@ -54,7 +54,7 @@ const Register = () => {
           } else {
             console.error('Login failed 2');
             const errorMessage = await response.json(); // Отримати текст повідомлення з тіла відповіді
-            console.log(errorMessage.message);
+            // console.log(errorMessage.message);
             setErrorMessage(errorMessage.error);
           }
         } catch (error) {

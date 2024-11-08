@@ -23,7 +23,7 @@ async function sendEmail(to, subject, session, lineItems) {
     service: 'gmail',  // Використовуйте свій постачальник поштових послуг Наприклад, для Gmail
     auth: {
       user: 'yurakarpaty@gmail.com',
-      pass: 'ubha slvg lrsj srgx',
+      pass: process.env.EMAIL_SEND_PASSWORD,
     },
   });
 
@@ -40,22 +40,22 @@ async function sendEmail(to, subject, session, lineItems) {
 
   // Створюємо повний HTML-шаблон листа, вставляючи HTML товарів
   const htmlContent = `
-    <h1>Дорогий ${session.customer_details.name}! Дякуємо за ваше замовлення!</h1>
-    <h2>Ось деталі вашого замовлення:</h2>
+    <h1>Dear ${session.customer_details.name}! Thank you for your order!</h1>
+    <h2>Details of your order:</h2>
     <table>
       <thead>
         <tr>
-          <th>Товар</th>
-          <th>Кількість</th>
-          <th>Ціна</th>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Price</th>
         </tr>
       </thead>
       <tbody>
         ${itemsHtml}
       </tbody>
     </table>
-    <h3>Всього оплачено ${(session.amount_total / 100).toFixed(2)}</h3>
-    <h4>Товар буде доставлено за адресою: 
+    <h3>Total paid ${(session.amount_total / 100).toFixed(2)}</h3>
+    <h4>Will be delivered to the address: 
     ${session.shipping_details.address.city} city,
     ${session.shipping_details.address.line1}, ${session.shipping_details.address.postal_code}
     </h4>

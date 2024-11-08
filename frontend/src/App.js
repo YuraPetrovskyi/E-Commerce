@@ -19,7 +19,7 @@ import './App.css';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/ecommerce">
       <Routes>
         <Route path="/" element={<Home />} />
 

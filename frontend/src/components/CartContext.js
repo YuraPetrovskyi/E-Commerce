@@ -30,9 +30,20 @@ export const CartProvider = ({ children }) => {
   }, []);
   // console.log('localStorage token:', localStorage.getItem('token'));
 
-  useEffect(() => {    
+  useEffect(() => {   
+    // Перевіряємо, чи є токен в localStorage перед відправкою запиту
+    const token = localStorage.getItem('token');
+    if (!token) {
+      // Якщо токена немає, встановлюємо стан як неавторизований
+      setAuthenticated(false);
+      setUser({});
+      setCart([]);
+      setCartId(null);
+      setCartLenght(null);
+      return; // Виходимо з функції, щоб уникнути запиту на сервер
+    }
     const fetchData = async () => {
-      console.log('startet CartProvider check-auth');
+      // console.log('startet CartProvider check-auth');
       try {        
         const authResponse = await fetch(`${SERVER_HOST}/check-auth`, {
           method: 'GET',
@@ -46,8 +57,9 @@ export const CartProvider = ({ children }) => {
         // if (respons.message) {
         //   // console.log('respons check-auth:', respons.message)
         // }
+        // console.log('respons', respons)
         if (respons.isAuthenticated) {
-          console.log("CartProvider isAuthenticated respons", respons)
+          // console.log("CartProvider isAuthenticated respons", respons)
           setAuthenticated(true);
           setUser(respons.user);
           setUserId(respons.user.user_id);
@@ -72,7 +84,7 @@ export const CartProvider = ({ children }) => {
   }, [authenticated]);
 
   useEffect(() => {
-    console.log('stared useEffect')
+    // console.log('stared useEffect')
     const fetchData = async () => {
       if (cartId) {
         try {
@@ -87,17 +99,17 @@ export const CartProvider = ({ children }) => {
           if(response.ok) {            
             const cartrespons = await response.json();
             if (cartrespons.length === 0) {
-              console.log('cart is empty: ');
+              // console.log('cart is empty: ');
             } else {
-              console.log('response: ', response);
-              console.log('cartrespons: ', cartrespons);
+              // console.log('response: ', response);
+              // console.log('cartrespons: ', cartrespons);
               setCart(cartrespons);
               setCartLenght(cartrespons.length);
             }
           }
           if(response.status === 404){
             const text = await response.text()  
-            console.log('response: ', text);  
+            // console.log('response: ', text);  
           }          
         } catch (error) {
           console.error('Error fetching product data:', error);

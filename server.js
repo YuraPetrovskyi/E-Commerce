@@ -373,9 +373,9 @@ app.delete('/order_items/:order_item_id', ensureAuthenticated, db_order_items.de
 // ================================ Stripe 
 app.post('/create-checkout-session', createCheckoutSession);
 
-app.post('/webhook', webhook);
+// app.post('/webhook', webhook);
 
-app.get('/api/checkout-session/:sessionId', email_stripe);
+app.get('/api/checkout-session/:sessionId', email_stripe); // resive fom Success.js
 
 
 // ================================ Addition

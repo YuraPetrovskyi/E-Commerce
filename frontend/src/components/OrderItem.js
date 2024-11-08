@@ -54,7 +54,7 @@ const OrderItem = () => {
       }
         
       } catch (error) {
-        console.log('Помилка при спробі глянути деталі покупок:( :')
+        // console.log('Помилка при спробі глянути деталі покупок:( :')
         console.error('Error fetching data:', error);
       }
     };
@@ -68,7 +68,7 @@ const OrderItem = () => {
       <div className="cart-back-container">
         <div className="back-cart-container">
           <button onClick={() => navigate(-1)} className="button-back">
-            <img src="/images/back.png" alt="shopping-cart-icon" />
+            <img src={`${process.env.PUBLIC_URL}/images/back.png`} alt="shopping-cart-icon" />
           </button>                  
           <h2>Order details</h2>      
           <Link to="/orders">Go to Orders</Link>

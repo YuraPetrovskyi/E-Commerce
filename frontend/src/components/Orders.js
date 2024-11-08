@@ -38,7 +38,7 @@ const Orders = () => {
             setOrders(dataOrders);
           }          
         } catch (error) {
-          console.log('Помилка при спробі глянути історію покупок:( :')
+          // console.log('Помилка при спробі глянути історію покупок:( :')
           console.error('Error fetching data:', error);
         }
       };
@@ -66,7 +66,7 @@ const Orders = () => {
 
         <div className="back-product-container">
           <button onClick={() => navigate(-1)} className="button-back">
-            <img src="/images/back.png" alt="shopping-cart-icon" />
+            <img src={`${process.env.PUBLIC_URL}/images/back.png`} alt="shopping-cart-icon" />
           </button>
           <div className="back-product-h2">
             <h2>Orders:</h2>

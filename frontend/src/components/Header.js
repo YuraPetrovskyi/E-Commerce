@@ -44,7 +44,7 @@ const Header = () => {
   return (
     <div className="header-container">
       <div className="header-emblem">
-        <Link to="/">eCOMMERS</Link>        
+        <Link to="/">eCOMMERCE</Link>        
       </div>
       {/* <div className="header-person-icon-container">
         <button>
@@ -53,7 +53,7 @@ const Header = () => {
       </div> */}
       <div className="dropdown">
         <button onClick={toggleDropdown} className="dropdown-button">
-          <img src="/images/person.svg" alt="person-icon" />
+          <img src={`${process.env.PUBLIC_URL}/images/person.svg`} alt="person-icon" />
         </button>
         {isOpen && (
           <div className="dropdown-content" onClick={toggleDropdownClose}>
@@ -75,7 +75,7 @@ const Header = () => {
           {/* {authenticated ? (<p>authenticated</p>) :(<p>none</p>)} */}
           <button onClick={handleLogout}>Logout</button>  
           <Link to="/cart" className='cart-image-container'>
-            <img src="/images/shopping.svg" alt="shopping-cart-icon" />
+            <img src={`${process.env.PUBLIC_URL}/images/shopping.svg`} alt="shopping-cart-icon" />
             <span className='cart-count'>{cartlenght}</span>
           </Link>
         </div>

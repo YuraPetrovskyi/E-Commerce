@@ -38,7 +38,7 @@ const Success = () => {
       });
       // console.log(response);
       if (response.ok) {
-        console.log(`The status of the order has been changed to Paid`);
+        // console.log(`The status of the order has been changed to Paid`);
         // alert(`The status of the order with id: ${order_id} has been changed to Paid`);
       }
     } catch (error) {
@@ -60,7 +60,7 @@ const Success = () => {
         return true;
       }
     } catch (error) {
-      console.log( 'isAuthenticated : --- you are not registered!!!!!!')
+      // console.log( 'isAuthenticated : --- you are not registered!!!!!!')
       return false;
     }
   };
@@ -69,7 +69,7 @@ const Success = () => {
     const respons = isAuthenticated();
     // console.log('respons: ', respons);
     if(!respons) {
-      console.log( 'respons : --- you are not registered!!!!!!')
+      // console.log( 'respons : --- you are not registered!!!!!!')
       navigate('/')
     }
     if (respons) {

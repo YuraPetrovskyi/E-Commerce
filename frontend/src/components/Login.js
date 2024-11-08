@@ -55,7 +55,7 @@ const Login = () => {
 
   const handleLoginJWT = async (e) => {
     e.preventDefault();
-    console.log('started handleLoginJWT', email, password);
+    // console.log('started handleLoginJWT', email, password);
     try {
       const response = await fetch(`${SERVER_HOST}/loginjwt`, {
         method: 'POST',
@@ -65,23 +65,23 @@ const Login = () => {
         credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
-      console.log('finish fetch handleLoginJWT');
+      // console.log('finish fetch handleLoginJWT');
       if (response.ok) {
-        console.log('response.ok');
+        // console.log('response.ok');
         const data = await response.json();
         localStorage.setItem('token', data.token);
         setAuthenticated(true);
         setUser(data.user);
         setUserId(data.user.user_id);
         setCartId(data.user.user_id);
-        console.log('data', data);
-        console.log('token', data.token);
+        // console.log('data', data);
+        // console.log('token', data.token);
         navigate('/');        
       } else {
 
         console.error('Login failed 2');
         const errorMessage = await response.json(); // Отримати текст повідомлення з тіла відповіді
-        console.log(errorMessage.message);
+        // console.log(errorMessage.message);
         // setErrorMessage(errorMessage.error);
         setErrorMessage(errorMessage.message);
 

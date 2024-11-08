@@ -27,7 +27,7 @@ const Cart = () => {
   useEffect(() => {    
     const fetchData = async () => {
       if (!cartlenght) {
-        console.log('Your basket is empty :)');
+        // console.log('Your basket is empty :)');
         setCartEmpty('Your basket is empty :)');          
         setProducts([]);        
         return;
@@ -207,7 +207,7 @@ const Cart = () => {
       
       <div className="back-cart-container">
         <button onClick={() => navigate(-1)} className="button-back">
-          <img src="/images/back.png" alt="shopping-cart-icon" />
+          <img src={`${process.env.PUBLIC_URL}/images/back.png`} alt="shopping-cart-icon" />
         </button>                  
         <h2>My basket</h2>      
         <Link to="/orders">Go to Orders</Link>
