@@ -69,6 +69,7 @@ app.use(cookieParser());
 
 //  ================================ Cors
 const WEB_APP_URL= process.env.WEB_APP_URL
+WEB_APP_URL_REDIRECT_GOOGLE= process.env.WEB_APP_URL_REDIRECT_GOOGLE
 // app.use(cors({
 //   origin: WEB_APP_URL,  // URL вашого клієнтського додатку
 //   credentials: true,
@@ -112,6 +113,7 @@ app.use(passport.session());  // uncomment to activate sessions!!!!!
 function ensureAuthenticated(req, res, next) {
   // uncomment to activate sessions!!!!!
   if (req.isAuthenticated()) {
+    console.log("ensureAuthenticated req.session:", req.session);
     console.log('ensureAuthenticated - go to next without token!!!!!')
     return next();
   }
@@ -241,12 +243,13 @@ app.get('/auth/google/callback',
   function(req, res) {
     // Successful authentication, redirect home.
     console.log('Google authentication successful.')
-    console.log('host: ',`${WEB_APP_URL}`)
+    console.log('WEB_APP_URL_REDIRECT_GOOGLE: ',`${WEB_APP_URL_REDIRECT_GOOGLE}`)
     const token = req.user.token;
     console.log('secces google token: ===>', token)
 
     // res.redirect(`${WEB_APP_URL}/?token=${token}`);
-    res.redirect(`${WEB_APP_URL}/ecommerce?token=${token}`);
+    // res.redirect(`${WEB_APP_URL}/ecommerce?token=${token}`);
+    res.redirect(`${WEB_APP_URL_REDIRECT_GOOGLE}?token=${token}`);  // для направлення онлайн - hostinger
   }
 );
 

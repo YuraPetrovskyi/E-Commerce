@@ -20,7 +20,7 @@ export const CartProvider = ({ children }) => {
 
     if (token) {
       localStorage.setItem('token', token);
-
+      console.log('there is token:')
       // Ви можете тут встановити аутентифікацію або зробити запит для перевірки токена
       setAuthenticated(true);
 
