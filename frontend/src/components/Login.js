@@ -17,40 +17,47 @@ const Login = () => {
 
   const navigate = useNavigate();  
 
-  // const handleLogin = async (e) => {
-  //   // e.preventDefault();
-  //   console.log('started handleLogin');
-  //   try {
-  //     const response = await fetch(`${SERVER_HOST}/login`, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       credentials: 'include',
-  //       body: JSON.stringify({ email, password }),
-  //     });
-  //     console.log('finish fetch');
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       // localStorage.setItem('token', data.token);
-  //       setAuthenticated(true);
-        
-  //       console.log('data', data);
-  //       // console.log('token', data.token);
-  //       if (data.redirect) {
-  //         navigate(data.redirect); // Перенаправити за допомогою useNavigate
-  //       } else {
-  //         console.error('Login failed 1');
-  //       }
-  //     } else {
-  //       console.error('Login failed 2');
-  //       const errorMessage = await response.json(); // Отримати текст повідомлення з тіла відповіді
-  //       setErrorMessage(errorMessage.error);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error during login:', error);
-  //   }
-  // };
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    // console.log('started handleLogin');
+    // alert('started handleLogin')
+    try {
+      const response = await fetch(`${SERVER_HOST}/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ email, password }),
+      });
+      // console.log('finish fetch');
+      // alert('finish fetch')
+
+      if (response.ok) {
+        const data = await response.json();
+        // localStorage.setItem('token', data.token);
+        setAuthenticated(true);
+        // console.log('token', data.token);
+        if (data.redirect) {
+          // console.log(data)
+          setAuthenticated(true);
+          setUser(data.user);
+          setUserId(data.user.user_id);
+          setCartId(data.user.user_id);
+          navigate('/');
+          // navigate(data.redirect); // Перенаправити за допомогою useNavigate
+        } else {
+          console.error('Login failed 1');
+        }
+      } else {
+        console.error('Login failed 2');
+        const errorMessage = await response.json(); // Отримати текст повідомлення з тіла відповіді
+        setErrorMessage(errorMessage.error);
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+    }
+  };
   // console.log('isAuthenticated', authenticated);
 
   const handleLoginJWT = async (e) => {
@@ -95,15 +102,16 @@ const Login = () => {
     <div className="login-container">
       <h2>Sign in</h2>
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      <form onSubmit={handleLoginJWT}>
+      <form>
         <label>Email:</label>
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         
         <label>Password:</label>
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         
-        <button type="submit">Sign in</button>
-      </form>      
+        <button type="button" onClick={handleLoginJWT}>Sign in (with token)</button>
+        <button type="button" onClick={handleLogin}>Sign in (with passport)</button>
+      </form>  
       
       
       <div className="login-link-container">

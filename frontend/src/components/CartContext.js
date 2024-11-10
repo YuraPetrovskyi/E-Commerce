@@ -11,6 +11,7 @@ export const CartProvider = ({ children }) => {
 
   const [cart, setCart] = useState([]);  
   const [cartlenght, setCartLenght] = useState(null);
+  // console.log("user", user)
 
   useEffect(() => {
     // Option 1 - Отримання токену з URL using window
@@ -18,7 +19,6 @@ export const CartProvider = ({ children }) => {
     const token = urlParams.get('token');
 
     if (token) {
-      // console.log('Token from URL:', token);
       localStorage.setItem('token', token);
 
       // Ви можете тут встановити аутентифікацію або зробити запит для перевірки токена
@@ -32,16 +32,9 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {   
     // Перевіряємо, чи є токен в localStorage перед відправкою запиту
+
     const token = localStorage.getItem('token');
-    if (!token) {
-      // Якщо токена немає, встановлюємо стан як неавторизований
-      setAuthenticated(false);
-      setUser({});
-      setCart([]);
-      setCartId(null);
-      setCartLenght(null);
-      return; // Виходимо з функції, щоб уникнути запиту на сервер
-    }
+
     const fetchData = async () => {
       // console.log('startet CartProvider check-auth');
       try {        

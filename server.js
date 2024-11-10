@@ -13,55 +13,6 @@ const jwt = require('jsonwebtoken');
 const find = require('./db/find_in_passprt');
 const SECRET_KEY = process.env.JWT_SECRET;
 
-// // ================================ Redis
-// const { createClient } = require('redis');
-// const RedisStore = require("connect-redis").default;
-
-// const clientRedis = createClient({
-//     password:  process.env.REDIS_PASSWORD,
-//     socket: {
-//         host: process.env.REDIS_HOST,
-//         port: process.env.REDIS_PORT
-//     }
-// });
-// // Ініціалізація підключення до Redis
-// clientRedis.connect().catch((err) => {
-//   console.error('Error connecting to Redis:', err);
-// });
-// //обробляє помилки, які можуть виникнути після успішного підключення 
-// clientRedis.on('error', (err) => {
-//   console.error('Помилка Redis після підключення:', err);
-// });
-// const storeRedis = new RedisStore({ client: clientRedis });
-
-// ================================ MongoDB with mongoose
-// const uri =process.env.MONGODB_URI;
-// // Підключення до MongoDB за допомогою Mongoose
-// const mongoose = require('mongoose');
-// mongoose.connect(`${uri}`);
-// // Створення моделі для сесій
-// const Session = mongoose.model('Session', new mongoose.Schema({
-//   _id: String,
-//   session: Object,
-//   expires: Date
-// }));
-// const storeMongo = new session.MemoryStore();
-
-// ================================ MongoDB with connect-mongodb-session
-// const MongoDBStore = require('connect-mongodb-session')(session);
-// const storeMongoDB = new MongoDBStore({
-//     uri: uri,
-//     databaseName: 'sample_mflix',
-//     collection: 'session'
-//   });
-// storeMongoDB.on('error', function(error) {
-//   console.log('storeMongoDB', error);
-// });
-// ================================ MongoDB with connect-mongo
-// const MongoStore = require('connect-mongo');
-// const storeMongoConnect = MongoStore.create({ mongoUrl: process.env.MONGODB_URI });
-//=================================================================
-
 // ================================ MySQL and Hostinger
 const MySQLStore = require('express-mysql-session')(session);
 
@@ -78,7 +29,7 @@ const sessionStoreHostinger = new MySQLStore(options);
 
 // ================================ Stripe
 const createCheckoutSession = require('./config/checkout'); //for stripe
-const webhook = require('./config/webhook');
+// const webhook = require('./config/webhook');
 const email_stripe = require('./config/email-stripe');
 
 // ================================ DB
@@ -149,7 +100,7 @@ app.use(express.json({
 // ================================ Passport 
 require('./config/passport')
 app.use(passport.initialize());
-// app.use(passport.session());  // uncomment to activate sessions!!!!!
+app.use(passport.session());  // uncomment to activate sessions!!!!!
 
 // app.use((req, res, next) => {
 //   console.log("Request headers:", req.headers);
@@ -160,16 +111,24 @@ app.use(passport.initialize());
 // ================================ check-auth
 function ensureAuthenticated(req, res, next) {
   // uncomment to activate sessions!!!!!
-  // if (req.isAuthenticated()) {
-  //   console.log('ensureAuthenticated - go to next without token!!!!!')
-  //   return next();
-  // }
+  if (req.isAuthenticated()) {
+    console.log('ensureAuthenticated - go to next without token!!!!!')
+    return next();
+  }
   // console.log("req.headers", req.headers);
+  console.log("ensureAuthenticated req.session:", req.session);
+  console.log("req.isAuthenticated():", req.isAuthenticated());
+
+  // Якщо сесія не автентифікована, перевірка за допомогою JWT
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
   console.log('ensureAuthenticated authHeader: ==========>', authHeader);
   console.log('ensureAuthenticated token: ==========>', token);
-  if (token == null) {
+  // if (token == null) {
+  //   return res.status(401).json({ message: 'Unauthorized' });
+  // }
+  // Перевірка на наявність токена з додатковою обробкою для "null" або "undefined"
+  if (!token || token === "null" || token === "undefined") {
     return res.status(401).json({ message: 'Unauthorized' });
   }
   jwt.verify(token, SECRET_KEY, (err, user) => {
@@ -271,22 +230,26 @@ app.post('/loginjwt', async (req, res) => {
 // ================================ Passport authenticate
 //Google strategy
 app.get('/auth/google', passport.authenticate('google', { 
-  scope: ['profile', 'email']}));
+  scope: ['profile', 'email']})
+);
 
 app.get('/auth/google/callback', 
   passport.authenticate('google', { 
-    failureRedirect: `${WEB_APP_URL}/login` 
+    // failureRedirect: `${WEB_APP_URL}/login`
+    failureRedirect: '/login'  
   }),
   function(req, res) {
     // Successful authentication, redirect home.
-    console.log('secces google sesion')
+    console.log('Google authentication successful.')
     console.log('host: ',`${WEB_APP_URL}`)
     const token = req.user.token;
     console.log('secces google token: ===>', token)
 
-    res.redirect(`${WEB_APP_URL}/?token=${token}`);
+    // res.redirect(`${WEB_APP_URL}/?token=${token}`);
+    res.redirect(`${WEB_APP_URL}/ecommerce?token=${token}`);
   }
 );
+
 // ================================ Local strategy
 app.post('/login', (req, res, next) => {
   console.log('start to login');
@@ -309,6 +272,7 @@ app.post('/login', (req, res, next) => {
       return res.status(200).json({ 
         redirect: '/',
         // token: req.user.token
+        user: user
       }); 
     })
   })(req, res, next)
@@ -316,8 +280,8 @@ app.post('/login', (req, res, next) => {
 
 app.get('/logout', (req, res, next) => {
   console.log('started logout');
-  console.log('req.body: =====>', req.body);
-  console.log('req: =====>', req);
+  // console.log('req.body: =====>', req.body);
+  // console.log('req: =====>', req);
 
   req.logout((err) => {
     if (err) {
@@ -408,6 +372,55 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Сервер запущено на порті ${port}`);
 });
+
+// // ================================ Redis
+// const { createClient } = require('redis');
+// const RedisStore = require("connect-redis").default;
+
+// const clientRedis = createClient({
+//     password:  process.env.REDIS_PASSWORD,
+//     socket: {
+//         host: process.env.REDIS_HOST,
+//         port: process.env.REDIS_PORT
+//     }
+// });
+// // Ініціалізація підключення до Redis
+// clientRedis.connect().catch((err) => {
+//   console.error('Error connecting to Redis:', err);
+// });
+// //обробляє помилки, які можуть виникнути після успішного підключення 
+// clientRedis.on('error', (err) => {
+//   console.error('Помилка Redis після підключення:', err);
+// });
+// const storeRedis = new RedisStore({ client: clientRedis });
+
+// ================================ MongoDB with mongoose
+// const uri =process.env.MONGODB_URI;
+// // Підключення до MongoDB за допомогою Mongoose
+// const mongoose = require('mongoose');
+// mongoose.connect(`${uri}`);
+// // Створення моделі для сесій
+// const Session = mongoose.model('Session', new mongoose.Schema({
+//   _id: String,
+//   session: Object,
+//   expires: Date
+// }));
+// const storeMongo = new session.MemoryStore();
+
+// ================================ MongoDB with connect-mongodb-session
+// const MongoDBStore = require('connect-mongodb-session')(session);
+// const storeMongoDB = new MongoDBStore({
+//     uri: uri,
+//     databaseName: 'sample_mflix',
+//     collection: 'session'
+//   });
+// storeMongoDB.on('error', function(error) {
+//   console.log('storeMongoDB', error);
+// });
+// ================================ MongoDB with connect-mongo
+// const MongoStore = require('connect-mongo');
+// const storeMongoConnect = MongoStore.create({ mongoUrl: process.env.MONGODB_URI });
+//=================================================================
 
 // // Facebook
 // app.get('/auth/facebook',
