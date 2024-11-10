@@ -53,6 +53,7 @@ app.use(
     store: sessionStoreHostinger,
     cookie: {
       path: '/',
+      domain: process.env.COOKIE_DOMAIN || 'localhost',
       httpOnly: true, 
       // secure: true,
       secure: process.env.NODE_ENV === "production", // Використовуйте secure cookies тільки в продакшні
@@ -64,6 +65,8 @@ app.use(
     saveUninitialized: false,
   })
 );
+// Додавання app.set('trust proxy', 1); для підтримки HTTPS за проксі
+app.set('trust proxy', 1);
 
 app.use(cookieParser());
 
@@ -88,6 +91,11 @@ app.use(cors({
   credentials: true // Дозволяє обробку cookies через CORS
 }));
 
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
+
 app.use(express.urlencoded({ extended: false })); //Цей рядок дозволяє обробляти запити, які мають тип application/x-www-form-urlencoded
 app.use(express.json({
   verify: (req, res, buffer) => req['rawBody'] = buffer,
@@ -109,16 +117,22 @@ app.use(passport.session());  // uncomment to activate sessions!!!!!
 //   next();
 // });
 
+app.use((req, res, next) => {
+  console.log("Session:", req.session);
+  console.log("User:", req.user);
+  next();
+});
+
 // ================================ check-auth
 function ensureAuthenticated(req, res, next) {
   // uncomment to activate sessions!!!!!
   if (req.isAuthenticated()) {
-    console.log("ensureAuthenticated req.session:", req.session);
+    // console.log("ensureAuthenticated req.session:", req.session);
     console.log('ensureAuthenticated - go to next without token!!!!!')
     return next();
   }
   // console.log("req.headers", req.headers);
-  console.log("ensureAuthenticated req.session:", req.session);
+  // console.log("ensureAuthenticated req.session:", req.session);
   console.log("req.isAuthenticated():", req.isAuthenticated());
 
   // Якщо сесія не автентифікована, перевірка за допомогою JWT
