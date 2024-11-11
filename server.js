@@ -53,7 +53,7 @@ app.use(
     store: sessionStoreHostinger,
     cookie: {
       path: '/',
-      domain: process.env.COOKIE_DOMAIN || 'localhost',
+      // domain: process.env.COOKIE_DOMAIN || 'localhost',
       httpOnly: true, 
       // secure: true,
       secure: process.env.NODE_ENV === "production", // Використовуйте secure cookies тільки в продакшні
@@ -89,11 +89,6 @@ app.use(cors({
     return callback(null, true);
   },
   credentials: true // Дозволяє обробку cookies через CORS
-}));
-
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
 }));
 
 app.use(express.urlencoded({ extended: false })); //Цей рядок дозволяє обробляти запити, які мають тип application/x-www-form-urlencoded
