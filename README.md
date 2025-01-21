@@ -82,11 +82,15 @@ Below is the `.env-example` file template.
 
 ### Backend `.env-example`
 ```env
+# Google authorization
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
-SECRET=any-random-string-of-characters
-USER=your-database-user
-PASSWORD=your-database-password
+
+# Session
+secret=any-random-string-of-characters
+
+user=your-database-user # for local PostgreSQL
+password=your-database-password # for local PostgreSQL
 
 # Stripe
 SECRET_KEY=your-stripe-secret-key
@@ -105,8 +109,14 @@ DB_PASS=your-db-password
 DB_NAME=your-db-name
 DB_TYPE=mysql  # or postgres
 
+# Database Type
+DB_TYPE=mysql # postgres or mysql
+
 # JWT
 JWT_SECRET=your-jwt-secret
+
+# Environment
+NODE_ENV=developer  # production or developer
 
 # Email - for sending emails to customers using Nodemailer
 EMAIL_SEND_NAME=your-email-name
