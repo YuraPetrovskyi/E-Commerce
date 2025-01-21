@@ -22,7 +22,7 @@ async function sendEmail(to, subject, session, lineItems) {
   let transporter = nodemailer.createTransport({
     service: 'gmail',  // Використовуйте свій постачальник поштових послуг Наприклад, для Gmail
     auth: {
-      user: 'yurakarpaty@gmail.com',
+      user: process.env.EMAIL_SEND_NAME,
       pass: process.env.EMAIL_SEND_PASSWORD,
     },
   });
@@ -63,7 +63,7 @@ async function sendEmail(to, subject, session, lineItems) {
 
   // Опції електронного листа
   let mailOptions = {
-    from: 'yurakarpaty@gmail.com',
+    from: process.env.EMAIL_SEND_NAME,
     to: to, // 'customer-email@example.com'
     subject: subject, 
     // text: "ssdasaas", // або html для відправлення HTML-листа
